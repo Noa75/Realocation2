@@ -1,11 +1,13 @@
 import React from 'react'
 
-export default function PrimeButton({ btntxt }) {
+export default function PrimeButton({ btntxt, onClick }) {
+  
   return (
-    <button style={{
+
+    <button onClick={() => {onClick()}} style={{
         color: 'white',
         backgroundColor: '#1170f4',
-        padding:'10px 54px',
+        padding:'8px 54px',
         fontSize: '18px',
         borderRadius:'50px'
     }}>

@@ -44,6 +44,7 @@
   width: 45px;
   height: 45px;
   margin-bottom: 8px;
+  margin-top: 8px;
  }
  .card-label{
   font-size: 12px;
@@ -109,14 +110,5 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-}
-.blue-container{
-  height: 300px;
-  background-color: #1170f4;
-   z-index: -1;
-   width: 100% ;
-   position: fixed;
-   margin: 0;
-   width: 100vh;
 }
 

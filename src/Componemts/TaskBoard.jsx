@@ -1,8 +1,8 @@
 import React from 'react'
 import Task from './Task'
-import { Button, IconButton, Stack, withStyles } from '@mui/material'
+import { IconButton, Stack } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-import { ArrowBack, Rowing } from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
 import ChipButton from './ChipButton';
 import Navbar from './Navbar';
 import PrimeButton from './PrimeButton';
@@ -11,7 +11,6 @@ import SecButton from './SecButton';
 export default function TaskBoard() {
     return (
         <div className='taskboard-container' style={{width:'393px'}} >
-            <div className='blue-container' />
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <IconButton style={{ transform: 'scaleX(-1)', left: '250px' }}>
                     <ArrowBack />
@@ -36,7 +35,7 @@ export default function TaskBoard() {
                 <Task date="5.8" label="בדיקת הסעות לבית הספר" description="בדיקת מרחק וסרכי הגעה לבית הספר" />
                 <Task date="5.8" label="התאמת ציוד לימודי" description="רכישת ציוד נדרש לשנה החדשה" />
             </div>
-            <Stack spacing={1} direction='column' sx={{ width: '80%', margin: 'auto' }}>
+            <Stack spacing={1} direction='column' sx={{ width: '50%', margin: 'auto' }}>
                 <SecButton btntxt="הוספת משימה חדשה" >
                     {<AddIcon />}
                 </SecButton>

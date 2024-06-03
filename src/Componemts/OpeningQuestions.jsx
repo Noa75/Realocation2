@@ -1,7 +1,6 @@
 import './Realocation.css';
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import PrimeButton from './PrimeButton';
@@ -18,19 +17,17 @@ function OpeningQuestions() {
 
 
     return (
-        <div className='OQ-container' style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',marginBottom:'102px' }}>
+        <div className='OQ-container' style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
                 <IconButton style={{ transform: 'scaleX(-1)', left: '270px' }}>
                     <ArrowBackIcon />
                 </IconButton>
                 <h4 style={{ textAlign: 'center' }}>שאלות לדיוק התהליך</h4>
             </div>
-            <br />
             <Stack spacing={4}>
                 <TextField id="descountry"
                     label="לאן המעבר"
                     variant="outlined" />
-                <br />
                 <div>
                     <p style={{ textAlign: 'right' }}>מתי המעבר</p>
                     <Grid container spacing={1} justifyContent={'center'} alignItems="center">
@@ -65,7 +62,6 @@ function OpeningQuestions() {
                         <p>?האם יש לך ילדים</p></Grid>
                 </Grid>
             </Stack>
-            <br />
             <Link to={"/categoies"}><PrimeButton btntxt="הבא" /></Link>
         </div>
     )

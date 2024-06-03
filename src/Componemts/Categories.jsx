@@ -1,5 +1,5 @@
-import React from 'react'
-import { Grid, IconButton, Button } from '@mui/material';
+import React from 'react';
+import { Grid, IconButton } from '@mui/material';
 import CategoryItem from './CategoryItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PrimeButton from './PrimeButton';
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 export default function Categories() {
   return (
-    <div>
+    <div className='Categories-container'>
       <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
         <IconButton style={{ transform: 'scaleX(-1)', left: '270px' }}>
           <ArrowBackIcon />
@@ -43,7 +43,7 @@ export default function Categories() {
           <CategoryItem image="public/friends.png" label="קהילות" /></Grid>
       </Grid>
       <div style={{ padding: '16px', display: 'flex', justifyContent: 'center' }}>
-        <Link to={"tasks-board"}><PrimeButton btntxt="הבא" /></Link>
+        <Link to={"/tasks-board"}><PrimeButton btntxt="הבא" /></Link>
       </div>
     </div>
   );

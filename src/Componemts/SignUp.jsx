@@ -52,33 +52,38 @@ e
           label="שם מלא"
           name="fullname"
           variant="outlined"
-          value={user.fullname} />
+          value={user.fullname}
+          onChange={handleChange} />
           <TextField
           label="שם משתמש"
           name="username"
           variant="outlined"
-          value={user.username} />
+          value={user.username}
+          onChange={handleChange} />
         <TextField
           label="מייל"
           name="email"
           type="email"
           variant="outlined"
-          value={user.email} />
+          value={user.email}
+          onChange={handleChange} />
         <TextField
           label="סיסמא"
           name="password"
           type="password"
           variant="outlined"
-          value={user.password} />
+          value={user.password}
+          onChange={handleChange} />
         <TextField
           label="אימות סיסמא"
           name="confirmpassword"
           type="password"
           variant="outlined"
-          value={user.confirmpassword} />
+          value={user.confirmpassword}
+          onChange={handleChange} />
       </div>
       <div onClick={handleRegister} style={{marginTop:"96px", marginBottom:"8px"}}>
-      <Link to={"opening-questions"}><PrimeButton btntxt="הירשם" /></Link>
+      <Link to={"/opening-questions"}><PrimeButton btntxt="הירשם" /></Link>
       </div>
       <Link to="/"><button variant="contained" >לחשבון קיים</button></Link>
     </div>
