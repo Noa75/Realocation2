@@ -2,12 +2,12 @@ import TextField from '@mui/material/TextField';
 import './Realocation.css';
 import Stack from '@mui/material/Stack';
 import PrimeButton from './PrimeButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { isLocalhost } from '../Utils';
 
 function LogIn() {
-
+    const navigate = useNavigate();
     const [user,setUser] = useState();
     const [password,setPassword] = useState();
 
@@ -29,6 +29,7 @@ function LogIn() {
         fetch(`${url}/api/login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
+                navigate('/opening-questions', { state: { } });
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
             })
             .catch((error) => {
