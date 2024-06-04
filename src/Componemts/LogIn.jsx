@@ -25,14 +25,17 @@ function LogIn() {
             headers: myHeaders,
             body: raw
         };
+
         const url = isLocalhost?"http://localhost:5231":"media.ruppin.ac.il/bgroup30/test2"
         fetch(`${url}/api/login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
+                console.log("work")
                 navigate('/opening-questions', { state: { } });
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
             })
             .catch((error) => {
+                console.log("not work")
                 //הלוגיקה שמה קורה אם לא הצליח
             });
     }
