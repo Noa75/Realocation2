@@ -1,5 +1,5 @@
   body{
-    background-color: #F5F7FA;
+    background-color: #F4F7FB;
     max-width: 393px;
     margin: 0;
     padding: 0;
@@ -11,8 +11,17 @@
     max-width: 393px;
     max-height: 852px;
     overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .signup-container{
+    max-width: 393px;
+    max-height: 852px;
+    overflow: hidden;
+  }
+  .OQ-container{
     max-width: 393px;
     max-height: 852px;
     overflow: hidden;
@@ -27,19 +36,6 @@
     font-weight: 300;
     font-size: 24px;
   }
-  .card-container{
-    background-color: white;
-    border: 1px solid #E7EFFA;
-    border-radius: 8px;
-    padding: 27px 35px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 8px;
-    height: 75px;
-    width: 30px;
- }
  .card-image{
   width: 45px;
   height: 45px;

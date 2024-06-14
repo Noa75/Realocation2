@@ -1,10 +1,22 @@
 import React from 'react'
 import './Realocation.css';
 
-function CategoryItem({ image, label }) {
+function CategoryItem({ image, label, onClick, active }) {
   
     return (
-    <div className='card-container'>
+    <div onClick={onClick} style={{
+      backgroundColor: active ? '#1170f4' : 'white',
+      border: '1px solid #E7EFFA',
+      borderRadius: '8px',
+      padding: '27px 35px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: '8px',
+      height: '75px',
+      width: '30p'
+    }}>
         <img src={image} alt={label} className='card-image'/>
         <p className='card-label'>{label}</p>
     </div>
