@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 export default function Task({ date, label, description }) {
   return (
     <div className="task-container" >
-        <IconButton aria-label="delete" size="small" className="task-delete-button">
+        <IconButton aria-label="delete" size="small" className="task-delete-button" >
         <DeleteOutlineIcon style={{color:'#1170f4'}} />
       </IconButton>
       <div className="task-content">

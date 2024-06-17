@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { TextField } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 import './Realocation.css';
 import PrimeButton from './PrimeButton';
 import { Link } from 'react-router-dom';
@@ -62,7 +62,7 @@ function SignUp() {
 
   return (
     <div className='signup-container' >
-      <img className='logo' src="public/Logo.png" alt="logo" style={{marginTop:"60px", marginBottom:"102px"}}/>
+      <img className='logo' src="public/Logo.png" alt="logo" style={{marginTop:"102px"}}/>
       <div className='signup-inputs'>
         <TextField
           label="שם מלא"
@@ -103,10 +103,12 @@ function SignUp() {
           error={errors.confirmpassword}
           helperText={errors.confirmpassword}/>
       </div>
-      <div onClick={handleRegister} style={{marginTop:"96px", marginBottom:"8px"}}>
+      <div onClick={handleRegister} >
+        <Stack spacing={1}>
       <PrimeButton btntxt="הירשם" />
-      </div>
       <Link to="/"><button variant="contained" >לחשבון קיים</button></Link>
+      </Stack>
+      </div>
     </div>
   )
 }

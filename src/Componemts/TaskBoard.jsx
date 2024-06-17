@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Task from './Task'
 import { IconButton, Stack } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
@@ -7,22 +7,25 @@ import ChipButton from './ChipButton';
 import Navbar from './Navbar';
 import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
+import { Link } from 'react-router-dom';
 
 export default function TaskBoard() {
     return (
-        <div className='taskboard-container' style={{width:'393px'}} >
+        <div className='taskboard-container' >
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton style={{ transform: 'scaleX(-1)', left: '250px' }}>
+                <IconButton style={{ transform: 'scaleX(-1)', left: '220px' }}>
                     <ArrowBack />
                 </IconButton>
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
             </div>
+            <div className='chip-container'>
             <Stack direction="row-reverse" spacing={1} >
                 <ChipButton txt="בית ספר" />
                 <ChipButton txt="בריאות" />
                 <ChipButton txt="ביטוחים" />
                 <ChipButton txt="בעלי חיים" />
             </Stack>
+            </div>
             <div className='taskrec'>
                 <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300' }}>לפני</h3>
                 <Task date="17.1" label="מציאת בית ספר" description="בדוק בין האופציות השונות באזורך החדש" />
@@ -39,9 +42,9 @@ export default function TaskBoard() {
                 <SecButton btntxt="הוספת משימה חדשה" >
                     {<AddIcon />}
                 </SecButton>
-                <PrimeButton btntxt="הבא"/>
+                <Link to="/edit-task"><PrimeButton btntxt="הבא"/></Link>
             </Stack>
-            <Navbar style={{ position: 'fixed', bottom:'0' }} />
+            <Navbar />
         </div>
         
 

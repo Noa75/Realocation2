@@ -122,7 +122,7 @@ function OpeningQuestions() {
                         </Grid>
                     </Grid>
                 </div>
-                <Grid container alignItems="center" spacing={1}>
+                <Grid container alignItems="center" >
                     <Grid item xs={3.5}>
                         <SecButton btntxt="לא" onClick={() => handleButton('no')} active={selectedOption === 'no'} /></Grid>
                     <Grid item xs={3.5}>

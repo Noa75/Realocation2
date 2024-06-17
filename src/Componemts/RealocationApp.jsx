@@ -5,6 +5,8 @@ import OpeningQuestions from './OpeningQuestions'
 import Categories from './Categories';
 import TaskBoard from './TaskBoard';
 import SignUp from './SignUp';
+import EditTask from './EditTask';
+import HomePage from './HomePage';
 
 export default function RealocationApp() {
   return (
@@ -15,6 +17,8 @@ export default function RealocationApp() {
         <Route path="/opening-questions" element={<OpeningQuestions />}/>
         <Route path="/categoies" element={<Categories />}/>
         <Route path="/tasks-board" element={<TaskBoard />}/>
+        <Route path="/edit-task" element={<EditTask />}/>
+        <Route path="/home" element={<HomePage />}/>
       </Routes>
     </Router>
   )

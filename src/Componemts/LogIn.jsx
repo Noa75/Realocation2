@@ -47,7 +47,7 @@ function LogIn() {
                 <img src="Logo.png" alt="logo" style={{ width: '100%' }}></img>
             </div>
 
-            <Stack spacing={1}>
+            <Stack spacing={1} >
                 <TextField label="שם משתמש" variant="outlined" onChange={(e) => {setUser(e.target.value)}} /> <br />
                 <TextField label="סיסמא" type="password" autoComplete="current-password" onChange={(e) => {setPassword(e.target.value)}} />
             </Stack>

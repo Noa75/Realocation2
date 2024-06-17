@@ -14,8 +14,8 @@ function CategoryItem({ image, label, onClick, active }) {
       alignItems: 'center',
       justifyContent: 'center',
       margin: '8px',
-      height: '75px',
-      width: '30p'
+      height: '72px',
+      width: '30px'
     }}>
         <img src={image} alt={label} className='card-image'/>
         <p className='card-label'>{label}</p>
