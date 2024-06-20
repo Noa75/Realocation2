@@ -10,7 +10,7 @@ export default function () {
         padding:'0 54px', 
         direction:'rtl', 
         backgroundColor: '#f5f7fa',
-        borderTop: '1px solid white',
+        borderTop: '1px solid white'
     }}>
         <button>
             <img src="public/R.png" alt="R" />

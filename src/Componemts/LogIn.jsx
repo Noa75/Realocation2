@@ -2,9 +2,11 @@ import TextField from '@mui/material/TextField';
 import './Realocation.css';
 import Stack from '@mui/material/Stack';
 import PrimeButton from './PrimeButton';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { isLocalhost } from '../Utils';
+
+const url = isLocalhost?"http://localhost:5231/api/":"media.ruppin.ac.il/bgroup30/test2"
 
 function LogIn() {
     const navigate = useNavigate();
@@ -26,8 +28,7 @@ function LogIn() {
             body: raw
         };
 
-        const url = isLocalhost?"http://localhost:5231":"media.ruppin.ac.il/bgroup30/test2"
-        fetch(`${url}/api/login`, requestOptions)
+        fetch(`${url}login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 console.log("work")
@@ -55,7 +56,7 @@ function LogIn() {
             <button className='forgetP'>שכחתי סיסמא</button> <br />
             <PrimeButton onClick={btnlogin} btntxt="כניסה" />
             <p className='newregister'>
-                <Link to="/sign-up"><button variant="contained">הירשם</button></Link>
+                <button onClick={() => navigate('/sign-up')} variant="contained">הירשם</button>
                 ?אין לך משתמש
             </p>
 

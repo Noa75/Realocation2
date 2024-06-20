@@ -70,7 +70,7 @@
   background-color: #F5F7FA;
   border: 1px solid #E7EFFA;
   border-radius: 8px;
-  width: 329px;
+  width: 90%;
   height: 78px;
   margin-bottom: 8px;
  }
@@ -108,9 +108,8 @@
   background-color: white;
   border-radius: 16px;
   margin: 16px 0;
-  padding: 24px;
-  width: 361px;
-
+  padding: 16px;
+  width: 80%;
 }
 .signup-container{
   display: flex;

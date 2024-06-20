@@ -10,6 +10,17 @@ import SecButton from './SecButton';
 import { Link } from 'react-router-dom';
 
 export default function TaskBoard() {
+    const [selectedOption, setSelectedOption] = useState('בית ספר');
+    const [task, setTask] = useState();
+
+    const handleButton = (selection) => {
+        setSelectedOption(selection);
+    }
+
+    const deleteTask = (label) => {
+        setTask(prevTask => prevTask.filter(task => task.label !== label));
+    }
+    
     return (
         <div className='taskboard-container' >
             <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -20,15 +31,15 @@ export default function TaskBoard() {
             </div>
             <div className='chip-container'>
             <Stack direction="row-reverse" spacing={1} >
-                <ChipButton txt="בית ספר" />
-                <ChipButton txt="בריאות" />
-                <ChipButton txt="ביטוחים" />
-                <ChipButton txt="בעלי חיים" />
+                <ChipButton txt="בית ספר" onClick={() => handleButton('בית ספר')} active={selectedOption === 'בית ספר'} />
+                <ChipButton txt="בריאות" onClick={() => handleButton('בריאות')} active={selectedOption === 'בריאות'} />
+                <ChipButton txt="ביטוחים" onClick={() => handleButton('ביטוחים')} active={selectedOption === 'ביטוחים'} />
+                <ChipButton txt="בעלי חיים" onClick={() => handleButton('בעלי חיים')} active={selectedOption === 'בעלי חיים'} />
             </Stack>
             </div>
             <div className='taskrec'>
-                <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300' }}>לפני</h3>
-                <Task date="17.1" label="מציאת בית ספר" description="בדוק בין האופציות השונות באזורך החדש" />
+                <h3 style={{width:'100%', fontSize: '18px', textAlign:'right', fontWeight: '300' }}>לפני</h3>
+                <Task date="17.1" label="מציאת בית ספר" description="בדוק בין האופציות השונות באזורך החדש" onDelete={deleteTask} />
                 <Task date="20.1" label="בדיקת תכני לימוד" description="עיין בתכנית הלימודים ובדוק התאמה" />
                 <Task date="21.1" label="סיור וירטואלי בבית הספר" description="הכר מראש את הבית הספר" />
                 <Task date="30.1" label="ביצוע הרשמה" description="השלם את תהליך ההרשמה ואסוף את המסמכים הנדרשים" />
