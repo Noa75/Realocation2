@@ -1,5 +1,5 @@
 import './Realocation.css';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
@@ -7,10 +7,13 @@ import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
 import { Link } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Autocomplete, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
+import AutoComplete from './AutoComplete';
+import { UserContext } from './UserHook';
 
 
 function OpeningQuestions() {
+    const {userDetails, setUserDetails} = useContext(UserContext);
     const [selectedOption, setSelectedOption] = useState(null);
     const [day, setDay] = useState('');
     const [month, setMonth] = useState('');
@@ -21,33 +24,33 @@ function OpeningQuestions() {
         month: false,
         year: false
     });
-    const [countries, setCountries] = useState(["אוסטרליה", "אוסטריה", "איטליה", "יפן"]);
     const [inputCountry, setInputCountry] = useState("");
-    
-    useEffect(() => {
-        // const myHeaders = new Headers();
-        // myHeaders.append("Content-Type", "application/json");
 
-        // const raw = JSON.stringify({
-        //     "email": "noa12@gmail.com"
-        // });
 
-        // const requestOptions = {
-        //     method: "GET",
-        //     headers: myHeaders,
-        //     body: raw,
-        //     redirect: "follow"
-        // };
+    const SaveDetails = () => {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
 
-        // fetch("http://localhost:5231/api/get", requestOptions)
-        //     .then((response) => response.text())
-        //     .then((result) => console.log(result))
-        //     .catch((error) => console.error(error));
-    }, [])
+        const raw = JSON.stringify({
+            "UserId": "100",
+            "DestinationCountry": inputCountry,
+            "MoveDate": new Date(year,month-1, day),
+            "HasChildren": selectedOption === 'yes'
+        });
 
-    const handleCountry = (e) => {
-        setInputCountry(e.target.value)
-        console.log(e.target.value)
+        const requestOptions = {
+            method: "POST",
+            headers: myHeaders,
+            body: raw
+        };
+
+        fetch("http://localhost:5231/api/detailsCountries", requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+                navigate('/categoies', { state: {} });
+            }
+        )
+            .catch((error) => console.error(error));
     }
 
     const validateField = (name, value) => {
@@ -104,16 +107,7 @@ function OpeningQuestions() {
                 </Grid>
             </Grid>
             <Stack spacing={4} style={{ marginBottom: '50%' }}>
-                <TextField id="descountry"
-                    label="לאן המעבר"
-                    variant="outlined"
-                    onChange={handleCountry}
-                    value={inputCountry} /> {countries.map((country,i) => {
-                        if (inputCountry && country.includes(inputCountry)){
-                            return <p key={i}>{country}</p>
-                        }
-                        console.log(countries.includes(inputCountry));
-                    })}
+                <AutoComplete setInputCountry={(value) => { setInputCountry(value) }} />
                 <div>
                     <p style={{ textAlign: 'right' }}>מתי המעבר</p>
                     <Grid container spacing={1} justifyContent={'center'} alignItems="center">
@@ -149,7 +143,7 @@ function OpeningQuestions() {
                         <p>?האם יש לך ילדים</p></Grid>
                 </Grid>
             </Stack>
-            <Link to={"/categoies"}><PrimeButton btntxt="הבא" /></Link>
+            <PrimeButton onClick={SaveDetails} btntxt="הבא" />
         </div>
     )
 }

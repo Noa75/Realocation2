@@ -40,7 +40,7 @@ function SignUp() {
     };
     const errors = Object.keys(user).map(key => validateField(key, user[key])).filter(error => error);
     if (errors.length === 0 ) {
-      fetch(`${url}register`, requestOptions)
+      fetch(`${url}register/register`, requestOptions)
       .then((response) => {
         if (!response.ok) throw new Error('field to register');
         response.json();
