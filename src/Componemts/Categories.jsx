@@ -5,12 +5,15 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PrimeButton from './PrimeButton';
 import { Link } from 'react-router-dom';
 import { Category } from '@mui/icons-material';
-
+import { UserContext } from './UserHook';
+import { isLocalhost } from '../Utils';
 
 
 export default function Categories() {
   const [active , setActive] = useState([]);
- 
+  const {userDetails, setUserDetails} = useContext(UserContext);
+
+  
   const toggleActive = (label) => {
     if (active.includes(label)){
       setActive(active.filter(item => item !== label));

@@ -5,7 +5,7 @@ import { UserContext, UserHook  } from './Componemts/UserHook'
 
 
 function App() {
-  const {userDetails, setUserDetails} = UserHook
+  const {userDetails, setUserDetails} = UserHook()
   return (
     <>
       <div>

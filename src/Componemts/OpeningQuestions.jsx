@@ -5,14 +5,17 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton } from '@mui/material';
 import AutoComplete from './AutoComplete';
 import { UserContext } from './UserHook';
+import { isLocalhost } from '../Utils';
 
+const url = isLocalhost?"http://localhost:5231/api/":"media.ruppin.ac.il/bgroup30/test2"
 
 function OpeningQuestions() {
+    const navigate = useNavigate();
     const {userDetails, setUserDetails} = useContext(UserContext);
     const [selectedOption, setSelectedOption] = useState(null);
     const [day, setDay] = useState('');
@@ -26,28 +29,39 @@ function OpeningQuestions() {
     });
     const [inputCountry, setInputCountry] = useState("");
 
+    useEffect (() => {
+        if (!userDetails) {
+            navigate('/');
+        }
+    },[])
 
     const SaveDetails = () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
-            "UserId": "100",
+            "UserId": userDetails.userId,
             "DestinationCountry": inputCountry,
             "MoveDate": new Date(year,month-1, day),
             "HasChildren": selectedOption === 'yes'
         });
-
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: raw
         };
 
-        fetch("http://localhost:5231/api/detailsCountries", requestOptions)
-            .then((response) => response.json())
+        fetch(`${url}detailsCountries`, requestOptions)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error (`error:" ${response.status}`);
+                }
+                return response.json();
+            })
             .then((result) => {
-                navigate('/categoies', { state: {} });
+                console.log(result.userId);
+                setUserDetails(prev => ({...prev, userId : result.userId}));
+                navigate('/categoies', { state: {userId : result.userId} });
             }
         )
             .catch((error) => console.error(error));
@@ -95,7 +109,8 @@ function OpeningQuestions() {
         setSelectedOption(selection);
     }
 
-    return (
+ 
+    return  (
         <div className='OQ-container'>
             <Grid container spacing={2} alignItems="center" style={{ padding: '0 16px', marginBottom: '20%' }}>
                 <Grid item xs={1}>
@@ -107,7 +122,8 @@ function OpeningQuestions() {
                 </Grid>
             </Grid>
             <Stack spacing={4} style={{ marginBottom: '50%' }}>
-                <AutoComplete setInputCountry={(value) => { setInputCountry(value) }} />
+                <AutoComplete setInputCountry={  setInputCountry } />
+                
                 <div>
                     <p style={{ textAlign: 'right' }}>מתי המעבר</p>
                     <Grid container spacing={1} justifyContent={'center'} alignItems="center">

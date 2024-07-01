@@ -1,4 +1,4 @@
-export const isLocalhost = true;
+export const isLocalhost = false;
 
 export const Translate = (value) => {
     const obj = {

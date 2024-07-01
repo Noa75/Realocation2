@@ -3,13 +3,15 @@ import './Realocation.css';
 import Stack from '@mui/material/Stack';
 import PrimeButton from './PrimeButton';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { isLocalhost } from '../Utils';
+import { UserContext } from './UserHook';
 
 const url = isLocalhost?"http://localhost:5231/api/":"media.ruppin.ac.il/bgroup30/test2"
 
 function LogIn() {
     const navigate = useNavigate();
+    const {setUserDetails} = useContext(UserContext);
     const [user,setUser] = useState();
     const [password,setPassword] = useState();
 
@@ -31,12 +33,13 @@ function LogIn() {
         fetch(`${url}login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                console.log("work")
-                navigate('/opening-questions', { state: { } });
+                console.log(result.userId)
+                setUserDetails({userId : result.userId});
+                navigate('/opening-questions', { state : {userId : result.userId}} );
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
             })
             .catch((error) => {
-                console.log("not work")
+                console.log(error)
                 //הלוגיקה שמה קורה אם לא הצליח
             });
     }
