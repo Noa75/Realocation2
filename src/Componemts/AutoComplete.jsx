@@ -34,7 +34,7 @@ fetch(`${url}get`, requestOptions)
   const getValue = (e, newValue) => {
     console.log(e,newValue)
 
-    setInputCountry(newValue)
+    setInputCountry(newValue.label)
   }
   return (
     <Autocomplete

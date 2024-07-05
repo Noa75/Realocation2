@@ -43,15 +43,18 @@ function OpeningQuestions() {
             "UserId": userDetails.userId,
             "DestinationCountry": inputCountry,
             "MoveDate": new Date(year,month-1, day),
-            "HasChildren": selectedOption === 'yes'
+            "HasChildren": selectedOption === 'yes',
+            "SelectedCategories": []
         });
+        console.log(raw, inputCountry)
+
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             body: raw
         };
 
-        fetch(`${url}detailsCountries`, requestOptions)
+        fetch(`${url}details`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error (`error:" ${response.status}`);
@@ -77,7 +80,7 @@ function OpeningQuestions() {
                 isValid = value >= 1 && value <= 12;
                 break;
             case 'year':
-                isValid = value >= (currentYear - 120) && value <= currentYear;
+                isValid = value >= (currentYear - 120) && value <= (currentYear + 120 );
                 break;
             default:
                 break;
@@ -122,7 +125,7 @@ function OpeningQuestions() {
                 </Grid>
             </Grid>
             <Stack spacing={4} style={{ marginBottom: '50%' }}>
-                <AutoComplete setInputCountry={  setInputCountry } />
+                <AutoComplete setInputCountry={ setInputCountry } />
                 
                 <div>
                     <p style={{ textAlign: 'right' }}>מתי המעבר</p>

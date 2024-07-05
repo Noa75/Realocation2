@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Stack, TextField } from '@mui/material';
 import './Realocation.css';
 import PrimeButton from './PrimeButton';
 import { useNavigate } from 'react-router-dom';
 import { isLocalhost } from '../Utils';
+import { UserContext } from './UserHook';
 
 const url = isLocalhost ? "http://localhost:5231/api/" : "proj.ruppin.ac.il/bgroup30/test2"
 
@@ -18,6 +19,7 @@ function SignUp() {
   const [userExistsMSG, setUserExistsMSG] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const {setUserDetails} = useContext(UserContext);
   
   const handleRegister = () => {
     console.log('reg');
@@ -48,6 +50,8 @@ function SignUp() {
       .then((result) => {
         console.log("work")
         console.log(result);
+        console.log(result.user.userId);
+        // setUserDetails({userId : result.userId});
         navigate('/opening-questions', { state: {} });
         //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
         if (errors.length === 0) {

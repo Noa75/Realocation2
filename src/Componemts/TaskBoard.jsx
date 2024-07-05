@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Task from './Task'
 import { IconButton, Stack } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
@@ -7,11 +7,17 @@ import ChipButton from './ChipButton';
 import Navbar from './Navbar';
 import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { UserContext } from './UserHook';
 
 export default function TaskBoard() {
     const [selectedOption, setSelectedOption] = useState('בית ספר');
     const [task, setTask] = useState();
+    const { userDetails, setUserDetails } = useContext(UserContext);
+
+    const location = useLocation();
+    const selectedCategories = location.state.selectedCategories;
+    console.log(location)
 
     const handleButton = (selection) => {
         setSelectedOption(selection);
