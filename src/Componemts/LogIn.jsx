@@ -7,7 +7,7 @@ import { useContext, useState } from 'react';
 import { isLocalhost } from '../Utils';
 import { UserContext } from './UserHook';
 
-const url = isLocalhost?"http://localhost:5231/api/":"media.ruppin.ac.il/bgroup30/test2"
+const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
 
 function LogIn() {
     const navigate = useNavigate();

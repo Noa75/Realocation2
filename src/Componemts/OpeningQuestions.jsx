@@ -12,7 +12,7 @@ import AutoComplete from './AutoComplete';
 import { UserContext } from './UserHook';
 import { isLocalhost } from '../Utils';
 
-const url = isLocalhost?"http://localhost:5231/api/":"media.ruppin.ac.il/bgroup30/test2"
+const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
 
 function OpeningQuestions() {
     const navigate = useNavigate();

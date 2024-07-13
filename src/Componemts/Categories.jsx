@@ -22,44 +22,33 @@ export default function Categories() {
     }
   }, [])
 
-  //   useEffect(() => {
-
-  //     const requestOptions = {
-  //       method: "GET"
-  //     };
-
-  //     fetch(`${url}Categories`, requestOptions)
-  //       .then((response) => response.json())
-  //       .then((result) => setCategories(result))
-
-  //       .catch((error) => console.error(error));
-  //   }, [])
-
   const SaveCateegories = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    const raw = JSON.stringify({
-      "UserId": userDetails.userId,
-      "SelectedCategories": active
-    });
-    console.log(raw)
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw
-    };
+const raw = JSON.stringify({
+  "UserId": userDetails.userId,
+  "SelectedCategories": active 
+});
 
-    fetch(`${url}UserCategories`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        setUserDetails(prev => ({ ...prev, userId: result.userId }));
-        navigate('/tasks-board', { state: {
-          userId: result.userId,
-          selectedCategories: active.map(id => categories.find(cat => cat.id === id))
-        } });
-      })
-      .catch((error) => console.error(error));
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw
+};
+
+fetch(`${url}UserCategories`, requestOptions)
+  .then((response) => response.json())
+  .then((result) => {
+    console.log(result.userId)
+    setUserDetails(prev => ({ ...prev, userId: result.userId }));
+    navigate('/tasks-board', { state: {
+      userId: result.userId,
+      selectedCategories: active
+    } }
+  );
+  })
+  .catch((error) => console.error(error));
   }
 
   const toggleActive = (id) => {
@@ -69,7 +58,7 @@ export default function Categories() {
     else {
       setActive([...active, id])
     }
-    console.log(id)
+    console.log(id,active)
   };
   return (
     <div className='Categories-container'>
