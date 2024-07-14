@@ -7,14 +7,14 @@ import ChipButton from './ChipButton';
 import Navbar from './Navbar';
 import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from './UserHook';
 import { isLocalhost } from '../Utils';
 
 const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
 
 export default function TaskBoard() {
-    
+    const navigate = useNavigate();
     const [task, setTask] = useState();
     const { userDetails, setUserDetails } = useContext(UserContext);
     const [tasks, setTasks] = useState([]);
@@ -59,7 +59,7 @@ export default function TaskBoard() {
     }, [selectedOption, userDetails.userId]);
 
     const fetchTasks = (categoryId, isBeforeMove) => {
-        const urlSuffix = isBeforeMove ? "true" : "false";
+        const urlSuffix = isBeforeMove ? "false" : "true";
         console.log("Fetching tasks for category:", selectedOption);
             const requestOptions = {
   method: "GET",
@@ -77,8 +77,44 @@ fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requ
   .catch((error) => console.error(error));
     }
 
-    const deleteTask = (label) => {
-        setTask(prevTask => prevTask.filter(task => task.label !== label));
+    const deleteTask = (taskId, isBeforeMove) => {
+        if (isBeforeMove) {
+            setTasksBefore(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
+        } else {
+            setTasksAfter(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
+        }
+    };
+    console.log(tasksBefore, tasksAfter)
+
+    const SaveTasks = () => {
+        const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify({
+  "UserId": userDetails.userId,
+  "TaskId": task.TaskId,
+  "TaskName": task.RecommendedTask,
+  "TaskDescription": task.DescriptionTask,
+  "IsRecommended": true,
+  "IsDeleted": "false",
+  "CreatedAt": "DateTime.Now",
+  "SelectedCategories": filteredCategories
+});
+console.log(raw)
+
+const requestOptions = {
+  method: "POST",
+  headers: myHeaders,
+  body: raw
+};
+
+fetch(`${url}/UserCategories`, requestOptions)
+  .then((response) => response.json())
+  .then((result) => {
+    console.log(result);
+    // navigate('/home')
+  })
+  .catch((error) => console.error(error));
     }
 
     return (
@@ -107,8 +143,8 @@ fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requ
                         key={task.taskId}  
                         date="20.1"
                         label={task.recommendedTask}
-                        description="asc"
-                        onDelete={() => deleteTask(task.taskId)}
+                        description={task.descriptionTask}
+                        onDelete={() => deleteTask(task.taskId, true)}
                     />
                 ))}     
             </div>
@@ -120,8 +156,8 @@ fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requ
                         key={task.taskId}  
                         date="20.1"
                         label={task.recommendedTask}
-                        description="asc"
-                        onDelete={() => deleteTask(task.taskId)}
+                        description={task.descriptionTask}
+                        onDelete={() => deleteTask(task.taskId, false)}
                     />
                 ))}     
 
@@ -130,7 +166,7 @@ fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requ
                 <SecButton btntxt="הוספת משימה חדשה" >
                     {<AddIcon />}
                 </SecButton>
-                <Link to="/edit-task"><PrimeButton btntxt="הבא" /></Link>
+                <PrimeButton onClick={SaveTasks} btntxt="הבא" />
             </Stack>
             <Navbar />
         </div>
