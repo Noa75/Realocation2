@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import Task from './Task'
 import { IconButton, Stack } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, FormatTextdirectionLToROutlined } from '@mui/icons-material';
 import ChipButton from './ChipButton';
 import Navbar from './Navbar';
 import PrimeButton from './PrimeButton';
@@ -14,17 +14,15 @@ import { isLocalhost } from '../Utils';
 const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
 
 export default function TaskBoard() {
-    const [selectedOption, setSelectedOption] = useState('בית ספר');
+    
     const [task, setTask] = useState();
     const { userDetails, setUserDetails } = useContext(UserContext);
     const [tasks, setTasks] = useState([]);
-
-    
-    
+    const [tasksBefore, setTasksBefore] = useState([]);
+    const [tasksAfter, setTasksAfter] = useState([]);
+    const [selectedOption, setSelectedOption] = useState();
     const location = useLocation();
     const selectedCategories = location.state.selectedCategories;
-    console.log(location)
-
     const allCategories = [
         { id: 1, name: 'בעלי חיים'},
         { id: 2, name: 'טיסה'},
@@ -39,28 +37,44 @@ export default function TaskBoard() {
         { id: 11, name: 'רכב'},
         { id: 12, name: 'קהילות'}
     ]
-
     const filteredCategories = allCategories.filter(cat => location.state.selectedCategories.includes(cat.id));
-    console.log(filteredCategories)
+
+    useEffect(() => {
+        if (filteredCategories.length > 0 && !selectedOption) {
+            setSelectedOption(filteredCategories[0].id)
+        }
+    },[filteredCategories, selectedOption])
+
+    const handleButton = (categoryId) => {
+        console.log("changing:", categoryId);
+        setSelectedOption(categoryId);
+        
+    }
 
     useEffect (() => {
         if (selectedOption && userDetails.userId) {
-            const raw = "";
+            fetchTasks(selectedOption, true);
+            fetchTasks(selectedOption, false);
+        }
+    }, [selectedOption, userDetails.userId]);
 
-const requestOptions = {
+    const fetchTasks = (categoryId, isBeforeMove) => {
+        const urlSuffix = isBeforeMove ? "true" : "false";
+        console.log("Fetching tasks for category:", selectedOption);
+            const requestOptions = {
   method: "GET",
   redirect: "follow"
 };
 
-fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/true`, requestOptions)
-  .then((response) => response.json())
-  .then((result) => console.log(result))
-  .catch((error) => console.error(error));
-        }
-    },[selectedOption, userDetails.userId])
 
-    const handleButton = (selection) => {
-        setSelectedOption(selection);
+fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requestOptions)
+  .then((response) => response.json())
+  .then((result) => {
+    const releventTasks = result.filter(task => task.categoryId === selectedOption);
+    isBeforeMove ? setTasksBefore(releventTasks) : setTasksAfter(releventTasks);
+    console.log(releventTasks);
+  })
+  .catch((error) => console.error(error));
     }
 
     const deleteTask = (label) => {
@@ -81,39 +95,37 @@ fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/true`, requestOptio
                         <ChipButton 
                             key={category.id}
                             txt={category.name}
-                            onClick={() => handleButton(category.name)} active={selectedOption === category.name}
+                            onClick={() => handleButton(category.id)} active={selectedOption === category.id}
                         />
                     ))}
                 </Stack>
             </div>
             <div className='taskrec'>
                 <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300' }}>לפני</h3>
-
-
-                {tasks.filter(task => task.isBeforeMove).map(task => (
+                {tasksBefore.map(task => (
                     <Task 
-                        key={task.id}
-                        date={task.date}
-                        label={task.label}
-                        description={task.description}
-                        onDelete={() => deleteTask(task.id)}
+                        key={task.taskId}  
+                        date="20.1"
+                        label={task.recommendedTask}
+                        description="asc"
+                        onDelete={() => deleteTask(task.taskId)}
                     />
-                ))}
-
-
-                {/* <Task date="17.1" label="מציאת בית ספר" description="בדוק בין האופציות השונות באזורך החדש" onDelete={deleteTask} />
-                <Task date="20.1" label="בדיקת תכני לימוד" description="עיין בתכנית הלימודים ובדוק התאמה" />
-                <Task date="21.1" label="סיור וירטואלי בבית הספר" description="הכר מראש את הבית הספר" />
-                <Task date="30.1" label="ביצוע הרשמה" description="השלם את תהליך ההרשמה ואסוף את המסמכים הנדרשים" /> */}
-
-
-
+                ))}     
             </div>
             <div className='taskrec'>
                 <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300' }}>אחרי</h3>
-                <Task date="5.8" label="בדיקת הסעות לבית הספר" description="בדיקת מרחק וסרכי הגעה לבית הספר" />
-                <Task date="5.8" label="התאמת ציוד לימודי" description="רכישת ציוד נדרש לשנה החדשה" />
-            </div>
+                
+                {tasksAfter.map(task => (
+                    <Task 
+                        key={task.taskId}  
+                        date="20.1"
+                        label={task.recommendedTask}
+                        description="asc"
+                        onDelete={() => deleteTask(task.taskId)}
+                    />
+                ))}     
+
+ </div>
             <Stack spacing={1} direction='column' sx={{ width: '50%', margin: 'auto' }}>
                 <SecButton btntxt="הוספת משימה חדשה" >
                     {<AddIcon />}
