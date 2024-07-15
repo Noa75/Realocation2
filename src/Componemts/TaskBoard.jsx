@@ -9,9 +9,8 @@ import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from './UserHook';
-import { isLocalhost } from '../Utils';
+import { baseURL } from '../Utils';
 
-const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
 
 export default function TaskBoard() {
     const navigate = useNavigate();
@@ -38,6 +37,7 @@ export default function TaskBoard() {
         { id: 12, name: 'קהילות'}
     ]
     const filteredCategories = allCategories.filter(cat => location.state.selectedCategories.includes(cat.id));
+    const url = baseURL();
 
     useEffect(() => {
         if (filteredCategories.length > 0 && !selectedOption) {
@@ -98,7 +98,7 @@ const raw = JSON.stringify({
   "IsRecommended": true,
   "IsDeleted": "false",
   "CreatedAt": "DateTime.Now",
-  "SelectedCategories": filteredCategories
+  "SelectedCategories": filteredCategories.map(cat => cat.id)
 });
 console.log(raw)
 

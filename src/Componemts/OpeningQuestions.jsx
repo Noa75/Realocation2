@@ -10,9 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton } from '@mui/material';
 import AutoComplete from './AutoComplete';
 import { UserContext } from './UserHook';
-import { isLocalhost } from '../Utils';
-
-const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
+import { baseURL } from '../Utils';
 
 function OpeningQuestions() {
     const navigate = useNavigate();
@@ -28,6 +26,7 @@ function OpeningQuestions() {
         year: false
     });
     const [inputCountry, setInputCountry] = useState("");
+    const url = baseURL();
 
     useEffect (() => {
         if (!userDetails) {

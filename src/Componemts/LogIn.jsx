@@ -4,24 +4,24 @@ import Stack from '@mui/material/Stack';
 import PrimeButton from './PrimeButton';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
-import { isLocalhost } from '../Utils';
+import { baseURL } from '../Utils';
 import { UserContext } from './UserHook';
 
-const url = isLocalhost?"http://localhost:5231/api/":"proj.ruppin.ac.il/bgroup30/test2"
 
 function LogIn() {
     const navigate = useNavigate();
     const {setUserDetails} = useContext(UserContext);
     const [user,setUser] = useState();
     const [password,setPassword] = useState();
-
+    const url = baseURL();
+    
     const btnlogin = () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
-            "username": user,
-            "password": password
+            "Username": user,
+            "Password": password
         });
 
         const requestOptions = {
@@ -29,7 +29,6 @@ function LogIn() {
             headers: myHeaders,
             body: raw
         };
-
         fetch(`${url}login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {

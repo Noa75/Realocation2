@@ -6,16 +6,16 @@ import PrimeButton from './PrimeButton';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Category } from '@mui/icons-material';
 import { UserContext } from './UserHook';
-import { isLocalhost } from '../Utils';
+import { baseURL } from '../Utils';
 
-const url = isLocalhost ? "http://localhost:5231/api/" : "proj.ruppin.ac.il/bgroup30/test2"
 
 export default function Categories() {
   const navigate = useNavigate();
   const [active, setActive] = useState([]);
   const { userDetails, setUserDetails } = useContext(UserContext);
   const [categories, setCategories] = useState([]);
-
+  const url = baseURL();
+  
   useEffect(() => {
     if (!userDetails) {
       navigate('/');

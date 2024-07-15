@@ -3,10 +3,9 @@ import { Stack, TextField } from '@mui/material';
 import './Realocation.css';
 import PrimeButton from './PrimeButton';
 import { useNavigate } from 'react-router-dom';
-import { isLocalhost } from '../Utils';
+import { baseURL } from '../Utils';
 import { UserContext } from './UserHook';
 
-const url = isLocalhost ? "http://localhost:5231/api/" : "proj.ruppin.ac.il/bgroup30/test2"
 
 
 function SignUp() {
@@ -20,7 +19,8 @@ function SignUp() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const {setUserDetails} = useContext(UserContext);
-  
+  const url = baseURL();
+
   const handleRegister = () => {
     console.log('reg');
     const myHeaders = new Headers();
@@ -109,7 +109,7 @@ function SignUp() {
 
   return (
     <div className='signup-container' >
-      <img className='logo' src="public/Logo.png" alt="logo" style={{ marginTop: "102px" }} />
+      <img className='logo' src=".public/Logo.png" alt="logo" style={{ marginTop: "102px" }} />
       <div className='signup-inputs'>
         <TextField
           label="שם מלא"
