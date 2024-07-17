@@ -5,7 +5,7 @@ function CategoryItem({ image, label, onClick, active }) {
   
     return (
     <div onClick={onClick} style={{
-      backgroundColor: active ? '#1170f4' : 'white',
+      backgroundColor: active ? '#0C8CE9' : 'white',
       border: '1px solid #E7EFFA',
       borderRadius: '8px',
       padding: '27px 35px',

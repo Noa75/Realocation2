@@ -79,7 +79,7 @@ function OpeningQuestions() {
                 isValid = value >= 1 && value <= 12;
                 break;
             case 'year':
-                isValid = value >= (currentYear - 120) && value <= (currentYear + 120 );
+                isValid = value >= (currentYear - 3) && value <= (currentYear + 120 );
                 break;
             default:
                 break;
@@ -123,7 +123,8 @@ function OpeningQuestions() {
                     <h4 style={{ textAlign: 'center' }}>שאלות לדיוק התהליך</h4>
                 </Grid>
             </Grid>
-            <Stack spacing={4} style={{ marginBottom: '50%' }}>
+            <Stack spacing={3} style={{ marginBottom: '50%' }}>
+                <p style={{ textAlign: 'right' }}>מדינת יעד</p>
                 <AutoComplete setInputCountry={ setInputCountry } />
                 
                 <div>

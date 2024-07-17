@@ -90,14 +90,16 @@ fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requ
         const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
 
+const taskToSave = [...tasksBefore, ...tasksAfter];
+
 const raw = JSON.stringify({
   "UserId": userDetails.userId,
   "TaskId": task.TaskId,
   "TaskName": task.RecommendedTask,
   "TaskDescription": task.DescriptionTask,
   "IsRecommended": true,
-  "IsDeleted": "false",
-  "CreatedAt": "DateTime.Now",
+  "IsDeleted": false,
+  "CreatedAt": new Date(),
   "SelectedCategories": filteredCategories.map(cat => cat.id)
 });
 console.log(raw)

@@ -14,7 +14,7 @@ function LogIn() {
     const [user,setUser] = useState();
     const [password,setPassword] = useState();
     const url = baseURL();
-    
+
     const btnlogin = () => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
@@ -46,7 +46,7 @@ function LogIn() {
     
     return (
         <div className="login-container">
-            <div style={{ marginTop: "210px", marginBottom: "102px" }}>
+            <div style={{ marginTop: "180px", marginBottom: "102px" }}>
                 <img src="Logo.png" alt="logo" style={{ width: '100%' }}></img>
             </div>
 

@@ -19,6 +19,7 @@
     max-width: 393px;
     max-height: 852px;
     overflow: hidden;
+    margin-bottom: 0;
   }
   .OQ-container{
     max-width: 393px;
@@ -29,6 +30,7 @@
     max-width: 393px;
     overflow: hidden;
     margin: auto;
+    overflow: hidden;
   }
   .chip-container{
     display: flex;
@@ -37,6 +39,7 @@
     -webkit-overflow-scrolling: touch;
     align-items: center;
     white-space: nowrap;
+    justify-content: flex-end;
   }
   .edit-container{
     max-width: 393px;
@@ -70,8 +73,7 @@
   background-color: #F5F7FA;
   border: 1px solid #E7EFFA;
   border-radius: 8px;
-  width: 90%;
-  height: 78px;
+  width: 100%;
   margin-bottom: 8px;
  }
 .task-content{
@@ -115,11 +117,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  min-height: 100vh;
+  min-height: 90vh;
 }
 .signup-inputs{
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 

@@ -6,7 +6,7 @@ export default function PrimeButton({ btntxt, onClick }) {
 
     <button onClick={() => {onClick()}} style={{
         color: 'white',
-        backgroundColor: '#1170f4',
+        backgroundColor: '#0C8CE9',
         padding:'8px 54px',
         fontSize: '18px',
         borderRadius:'50px'

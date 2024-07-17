@@ -15,7 +15,7 @@ export default function Categories() {
   const { userDetails, setUserDetails } = useContext(UserContext);
   const [categories, setCategories] = useState([]);
   const url = baseURL();
-  
+
   useEffect(() => {
     if (!userDetails) {
       navigate('/');
@@ -68,7 +68,7 @@ fetch(`${url}UserCategories`, requestOptions)
         </IconButton>
         <h4 style={{ textAlign: 'center' }}>בחירת נושאי משימות </h4>
       </div>
-      <Grid container direction="row-reverse" justifyContent="center" spacing={1}>
+      <Grid container direction="row-reverse" justifyContent="center" spacing={0.5}>
         <Grid item xs={4}>
           <CategoryItem image="public/animals.png" label="בעלי חיים" active={active.includes(1)} onClick={() => toggleActive(1)} /></Grid>
         <Grid item xs={4}>

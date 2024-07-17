@@ -42,7 +42,6 @@ fetch(`${url}get`, requestOptions)
       id="combo-box-demo"
       options={country}
       onChange={getValue}
-      sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="country" />}
     />
   );
