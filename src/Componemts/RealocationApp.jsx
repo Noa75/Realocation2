@@ -16,9 +16,9 @@ export default function RealocationApp() {
         <Route path="/" element={<LogIn />}/>
         <Route path="/sign-up" element={<SignUp />}/>
         <Route path="/opening-questions" element={<OpeningQuestions />}/>
-        <Route path="/categoies" element={<Categories />}/>
+        <Route path="/categories" element={<Categories />}/>
         <Route path="/tasks-board" element={<TaskBoard />}/>
-        <Route path="/edit-task" element={<EditTask />}/>
+        <Route path="/edit-task/:taskId" element={<EditTask />}/>
         <Route path="/home" element={<HomePage />}/>
       </Routes>
     </Router>

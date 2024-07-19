@@ -3,9 +3,9 @@ import './Realocation.css';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
 
-export default function Task({ date, label, description, onDelete }) {
+export default function Task({ date, label, description, onDelete, onClick }) {
   return (
-    <div className="task-container" >
+    <div className="task-container" onClick={onClick} >
         <IconButton aria-label="delete" size="small" className="task-delete-button"  onClick={() => onDelete(label)} >
         <DeleteOutlineIcon style={{color:'#1170f4'}} />
       </IconButton>

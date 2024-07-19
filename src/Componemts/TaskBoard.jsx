@@ -119,6 +119,11 @@ fetch(`${url}/UserCategories`, requestOptions)
   .catch((error) => console.error(error));
     }
 
+    const handleTaskClick = (taskId) => {
+        console.log(taskId)
+        navigate ('/edit-task/${taskId}', {state: {taskId}});
+    }
+
     return (
         <div className='taskboard-container' >
             <div className='stepIndicator' dir='rtl' >
@@ -146,7 +151,7 @@ fetch(`${url}/UserCategories`, requestOptions)
             <div className='taskrec'>
                 <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300', fontWeight:'bold' }}>לפני המעבר</h3>
                 {tasksBefore.map(task => (
-                    <Task 
+                    <Task onClick={() => handleTaskClick(task)}
                         key={task.taskId}  
                         date="20.1"
                         label={task.recommendedTask}
@@ -159,7 +164,7 @@ fetch(`${url}/UserCategories`, requestOptions)
                 <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300', fontWeight:'bold' }}>אחרי המעבר</h3>
                 
                 {tasksAfter.map(task => (
-                    <Task 
+                    <Task onClick={() => handleTaskClick(task)}
                         key={task.taskId}  
                         date="20.1"
                         label={task.recommendedTask}

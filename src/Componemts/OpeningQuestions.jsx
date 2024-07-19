@@ -63,7 +63,7 @@ function OpeningQuestions() {
             .then((result) => {
                 console.log(result.userId);
                 setUserDetails(prev => ({...prev, userId : result.userId}));
-                navigate('/categoies', { state: {userId : result.userId} });
+                navigate('/categories', { state: {userId : result.userId} });
             }
         )
             .catch((error) => console.error(error));

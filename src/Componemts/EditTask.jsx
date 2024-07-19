@@ -5,26 +5,29 @@ import React, { useState } from 'react';
 import CircleButton from './CircleButton';
 import SecButton from './SecButton';
 import PrimeButton from './PrimeButton';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 export default function EditTask() {
     const [active, setActive] = useState(null);
-
+    const navigate = useNavigate();
     const toggleActive = (label) => {
         setActive(active === label ? null : label)
     }
+    const location = useLocation();
+    const {task} = location.state;
  
    return (
     <div className='edit-container'>
         <div style={{borderBottom:'1px solid #b3ccef', padding:'8px'}}>
         <div style={{ display: 'flex', alignItems: 'center', padding: '0 32px' }}>
-        <IconButton style={{ transform: 'scaleX(-1)', left: '270px' }}>
+        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
           <ArrowBackIcon />
         </IconButton>
-        <h4 style={{ textAlign: 'center', margin: '0' }}>מציאת בית ספר</h4>
+        <h4 style={{ textAlign: 'center', margin: '0' }}>{task.recommendedTask}</h4>
       </div>
       <div>
-      <p style={{marginTop: '8px', marginBottom:'24px'}}>בדוק בין האופציות השונות באזורם החדש</p>
+      <p style={{marginTop: '8px', marginBottom:'24px'}}>{task.descriptionTask}</p>
       </div>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center'}}>
         <Switch />
