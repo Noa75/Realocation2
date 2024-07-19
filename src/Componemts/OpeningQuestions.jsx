@@ -114,9 +114,14 @@ function OpeningQuestions() {
  
     return  (
         <div className='OQ-container'>
+            <div className='stepIndicator' dir='rtl' >
+                <div className='dot active'></div>
+                <div className='dot'></div>
+                <div className='dot'></div>
+            </div>
             <Grid container spacing={2} alignItems="center" style={{ padding: '0 16px', marginBottom: '20%' }}>
                 <Grid item xs={1}>
-                    <IconButton style={{ transform: 'scaleX(-1)', left: '270px' }}>
+                    <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
                         <ArrowBackIcon />
                     </IconButton></Grid>
                 <Grid item xs={11}>

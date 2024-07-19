@@ -21,10 +21,10 @@ export default function EditTask() {
         <IconButton style={{ transform: 'scaleX(-1)', left: '270px' }}>
           <ArrowBackIcon />
         </IconButton>
-        <h4 style={{ textAlign: 'center' }}>מציאת בית ספר</h4>
+        <h4 style={{ textAlign: 'center', margin: '0' }}>מציאת בית ספר</h4>
       </div>
       <div>
-      <p>בדוק בין האופציות השונות באזורם החדש</p>
+      <p style={{marginTop: '8px', marginBottom:'24px'}}>בדוק בין האופציות השונות באזורם החדש</p>
       </div>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center'}}>
         <Switch />

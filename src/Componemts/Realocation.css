@@ -29,8 +29,8 @@
   .taskboard-container{
     max-width: 393px;
     overflow: hidden;
-    margin: auto;
-    overflow: hidden;
+    margin:  0 auto;
+    padding-bottom: 56px;
   }
   .chip-container{
     display: flex;
@@ -73,7 +73,7 @@
   background-color: #F5F7FA;
   border: 1px solid #E7EFFA;
   border-radius: 8px;
-  width: 100%;
+  width: 90%;
   margin-bottom: 8px;
  }
 .task-content{
@@ -111,7 +111,7 @@
   border-radius: 16px;
   margin: 16px 0;
   padding: 16px;
-  width: 80%;
+  width: 90%;
 }
 .signup-container{
   display: flex;
@@ -124,4 +124,18 @@
   flex-direction: column;
   gap: 16px;
 }
-
+.stepIndicator{
+  display: flex;
+  justify-content: space-between;
+  width: 144px;
+  margin: 0 auto;
+}
+.dot{
+  height: 16px;
+  width: 16px;
+  border: 1px solid #0C8CE9;
+  border-radius: 50%;
+}
+.dot.active{
+  background-color: #5db2f0;
+}

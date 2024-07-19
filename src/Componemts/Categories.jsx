@@ -4,7 +4,7 @@ import CategoryItem from './CategoryItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PrimeButton from './PrimeButton';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Category } from '@mui/icons-material';
+import { Category, SignalWifiStatusbarConnectedNoInternet4Rounded } from '@mui/icons-material';
 import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
 
@@ -52,18 +52,25 @@ fetch(`${url}UserCategories`, requestOptions)
   }
 
   const toggleActive = (id) => {
-    if (active.includes(id)) {
-      setActive(active.filter(id => id !== id));
-    }
-    else {
-      setActive([...active, id])
-    }
-    console.log(id,active)
+    setActive(currentActive => {
+      if (currentActive.includes(id)) {
+        return currentActive.filter(item => item !== id);
+      }
+      else {
+        return [...currentActive, id];
+      }
+    });
+    
   };
   return (
     <div className='Categories-container'>
+      <div className='stepIndicator' dir='rtl' >
+                <div className='dot'></div>
+                <div className='dot active'></div>
+                <div className='dot'></div>
+            </div>
       <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
-        <IconButton style={{ transform: 'scaleX(-1)', left: '270px' }}>
+        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
           <ArrowBackIcon />
         </IconButton>
         <h4 style={{ textAlign: 'center' }}>בחירת נושאי משימות </h4>

@@ -47,7 +47,7 @@ function LogIn() {
     return (
         <div className="login-container">
             <div style={{ marginTop: "180px", marginBottom: "102px" }}>
-                <img src="Logo.png" alt="logo" style={{ width: '100%' }}></img>
+                <img src="Logo.svg" alt="logo" style={{ width: '100%' }}></img>
             </div>
 
             <Stack spacing={1} >

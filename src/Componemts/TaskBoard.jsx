@@ -121,8 +121,13 @@ fetch(`${url}/UserCategories`, requestOptions)
 
     return (
         <div className='taskboard-container' >
+            <div className='stepIndicator' dir='rtl' >
+                <div className='dot'></div>
+                <div className='dot'></div>
+                <div className='dot active'></div>
+            </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton style={{ transform: 'scaleX(-1)', left: '220px' }}>
+                <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '220px' }}>
                     <ArrowBack />
                 </IconButton>
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
@@ -139,7 +144,7 @@ fetch(`${url}/UserCategories`, requestOptions)
                 </Stack>
             </div>
             <div className='taskrec'>
-                <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300' }}>לפני</h3>
+                <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300', fontWeight:'bold' }}>לפני המעבר</h3>
                 {tasksBefore.map(task => (
                     <Task 
                         key={task.taskId}  
@@ -151,7 +156,7 @@ fetch(`${url}/UserCategories`, requestOptions)
                 ))}     
             </div>
             <div className='taskrec'>
-                <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300' }}>אחרי</h3>
+                <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300', fontWeight:'bold' }}>אחרי המעבר</h3>
                 
                 {tasksAfter.map(task => (
                     <Task 
@@ -164,13 +169,13 @@ fetch(`${url}/UserCategories`, requestOptions)
                 ))}     
 
  </div>
-            <Stack spacing={1} direction='column' sx={{ width: '50%', margin: 'auto' }}>
+            <Stack spacing={1} direction='column' sx={{ width: '70%', margin: 'auto' }}>
                 <SecButton btntxt="הוספת משימה חדשה" >
                     {<AddIcon />}
                 </SecButton>
                 <PrimeButton onClick={SaveTasks} btntxt="הבא" />
             </Stack>
-            <Navbar />
+            <Navbar/>
         </div>
 
 

@@ -109,7 +109,7 @@ function SignUp() {
 
   return (
     <div className='signup-container' >
-      <img className='logo' src="public/Logo.png" alt="logo" style={{ marginTop: "80px" }} />
+      <img className='logo' src="public/Logo.svg" alt="logo" style={{ marginTop: "80px" }} />
       <div className='signup-inputs'>
         <TextField
           label="שם מלא"
