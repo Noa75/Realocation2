@@ -22,7 +22,6 @@ function SignUp() {
   const url = baseURL();
 
   const handleRegister = () => {
-    console.log('reg');
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json; charset=utf-8");
     myHeaders.append("Accept", "application/json; charset=utf-8");
@@ -45,18 +44,15 @@ function SignUp() {
       fetch(`${url}register/register`, requestOptions)
       .then((response) => {
         if (!response.ok) throw new Error('field to register');
-        response.json();
+        return response.json();
       })
       .then((result) => {
         console.log("work")
         console.log(result);
         console.log(result.user.userId);
-        // setUserDetails({userId : result.userId});
-        navigate('/opening-questions', { state: {} });
+        setUserDetails({userId : result.userId});
+        navigate('/opening-questions', { state : {userId : result.user.userId} });
         //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
-        if (errors.length === 0) {
-          alert('נרשם בהצלחה');
-        }
       })
       .catch((error) => {
         console.log("not work")

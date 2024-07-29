@@ -119,14 +119,15 @@ fetch(`${url}/UserCategories`, requestOptions)
   .catch((error) => console.error(error));
     }
 
-    const handleTaskClick = (taskId) => {
-        console.log(taskId)
-        navigate ('/edit-task/${taskId}', {state: {taskId}});
+    const handleTaskClick = (task) => {
+        console.log(task)
+        navigate ('/edit-task/${taskId}', {state: {task}});
     }
 
     return (
         <div className='taskboard-container' >
             <div className='stepIndicator' dir='rtl' >
+                <div className='dot'></div>
                 <div className='dot'></div>
                 <div className='dot'></div>
                 <div className='dot active'></div>

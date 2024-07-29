@@ -10,17 +10,39 @@ import { baseURL } from '../Utils';
 
 
 export default function Categories() {
+  const url = baseURL();
   const navigate = useNavigate();
   const [active, setActive] = useState([]);
   const { userDetails, setUserDetails } = useContext(UserContext);
-  const [categories, setCategories] = useState([]);
-  const url = baseURL();
+  const initialCategories = [
+    { id: 1, image:"public/animals.png", label: "בעלי חיים" },
+    { id: 2, image:"public/flight.png", label: "טיסה" },
+    { id: 3, image:"public/working.png", label: "עבודה" },
+    { id: 4, image:"public/doctor.png", label: "בריאות" },
+    { id: 5, image:"public/home.png", label: "מגורים" },
+    { id: 6, image:"public/beer.png", label: "פנאי" },
+    { id: 7, image:"public/classroom.png", label: "חינוך ילדים" },
+    { id: 8, image:"public/truck.png", label: "הובלה" },
+    { id: 9, image:"public/student.png", label: "חינוך בוגרים" },
+    { id: 10, image:"public/shild.png", label: "ביטוחים" },
+    { id: 11, image:"public/car.png", label: "רכב" },
+    { id: 12, image:"public/friends.png", label: "קהילות" }
+  ];
+  const[categories, setCategories] = useState(initialCategories);
 
   useEffect(() => {
+    console.log(userDetails);
     if (!userDetails) {
       navigate('/');
     }
-  }, [])
+    else{
+      const filteredCategories = userDetails.hasChildren
+      ? initialCategories
+      : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
+      setCategories(filteredCategories);
+      console.log(filteredCategories, userDetails.hasChildren)
+    }
+  }, [userDetails, navigate])
 
   const SaveCateegories = () => {
     const myHeaders = new Headers();
@@ -66,6 +88,7 @@ fetch(`${url}UserCategories`, requestOptions)
     <div className='Categories-container'>
       <div className='stepIndicator' dir='rtl' >
                 <div className='dot'></div>
+                <div className='dot'></div>
                 <div className='dot active'></div>
                 <div className='dot'></div>
             </div>
@@ -76,30 +99,15 @@ fetch(`${url}UserCategories`, requestOptions)
         <h4 style={{ textAlign: 'center' }}>בחירת נושאי משימות </h4>
       </div>
       <Grid container direction="row-reverse" justifyContent="center" spacing={0.5}>
-        <Grid item xs={4}>
-          <CategoryItem image="public/animals.png" label="בעלי חיים" active={active.includes(1)} onClick={() => toggleActive(1)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/flight.png" label="טיסה" active={active.includes(2)} onClick={() => toggleActive(2)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/working.png" label="עבודה" active={active.includes(3)} onClick={() => toggleActive(3)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/doctor.png" label="בריאות" active={active.includes(4)} onClick={() => toggleActive(4)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/home.png" label="מגורים" active={active.includes(5)} onClick={() => toggleActive(5)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/beer.png" label="פנאי" active={active.includes(6)} onClick={() => toggleActive(6)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/classroom.png" label="חינוך ילדים" active={active.includes(7)} onClick={() => toggleActive(7)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/truck.png" label="הובלה" active={active.includes(8)} onClick={() => toggleActive(8)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/student.png" label="חינוך בוגרים" active={active.includes(9)} onClick={() => toggleActive(9)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/shild.png" label="ביטוחים" active={active.includes(10)} onClick={() => toggleActive(10)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/car.png" label="רכב" active={active.includes(11)} onClick={() => toggleActive(11)} /></Grid>
-        <Grid item xs={4}>
-          <CategoryItem image="public/friends.png" label="קהילות" active={active.includes(12)} onClick={() => toggleActive(12)} /></Grid>
+        {categories.map(Category => (
+          <Grid key={Category.id} item xs={4}>
+            <CategoryItem
+            image={Category.image}
+            label={Category.label}
+            active={active.includes(Category.id)}
+            onClick={() => toggleActive(Category.id)} />
+          </Grid >
+        ))}
       </Grid>
       <div style={{ padding: '16px', display: 'flex', justifyContent: 'center' }}>
         <PrimeButton onClick={SaveCateegories} btntxt="הבא" />

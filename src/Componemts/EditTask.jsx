@@ -14,8 +14,8 @@ export default function EditTask() {
     const toggleActive = (label) => {
         setActive(active === label ? null : label)
     }
-    const location = useLocation();
-    const {task} = location.state;
+    const { state } = useLocation();
+    const task = state.task;
  
    return (
     <div className='edit-container'>
@@ -75,12 +75,12 @@ export default function EditTask() {
       </div>
       <div style={{marginTop:'16px'}}>
         <p style={{display:'flex', justifyContent:'flex-end'}}>הערות אישיות</p>
-        <textarea style={{width:'100%', height:'15vh', marginBottom:'16px', direction:'rtl'}} />
+        <textarea style={{width:'90%', height:'15vh', marginBottom:'16px', direction:'rtl'}} />
         <SecButton btntxt="מעבר לחוות דעת" />
       </div>
       <div style={{marginTop:'16px'}}>
         <p style={{display:'flex', justifyContent:'flex-end'}}>הוספת חוות דעת</p>
-        <textarea style={{width:'100%', height:'15vh', marginBottom:'16px', direction:'rtl'}} />
+        <textarea style={{width:'90%', height:'15vh', marginBottom:'16px', direction:'rtl'}} />
         <PrimeButton btntxt="שמירה" />
       </div>
     </div>

@@ -7,6 +7,8 @@ import TaskBoard from './TaskBoard';
 import SignUp from './SignUp';
 import EditTask from './EditTask';
 import HomePage from './HomePage';
+import Terms from './Terms';
+import RestorePassword from './RestorePassword';
 
 export default function RealocationApp() {
   
@@ -14,7 +16,9 @@ export default function RealocationApp() {
     <Router>
       <Routes>
         <Route path="/" element={<LogIn />}/>
+        <Route path="/restore-password" element={<RestorePassword />}/>
         <Route path="/sign-up" element={<SignUp />}/>
+        <Route path="/terms" element={<Terms />}/>
         <Route path="/opening-questions" element={<OpeningQuestions />}/>
         <Route path="/categories" element={<Categories />}/>
         <Route path="/tasks-board" element={<TaskBoard />}/>

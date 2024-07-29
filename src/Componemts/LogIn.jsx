@@ -55,7 +55,7 @@ function LogIn() {
                 <TextField label="סיסמא" type="password" autoComplete="current-password" onChange={(e) => {setPassword(e.target.value)}} />
             </Stack>
 
-            <button className='forgetP'>שכחתי סיסמא</button> <br />
+            <button className='forgetP' onClick={() => navigate('/restore-password')}>שכחתי סיסמא</button> <br />
             <PrimeButton onClick={btnlogin} btntxt="כניסה" />
             <p className='newregister'>
                 <button onClick={() => navigate('/sign-up')} variant="contained">הירשם</button>

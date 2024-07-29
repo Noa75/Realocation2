@@ -2,63 +2,70 @@ import React, { useState } from 'react'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { IconButton } from '@mui/material';
+import { SwipeableDrawer, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { Drawer, Button } from '@mui/material';
+import Navbar from './Navbar';
+import zIndex from '@mui/material/styles/zIndex';
+import HomeTask from './HomeTask';
 
 const localizer = momentLocalizer(moment)
 
 export default function HomePage() {
-    
-    const [date, setDate] = useState(new Date());
-
-    const customToolbar = () => {
-        return null;
+    const [drawerHieght, setDrawerHeight] = useState('50vh');
+    const [isOpen, setIsOpen] = useState(false); 
+    const handleSwipe = (e, newHeight) => {
+    if (newHeight > window.innerHeight * 0.85) {
+        setDrawerHeight('85%'); // מקסימום 85% מהמסך
+    } else {
+        setDrawerHeight('50%'); // מינימום 50% מהמסך
     }
+   };
 
-    const prevMonth = () => {
-        setDate(moment(date).subtract(1,'month').toDate());
-    }
-
-    const nextMonth = () => {
-        setDate(moment(date).add(1,'month').toDate());
-    }
-    
-    const events = [
-        {
-            title: 'מפגש עבודה',
-            start: moment().toDate(),
-            end: moment().add(1, 'hours').toDate(),
-            allDay: false
-        }
-    ];
-
-    
+   const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+    setDrawerHeight(isOpen ? '50%' : '90%'); // שינוי הגובה בהתאם למצב
+};
 
     return (
-    <div style={{backgroundColor:'#1170f4'}}>
-        <div style={{paddingTop:'54px', textAlign:'center', color:'white'}}>
-            <img src="public/White R.png" alt="logo" />
+        <div style={{ backgroundColor: '#0C8CE9', margin: '0', height: '100vh' }}>
+            <div style={{ paddingTop: '54px', textAlign: 'center', color: 'white' }}>
+                <img src="public/White R.png" alt="logo" />
+            </div>
+            <div>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateCalendar />
+                </LocalizationProvider>
+            </div>
+            <div>
+            <SwipeableDrawer
+                anchor='bottom'
+                open={true}
+                onClose={toggleDrawer}
+                onOpen={toggleDrawer}
+                swipeAreaWidth={30}
+                disableSwipeToOpen={false}
+                onSwipe={(e) => handleSwipe(e)}
+                PaperProps={{
+                    style: {
+                        position: 'absolute',
+                        height: drawerHieght,
+                    },
+                }}
+                ModalProps={{
+                    keepMounted: true, // Better open performance on mobile.
+                    style: { backgroundColor: 'transparent' } // הסרת הצללה בעת פתיחת המגירה
+                }}
+            >
+                <div style={{ height: '100%', overflow: 'auto' }}>
+                    <HomeTask/>
+                </div>
+            </SwipeableDrawer>
+            </div>
+            <Navbar />
         </div>
-        <IconButton>
-            <ArrowBackIcon onClick={nextMonth} style={{color:'white' }} />
-        </IconButton>
-        {/* {months(date).format('MMMM YYYY')} */}
-        <IconButton>
-            <ArrowBackIcon onClick={prevMonth} style={{color:'white', transform: 'scaleX(-1)' }} />
-        </IconButton>
-        
-        <div style={{ height: 500 }}>
-            <Calendar
-                localizer={localizer}
-                
-                date={date}
-                onNavigate={date => setDate(date)}
-                startAccessor="start"
-                endAccessor="end"
-                toolbar={customToolbar}
-                style={{ height: '100%', margin: '50px' }}
-            />
-        </div>
-    </div>
-  )
+    )
 }

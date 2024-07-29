@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
 import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { IconButton } from '@mui/material';
 import AutoComplete from './AutoComplete';
@@ -14,6 +14,8 @@ import { baseURL } from '../Utils';
 
 function OpeningQuestions() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const userId = location.state?.userId;
     const {userDetails, setUserDetails} = useContext(UserContext);
     const [selectedOption, setSelectedOption] = useState(null);
     const [day, setDay] = useState('');
@@ -29,10 +31,13 @@ function OpeningQuestions() {
     const url = baseURL();
 
     useEffect (() => {
-        if (!userDetails) {
+        if (!userId) {
             navigate('/');
         }
-    },[])
+        else {
+            setUserDetails({ userId });
+        }
+    },[userId, setUserDetails, navigate])
 
     const SaveDetails = () => {
         const myHeaders = new Headers();
@@ -62,8 +67,8 @@ function OpeningQuestions() {
             })
             .then((result) => {
                 console.log(result.userId);
-                setUserDetails(prev => ({...prev, userId : result.userId}));
-                navigate('/categories', { state: {userId : result.userId} });
+                setUserDetails(prev => ({...prev, userId : result.userId, hasChildren: result.hasChildren}));
+                navigate('/categories', { state: {userId : result.userId, hasChildren: result.hasChildren} });
             }
         )
             .catch((error) => console.error(error));
@@ -115,6 +120,7 @@ function OpeningQuestions() {
     return  (
         <div className='OQ-container'>
             <div className='stepIndicator' dir='rtl' >
+                <div className='dot'></div>
                 <div className='dot active'></div>
                 <div className='dot'></div>
                 <div className='dot'></div>
