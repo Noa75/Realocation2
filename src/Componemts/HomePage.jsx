@@ -11,12 +11,21 @@ import { Drawer, Button } from '@mui/material';
 import Navbar from './Navbar';
 import zIndex from '@mui/material/styles/zIndex';
 import HomeTask from './HomeTask';
+import './Realocation.css';
 
 const localizer = momentLocalizer(moment)
 
 export default function HomePage() {
     const [drawerHieght, setDrawerHeight] = useState('50vh');
     const [isOpen, setIsOpen] = useState(false); 
+    
+    const toggleDrawer = () => {
+        const newHeight = isOpen ? '85vh' : '50vh';
+        setDrawerHeight(newHeight);
+        setIsOpen(!isOpen);
+        //setDrawerHeight(isOpen ? '50%' : '85%'); // שינוי הגובה בהתאם למצב
+    };
+
     const handleSwipe = (e, newHeight) => {
     if (newHeight > window.innerHeight * 0.85) {
         setDrawerHeight('85%'); // מקסימום 85% מהמסך
@@ -25,10 +34,7 @@ export default function HomePage() {
     }
    };
 
-   const toggleDrawer = () => {
-    setIsOpen(!isOpen);
-    setDrawerHeight(isOpen ? '50%' : '90%'); // שינוי הגובה בהתאם למצב
-};
+   
 
     return (
         <div style={{ backgroundColor: '#0C8CE9', margin: '0', height: '100vh' }}>
@@ -43,7 +49,7 @@ export default function HomePage() {
             <div>
             <SwipeableDrawer
                 anchor='bottom'
-                open={true}
+                open={!isOpen}
                 onClose={toggleDrawer}
                 onOpen={toggleDrawer}
                 swipeAreaWidth={30}
@@ -57,7 +63,7 @@ export default function HomePage() {
                 }}
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
-                    style: { backgroundColor: 'transparent' } // הסרת הצללה בעת פתיחת המגירה
+                    style: { backgroundColor: isOpen ? 'rgba(0,0,0,0.5)' : 'transparent' } // הסרת הצללה בעת פתיחת המגירה
                 }}
             >
                 <div style={{ height: '100%', overflow: 'auto' }}>
