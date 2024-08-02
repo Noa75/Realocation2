@@ -127,7 +127,7 @@ function OpeningQuestions() {
             </div>
             <Grid container spacing={2} alignItems="center" style={{ padding: '0 16px', marginBottom: '20%' }}>
                 <Grid item xs={1}>
-                    <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
+                    <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '280px' }}>
                         <ArrowBackIcon />
                     </IconButton></Grid>
                 <Grid item xs={11}>
@@ -163,6 +163,7 @@ function OpeningQuestions() {
                                 error={errors.day} />
                         </Grid>
                     </Grid>
+                    <br />
                 </div>
                 <Grid container alignItems="center" >
                     <Grid item xs={3.5}>

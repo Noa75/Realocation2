@@ -1,4 +1,4 @@
-import { Switch, IconButton } from '@mui/material';
+import { Switch, IconButton, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import React, { useState } from 'react';
@@ -20,8 +20,8 @@ export default function EditTask() {
    return (
     <div className='edit-container'>
         <div style={{borderBottom:'1px solid #b3ccef', padding:'8px'}}>
-        <div style={{ display: 'flex', alignItems: 'center', padding: '0 32px' }}>
-        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0 8px' }}>
+        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '330px' }}>
           <ArrowBackIcon />
         </IconButton>
         <h4 style={{ textAlign: 'center', margin: '0' }}>{task.recommendedTask}</h4>
@@ -75,14 +75,15 @@ export default function EditTask() {
       </div>
       <div style={{marginTop:'16px'}}>
         <p style={{display:'flex', justifyContent:'flex-end'}}>הערות אישיות</p>
-        <textarea style={{width:'90%', height:'15vh', marginBottom:'16px', direction:'rtl'}} />
-        <SecButton btntxt="מעבר לחוות דעת" />
+        <TextField
+        fullWidth
+        multiline
+        rows={8}
+        placeholder="הערות לעצמך"
+        variant="outlined"
+        style={{ margin: '0px', direction: 'rtl', marginBottom: '16px' }} />
       </div>
-      <div style={{marginTop:'16px'}}>
-        <p style={{display:'flex', justifyContent:'flex-end'}}>הוספת חוות דעת</p>
-        <textarea style={{width:'90%', height:'15vh', marginBottom:'16px', direction:'rtl'}} />
         <PrimeButton btntxt="שמירה" />
-      </div>
     </div>
   )
 }

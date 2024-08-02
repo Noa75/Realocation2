@@ -93,7 +93,7 @@ fetch(`${url}UserCategories`, requestOptions)
                 <div className='dot'></div>
             </div>
       <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
-        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
+        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '280px' }}>
           <ArrowBackIcon />
         </IconButton>
         <h4 style={{ textAlign: 'center' }}>בחירת נושאי משימות </h4>

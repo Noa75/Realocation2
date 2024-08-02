@@ -13,9 +13,9 @@ export default function RestorePassword() {
   };
   
     return (
-    <div style={{padding: '24px'}}>
-        <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
-        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '270px' }}>
+    <div style={{ height: '100vh',padding: '24px'}}>
+        <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 24px' }}>
+        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '230px' }}>
           <ArrowBackIcon />
         </IconButton>
         <h4 style={{ textAlign: 'center' }}>אמת את זהותך</h4>

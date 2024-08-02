@@ -133,7 +133,7 @@ fetch(`${url}/UserCategories`, requestOptions)
                 <div className='dot active'></div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '220px' }}>
+                <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '240px' }}>
                     <ArrowBack />
                 </IconButton>
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
@@ -181,7 +181,7 @@ fetch(`${url}/UserCategories`, requestOptions)
                 </SecButton>
                 <PrimeButton onClick={SaveTasks} btntxt="הבא" />
             </Stack>
-            <Navbar/>
+            {userDetails.userId === "true" ? <Navbar /> : null}
         </div>
 
 

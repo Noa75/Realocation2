@@ -10,6 +10,7 @@ import HomePage from './HomePage';
 import Terms from './Terms';
 import RestorePassword from './RestorePassword';
 import PostPage from './PostPage';
+import NewPost from './NewPost';
 
 export default function RealocationApp() {
   
@@ -26,6 +27,7 @@ export default function RealocationApp() {
         <Route path="/edit-task/:taskId" element={<EditTask />}/>
         <Route path="/home" element={<HomePage />}/>
         <Route path="/post" element={<PostPage />}/>
+        <Route path="/new-post" element={<NewPost />}/>
       </Routes>
     </Router>
   )
