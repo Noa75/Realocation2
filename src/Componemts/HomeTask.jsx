@@ -3,25 +3,32 @@ import { useState } from 'react';
 import { Button } from '@mui/material';
 import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
+import { de } from 'date-fns/locale';
 
 
-export default function HomeTask(
-    // { title, description, location, urgency, }
-) {
-    const [completed, setCompleted] = useState(false);  // קובע את מצב המשימה כלא בוצעה
-    const title = "פגישה עם הנהלה";  // כותרת המשימה
-    const description = "דיון בצעדים הבאים של הפרויקט";  // תיאור המשימה
-    const location = "חדר ישיבות 3";  // מיקום המשימה
-    const urgency = "22.1";
+export default function HomeTask() {
+    const [tasks, setTasks] = useState([
+        { id: 1, title: "משימת חבילה", description: "nnn", location: "תל אביב", urgency: "22.4", completed: false},
+        { id: 2, title: "משימת חבילה", description: "nnn", location: "תל אביב", urgency: "22.4", completed: false},
+        { id: 3, title: "משימת חבילה", description: "nnn", location: "תל אביב", urgency: "22.4", completed: false}
+    ]);
 
-    const handleComplete = () => {
-        setCompleted(!completed);
+
+    const handleComplete = (taskId) => {
+        setTasks(tasks.map(task => {
+            if (task.id === taskId) {
+                return { ...task, completed: !task.completed};
+            }
+            return task;
+        }))
     };
 
     return (
-        <div style={{
+        <>
+        {tasks.map((task) =>(
+        <div key={task.id} style={{
             padding: '16px 32px',
-            backgroundColor: completed ? '#D9E4F4' : 'white',
+            backgroundColor: task.completed ? '#D9E4F4' : 'white',
             borderRadius: '16px',
             marginBottom: '16px',
             border: '1px solid #E7EFFA',
@@ -41,15 +48,29 @@ export default function HomeTask(
                 right: '0',
                 top: '0'
             }} />
+            <div style={{
+                 height: '16px',
+                 width: '16px',
+                 border: '2px solid #0C8CE9',
+                 backgroundColor: task.completed ? '#0C8CE9' : 'transparent',
+                 borderRadius: '50%',
+                 position: 'absolute',
+                 right: '4px',
+                 top: '50%',
+                 transform: 'translateY(-50%)'
+            }}
+            />
             <div>
-                <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0C8CE9', margin: '0' }}>{title}</h4>
-                <p style={{ fontSize: '14px', color: '#0C8CE9', margin:'0' }}>{description}</p>
-                <p style={{ fontSize: '14px' }}>{location} <br /> {urgency}</p>
+                <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0C8CE9', margin: '0' }}>{task.title}</h4>
+                <p style={{ fontSize: '14px', color: '#0C8CE9', margin:'0' }}>{task.description}</p>
+                <p style={{ fontSize: '14px' }}>{task.location} <br /> {task.urgency}</p>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '10px' }} >
-                    <SecButton disabled={!completed} btntxt="השאר חוות דעת" active={completed}/>
-                    <SecButton onClick={handleComplete} btntxt={completed ? "שחזר" : "בוצע"} active={!completed}/>
+                    <SecButton disabled={!task.completed} btntxt="השאר חוות דעת" active={task.completed}/>
+                    <SecButton onClick={() => handleComplete(task.id)} btntxt={task.completed ? "שחזר" : "בוצע"} active={!task.completed}/>
                 </div>
             </div>
         </div>
+        ))}
+        </>
     )
 }
