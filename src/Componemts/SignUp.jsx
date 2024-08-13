@@ -85,6 +85,11 @@ function SignUp() {
           errMsg = "כתובת מייל לא תקינה";
         }
         break;
+        case 'password':
+          if (!/^[A-Za-z0-9]{6,}$/.test(value)){
+            errMsg = "סיסמא צריכה להכיל 6 תווים לפחות"
+          }
+        break;
       case 'confirmpassword':
         if (value !== user.password) {
           errMsg = "סיסמא לא תואמת";
@@ -134,7 +139,8 @@ function SignUp() {
           value={user.password}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={!!errors.password} />
+          error={!!errors.password}
+          helperText={errors.email} />
         <TextField
           label="אימות סיסמא"
           name="confirmpassword"

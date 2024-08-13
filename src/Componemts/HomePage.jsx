@@ -60,11 +60,11 @@ export default function HomePage() {
             <SwipeableDrawer
                 anchor='bottom'
                 open={!isOpen}
-                onClose={() => toggleDrawer(false)}
+                onClose={() => toggleDrawer(true)}
                 onOpen={() => toggleDrawer(true)}
                 swipeAreaWidth={30}
                 disableSwipeToOpen={false}
-                //onSwipe={(e) => handleSwipe(e)}
+                onSwipe={(e) => handleSwipe(e)}
                 PaperProps={{
                     style: {
                         position: 'absolute',

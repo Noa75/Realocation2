@@ -48,18 +48,6 @@ export default function HomeTask() {
                 right: '0',
                 top: '0'
             }} />
-            <div style={{
-                 height: '16px',
-                 width: '16px',
-                 border: '2px solid #0C8CE9',
-                 backgroundColor: task.completed ? '#0C8CE9' : 'transparent',
-                 borderRadius: '50%',
-                 position: 'absolute',
-                 right: '4px',
-                 top: '50%',
-                 transform: 'translateY(-50%)'
-            }}
-            />
             <div>
                 <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: '#0C8CE9', margin: '0' }}>{task.title}</h4>
                 <p style={{ fontSize: '14px', color: '#0C8CE9', margin:'0' }}>{task.description}</p>

@@ -24,7 +24,7 @@ export default function EditTask() {
         <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '330px' }}>
           <ArrowBackIcon />
         </IconButton>
-        <h4 style={{ textAlign: 'center', margin: '0' }}>{task.recommendedTask}</h4>
+        <h4 style={{ textAlign: 'center', margin: '0', padding: '0 24px' }}>{task.recommendedTask}</h4>
       </div>
       <div>
       <p style={{marginTop: '8px', marginBottom:'24px'}}>{task.descriptionTask}</p>
