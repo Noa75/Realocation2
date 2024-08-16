@@ -66,7 +66,8 @@ fetch(`${url}UserCategories`, requestOptions)
     setUserDetails(prev => ({ ...prev, userId: result.userId }));
     navigate('/tasks-board', { state: {
       userId: result.userId,
-      selectedCategories: active
+      selectedCategories: active,
+      hasChildren: userDetails.hasChildren
     } }
   );
   })

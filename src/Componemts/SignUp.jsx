@@ -49,9 +49,9 @@ function SignUp() {
       .then((result) => {
         console.log("work")
         console.log(result);
-        console.log(result.user.userId);
+        console.log(result.userId);
         setUserDetails({userId : result.userId});
-        navigate('/opening-questions', { state : {userId : result.user.userId} });
+        navigate('/opening-questions', { state : {userId : result.userId} });
         //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
       })
       .catch((error) => {

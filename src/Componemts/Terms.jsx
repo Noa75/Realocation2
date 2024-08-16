@@ -1,23 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import PrimeButton from './PrimeButton';
 import Navbar from './Navbar';
 import { Grid, IconButton, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { baseURL } from '../Utils';
+import { UserContext } from './UserHook';
 
 export default function Terms() {
   const [isAccepted, setIsAccepted] = useState(false);
   const navigate = useNavigate();
-  
+  const location = useLocation();
+  const url = baseURL();
+  const {userDetails, setUserDetails} = useContext(UserContext);
 
-  const userId = "111";
-  const filed = "true";
+  const fromLogin = location.state?.fromLogin; 
 
-  const handleAccept = () => {
-    if (isAccepted) {
-        navigate('/opening-questions');
-    }
-  };
+  const acceptTerms = () =>  {
+    const myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+
+const raw = JSON.stringify(isAccepted);
+
+const requestOptions = {
+  method: "PUT",
+  headers: myHeaders,
+  body: raw,
+  redirect: "follow"
+};
+
+fetch(`${url}register/accept-terms/${userDetails.userId}`, requestOptions)
+  .then((response) => response.json())
+  .then((result) => {
+    console.log("work")
+        console.log(result);
+        setUserDetails(prev => ({ ...prev, userId: result.userId }));
+        navigate('/opening-questions', { state: { userId: result.userId } });
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+  }
+
+
 
     return (
     <div style={{padding: '24px'}}>
@@ -54,8 +79,8 @@ export default function Terms() {
             </label>
         </div>
         <div style={{marginTop: '32px'}}>
-        <PrimeButton onClick={handleAccept} btntxt="הבא" disabled={!isAccepted} /></div>
-        {userId && filed === "true" ? <Navbar /> : null}
+        <PrimeButton onClick={acceptTerms} btntxt="הבא" disabled={!isAccepted} /></div>
+        {!fromLogin && <Navbar />} 
     </div>
   )
 }

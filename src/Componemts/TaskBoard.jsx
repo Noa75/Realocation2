@@ -21,20 +21,22 @@ export default function TaskBoard() {
     const [tasksAfter, setTasksAfter] = useState([]);
     const [selectedOption, setSelectedOption] = useState();
     const location = useLocation();
+    const hasChildren = location.state?.hasChildren;
     const selectedCategories = location.state.selectedCategories;
+    const [updateTrigger, setUpdateTrigger] = useState(false);
     const allCategories = [
-        { id: 1, name: 'בעלי חיים'},
-        { id: 2, name: 'טיסה'},
-        { id: 3, name: 'עבודה'},
-        { id: 4, name: 'בריאות'},
-        { id: 5, name: 'מגורים'},
-        { id: 6, name: 'פנאי'},
-        { id: 7, name: 'חינוך ילדים'},
-        { id: 8, name: 'הובלה'},
-        { id: 9, name: 'חינוך בוגרים'},
-        { id: 10, name: 'ביטוחים'},
-        { id: 11, name: 'רכב'},
-        { id: 12, name: 'קהילות'}
+        { id: 1, name: 'בעלי חיים' },
+        { id: 2, name: 'טיסה' },
+        { id: 3, name: 'עבודה' },
+        { id: 4, name: 'בריאות' },
+        { id: 5, name: 'מגורים' },
+        { id: 6, name: 'פנאי' },
+        { id: 7, name: 'חינוך ילדים' },
+        { id: 8, name: 'הובלה' },
+        { id: 9, name: 'חינוך בוגרים' },
+        { id: 10, name: 'ביטוחים' },
+        { id: 11, name: 'רכב' },
+        { id: 12, name: 'קהילות' }
     ]
     const filteredCategories = allCategories.filter(cat => location.state.selectedCategories.includes(cat.id));
     const url = baseURL();
@@ -43,85 +45,79 @@ export default function TaskBoard() {
         if (filteredCategories.length > 0 && !selectedOption) {
             setSelectedOption(filteredCategories[0].id)
         }
-    },[filteredCategories, selectedOption])
+    }, [filteredCategories, selectedOption])
 
     const handleButton = (categoryId) => {
         console.log("changing:", categoryId);
         setSelectedOption(categoryId);
-        
+
     }
 
-    useEffect (() => {
+    useEffect(() => {
         if (selectedOption && userDetails.userId) {
             fetchTasks(selectedOption, true);
             fetchTasks(selectedOption, false);
         }
-    }, [selectedOption, userDetails.userId]);
+    }, [selectedOption, userDetails.userId, updateTrigger]);
+
 
     const fetchTasks = (categoryId, isBeforeMove) => {
+        const hasChildren = userDetails.hasChildren; 
         const urlSuffix = isBeforeMove ? "false" : "true";
-        console.log("Fetching tasks for category:", selectedOption);
-            const requestOptions = {
-  method: "GET",
-  redirect: "follow"
-};
+        console.log("Fetching tasks for category:", filteredCategories, " with children: ", hasChildren);
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
 
 
-fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requestOptions)
-  .then((response) => response.json())
-  .then((result) => {
-    const releventTasks = result.filter(task => task.categoryId === selectedOption);
-    isBeforeMove ? setTasksBefore(releventTasks) : setTasksAfter(releventTasks);
-    console.log(releventTasks);
-  })
-  .catch((error) => console.error(error));
+        fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+                const releventTasks = result.filter(task => task.categoryId === selectedOption);
+                isBeforeMove ? setTasksBefore(releventTasks) : setTasksAfter(releventTasks);
+                console.log(releventTasks);
+            })
+            .catch((error) => console.error(error));
     }
+
+
 
     const deleteTask = (taskId, isBeforeMove) => {
-        if (isBeforeMove) {
-            setTasksBefore(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
-        } else {
-            setTasksAfter(prevTasks => prevTasks.filter(task => task.taskId !== taskId));
-        }
-    };
-    console.log(tasksBefore, tasksAfter)
-
-    const SaveTasks = () => {
         const myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Content-Type", "application/json");
 
-const taskToSave = [...tasksBefore, ...tasksAfter];
+        const raw = {
+            "UserTaskId": userDetails.userId,
+            "TaskId": taskId,
+            "IsDelete": true
+        };
 
-const raw = JSON.stringify({
-  "UserId": userDetails.userId,
-  "TaskId": task.TaskId,
-  "TaskName": task.RecommendedTask,
-  "TaskDescription": task.DescriptionTask,
-  "IsRecommended": true,
-  "IsDeleted": false,
-  "CreatedAt": new Date(),
-  "SelectedCategories": filteredCategories.map(cat => cat.id)
-});
-console.log(raw)
+        const requestOptions = {
+            method: "DELETE",
+            headers: myHeaders,
+            body: raw,
+            redirect: "follow"
+        };
 
-const requestOptions = {
-  method: "POST",
-  headers: myHeaders,
-  body: raw
-};
-
-fetch(`${url}/UserCategories`, requestOptions)
-  .then((response) => response.json())
-  .then((result) => {
-    console.log(result);
-    // navigate('/home')
-  })
-  .catch((error) => console.error(error));
+        fetch(`${url}UserTasks/${userDetails.userId}/task/${taskId}`, requestOptions)
+            .then((response) => response.json())
+            .then((result) => {
+                console.log("task deleted:", result)
+                if (isBeforeMove) {
+                    setTasksBefore(prev => prev.filter(task => task.taskId !== taskId));
+                } else {
+                    setTasksAfter(prev => prev.filter(task => task.taskId !== taskId));
+                }
+              
+            })
+            .catch((error) => console.error(error));
     }
 
+    
     const handleTaskClick = (task) => {
         console.log(task)
-        navigate ('/edit-task/${taskId}', {state: {task}});
+        navigate('/edit-task/${taskId}', { state: { task } });
     }
 
     return (
@@ -141,7 +137,7 @@ fetch(`${url}/UserCategories`, requestOptions)
             <div className='chip-container'>
                 <Stack direction="row-reverse" spacing={1} >
                     {filteredCategories.map(category => (
-                        <ChipButton 
+                        <ChipButton
                             key={category.id}
                             txt={category.name}
                             onClick={() => handleButton(category.id)} active={selectedOption === category.id}
@@ -150,36 +146,36 @@ fetch(`${url}/UserCategories`, requestOptions)
                 </Stack>
             </div>
             <div className='taskrec'>
-                <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300', fontWeight:'bold' }}>לפני המעבר</h3>
+                <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300', fontWeight: 'bold' }}>לפני המעבר</h3>
                 {tasksBefore.map(task => (
                     <Task onClick={() => handleTaskClick(task)}
-                        key={task.taskId}  
+                        key={task.taskId}
                         date="20.1"
                         label={task.recommendedTask}
                         description={task.descriptionTask}
                         onDelete={() => deleteTask(task.taskId, true)}
                     />
-                ))}     
+                ))}
             </div>
             <div className='taskrec'>
-                <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300', fontWeight:'bold' }}>אחרי המעבר</h3>
-                
+                <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300', fontWeight: 'bold' }}>אחרי המעבר</h3>
+
                 {tasksAfter.map(task => (
                     <Task onClick={() => handleTaskClick(task)}
-                        key={task.taskId}  
+                        key={task.taskId}
                         date="20.1"
                         label={task.recommendedTask}
                         description={task.descriptionTask}
                         onDelete={() => deleteTask(task.taskId, false)}
                     />
-                ))}     
+                ))}
 
- </div>
+            </div>
             <Stack spacing={1} direction='column' sx={{ width: '70%', margin: 'auto' }}>
                 <SecButton btntxt="הוספת משימה חדשה" >
                     {<AddIcon />}
                 </SecButton>
-                <PrimeButton onClick={SaveTasks} btntxt="הבא" />
+                <PrimeButton btntxt="הבא" />
             </Stack>
             {userDetails.userId === "true" ? <Navbar /> : null}
         </div>

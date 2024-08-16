@@ -12,6 +12,7 @@ function LogIn() {
     const navigate = useNavigate();
     const {setUserDetails} = useContext(UserContext);
     const [user,setUser] = useState();
+    const [userExistsMSG, setUserExistsMSG] = useState('');
     const [password,setPassword] = useState();
     const url = baseURL();
 
@@ -34,11 +35,12 @@ function LogIn() {
             .then((result) => {
                 console.log(result.userId)
                 setUserDetails({userId : result.userId});
-                navigate('/opening-questions', { state : {userId : result.userId}} );
+                navigate('/terms', { state : {userId : result.userId},state: { fromLogin: true }} );
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
             })
             .catch((error) => {
                 console.log(error)
+                setUserExistsMSG("משתמש לא קיים")
                 //הלוגיקה שמה קורה אם לא הצליח
             });
     }
@@ -56,6 +58,7 @@ function LogIn() {
             </Stack>
 
             <button className='forgetP' onClick={() => navigate('/restore-password')}>שכחתי סיסמא</button> <br />
+            <p>{userExistsMSG}</p>
             <PrimeButton onClick={btnlogin} btntxt="כניסה" />
             <p className='newregister'>
                 <button onClick={() => navigate('/sign-up')} variant="contained">הירשם</button>
