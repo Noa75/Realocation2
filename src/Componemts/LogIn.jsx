@@ -10,10 +10,10 @@ import { UserContext } from './UserHook';
 
 function LogIn() {
     const navigate = useNavigate();
-    const {setUserDetails} = useContext(UserContext);
-    const [user,setUser] = useState();
+    const { setUserDetails } = useContext(UserContext);
+    const [user, setUser] = useState();
     const [userExistsMSG, setUserExistsMSG] = useState('');
-    const [password,setPassword] = useState();
+    const [password, setPassword] = useState();
     const url = baseURL();
 
     const btnlogin = () => {
@@ -34,8 +34,8 @@ function LogIn() {
             .then((response) => response.json())
             .then((result) => {
                 console.log(result.userId)
-                setUserDetails({userId : result.userId});
-                navigate('/terms', { state : {userId : result.userId},state: { fromLogin: true }} );
+                setUserDetails({ userId: result.userId });
+                navigate('/terms', { state: { userId: result.userId }, state: { fromReg: true } });
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
             })
             .catch((error) => {
@@ -45,7 +45,7 @@ function LogIn() {
             });
     }
 
-    
+
     return (
         <div className="login-container">
             <div style={{ marginTop: "180px", marginBottom: "102px" }}>
@@ -53,8 +53,8 @@ function LogIn() {
             </div>
 
             <Stack spacing={1} >
-                <TextField label="שם משתמש" variant="outlined" onChange={(e) => {setUser(e.target.value)}} /> <br />
-                <TextField label="סיסמא" type="password" autoComplete="current-password" onChange={(e) => {setPassword(e.target.value)}} />
+                <TextField label="שם משתמש" variant="outlined" onChange={(e) => { setUser(e.target.value) }} /> <br />
+                <TextField label="סיסמא" type="password" autoComplete="current-password" onChange={(e) => { setPassword(e.target.value) }} />
             </Stack>
 
             <button className='forgetP' onClick={() => navigate('/restore-password')}>שכחתי סיסמא</button> <br />

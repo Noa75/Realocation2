@@ -16,7 +16,6 @@ export default function TaskBoard() {
     const navigate = useNavigate();
     const [task, setTask] = useState();
     const { userDetails, setUserDetails } = useContext(UserContext);
-    const [tasks, setTasks] = useState([]);
     const [tasksBefore, setTasksBefore] = useState([]);
     const [tasksAfter, setTasksAfter] = useState([]);
     const [selectedOption, setSelectedOption] = useState();
@@ -38,14 +37,32 @@ export default function TaskBoard() {
         { id: 11, name: 'רכב' },
         { id: 12, name: 'קהילות' }
     ]
-    const filteredCategories = allCategories.filter(cat => location.state.selectedCategories.includes(cat.id));
+    const filteredCategories = allCategories.filter(cat => selectedCategories.includes(cat.id));
     const url = baseURL();
+    console.log(filteredCategories)
+
+    const addNewTask = () => {
+        // Navigate to the EditTask component with initial empty data for creating a new task
+        navigate('/edit-task', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" } } });
+    };
+ 
+
+    useEffect(() => {
+        if (!userDetails.userId) {
+            console.log(userDetails.userId)
+            navigate('/');
+        }
+        else {
+            fetchTasks();
+        }
+    }, [userDetails.userId]);
 
     useEffect(() => {
         if (filteredCategories.length > 0 && !selectedOption) {
             setSelectedOption(filteredCategories[0].id)
         }
-    }, [filteredCategories, selectedOption])
+    }, [])
+   
 
     const handleButton = (categoryId) => {
         console.log("changing:", categoryId);
@@ -58,37 +75,39 @@ export default function TaskBoard() {
             fetchTasks(selectedOption, true);
             fetchTasks(selectedOption, false);
         }
-    }, [selectedOption, userDetails.userId, updateTrigger]);
+    }, [selectedOption, userDetails.userId]);
+    console.log(selectedOption);
 
 
-    const fetchTasks = (categoryId, isBeforeMove) => {
-        const hasChildren = userDetails.hasChildren; 
-        const urlSuffix = isBeforeMove ? "false" : "true";
-        console.log("Fetching tasks for category:", filteredCategories, " with children: ", hasChildren);
+    const fetchTasks = (selectedOption, isBeforeMove) => {
+        console.log("Fetching tasks for category:", selectedOption, " with children: ", hasChildren);
+
         const requestOptions = {
             method: "GET",
             redirect: "follow"
         };
 
-
-        fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/${urlSuffix}`, requestOptions)
+        fetch(`${url}UserTasks/tasks/user/${userDetails.userId}/final`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                const releventTasks = result.filter(task => task.categoryId === selectedOption);
-                isBeforeMove ? setTasksBefore(releventTasks) : setTasksAfter(releventTasks);
-                console.log(releventTasks);
+                const releventTasks = result.filter(task => {
+                    const categoryMatch = task.categoryId === selectedOption;
+                    const notDeleted = !task.IsDeleted;
+                    return categoryMatch && notDeleted;
+            });
+            
+            setTasksBefore(releventTasks.filter(task => task.isBeforeMove)); // אם יש תכונה כזו
+            setTasksAfter(releventTasks.filter(task => !task.isBeforeMove)); 
             })
             .catch((error) => console.error(error));
     }
-
-
 
     const deleteTask = (taskId, isBeforeMove) => {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         const raw = {
-            "UserTaskId": userDetails.userId,
+            "userTaskId": userDetails.userId,
             "TaskId": taskId,
             "IsDelete": true
         };
@@ -104,17 +123,18 @@ export default function TaskBoard() {
             .then((response) => response.json())
             .then((result) => {
                 console.log("task deleted:", result)
+                const updateTasks = (tasks) => tasks.filter(task => task.taskId !== taskId);
                 if (isBeforeMove) {
-                    setTasksBefore(prev => prev.filter(task => task.taskId !== taskId));
+                    setTasksBefore(updateTasks);
                 } else {
-                    setTasksAfter(prev => prev.filter(task => task.taskId !== taskId));
+                    setTasksAfter(updateTasks);
                 }
-              
+
             })
             .catch((error) => console.error(error));
     }
 
-    
+
     const handleTaskClick = (task) => {
         console.log(task)
         navigate('/edit-task/${taskId}', { state: { task } });
@@ -147,12 +167,13 @@ export default function TaskBoard() {
             </div>
             <div className='taskrec'>
                 <h3 style={{ width: '100%', fontSize: '18px', textAlign: 'right', fontWeight: '300', fontWeight: 'bold' }}>לפני המעבר</h3>
-                {tasksBefore.map(task => (
+                {tasksBefore.map((task, index) => (
                     <Task onClick={() => handleTaskClick(task)}
-                        key={task.taskId}
-                        date="20.1"
-                        label={task.recommendedTask}
-                        description={task.descriptionTask}
+                        key={`${task.taskId}-${index}`}
+                        date={(task.daysToComplete)}
+                        label={task.taskName}
+                        description={task.taskDescription
+                        }
                         onDelete={() => deleteTask(task.taskId, true)}
                     />
                 ))}
@@ -160,10 +181,10 @@ export default function TaskBoard() {
             <div className='taskrec'>
                 <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300', fontWeight: 'bold' }}>אחרי המעבר</h3>
 
-                {tasksAfter.map(task => (
+                {tasksAfter.map((task, index) => (
                     <Task onClick={() => handleTaskClick(task)}
-                        key={task.taskId}
-                        date="20.1"
+                        key={`${task.taskId}-${index}`}
+                        date={task.daysToComplete}
                         label={task.recommendedTask}
                         description={task.descriptionTask}
                         onDelete={() => deleteTask(task.taskId, false)}
@@ -172,7 +193,7 @@ export default function TaskBoard() {
 
             </div>
             <Stack spacing={1} direction='column' sx={{ width: '70%', margin: 'auto' }}>
-                <SecButton btntxt="הוספת משימה חדשה" >
+                <SecButton btntxt="הוספת משימה חדשה" onClick={addNewTask} >
                     {<AddIcon />}
                 </SecButton>
                 <PrimeButton btntxt="הבא" />

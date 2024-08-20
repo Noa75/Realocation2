@@ -1,48 +1,68 @@
-import  React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { isLocalhost, Translate } from '../Utils';
 
-const url = isLocalhost ? "http://localhost:5231/api/" : "proj.ruppin.ac.il/bgroup30/test2"
+const url = isLocalhost ? "http://localhost:5231/api/" : "proj.ruppin.ac.il/bgroup30/test2";
 
 export default function AutoComplete(props) {
-  const [country, setCountry] = useState([]);
-    const {setInputCountry} = props
+  
+  const { setInputCountry, defultCountry } = props;
+  const [country, setCountry] = useState('');
+  const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const setSelectedCountry = (e, newValue) => {
+    console.log(e, newValue);
+    if (newValue) {
+      setInputCountry(newValue.label);
+    }
+  };
+
   useEffect(() => {
-    const myHeaders = new Headers();
-myHeaders.append("Content-Type", "application/json");
+    fetch('https://restcountries.com/v3.1/all?fields=name,flags')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const sortedData = data.sort((a, b) => a.name.common.localeCompare(b.name.common));
 
+        // Mapping countries data to the format that Autocomplete expects (label for display)
+        const parsedData = sortedData.map((country) => ({
+          label: country.name.common
+        }));
 
-const requestOptions = {
-  method: "GET",
-  headers: myHeaders
-};
+        setCountries(parsedData);
+        setCountry(parsedData[0].label); // Set default country (first country in the list)
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
 
-fetch(`${url}get`, requestOptions)
-  .then((response) => response.json())
-  .then((result) => {
-    
-    if  (result && result.length > 0) {
-    let parseData = result.map(x => ({label: Translate(x.countryName), id: x.countryId }))
-    console.log({parseData})
-    setCountry(parseData)
-}
-})
-  .catch((error) => console.error(error));
-  },[])
-
-  const getValue = (e, newValue) => {
-    console.log(e,newValue)
-
-    setInputCountry(newValue.label)
+  if (loading) {
+    return <div>Loading...</div>;
   }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
-    <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={country}
-      onChange={getValue}
-      renderInput={(params) => <TextField {...params} label="country" />}
-    />
+      <Autocomplete
+        disablePortal
+        id="combo-box-demo"
+        defaultValue={defultCountry}
+        options={countries}
+        onChange={setSelectedCountry}
+        renderInput={(params) => <TextField {...params} label="Country" />}
+        getOptionLabel={(option) => option.label} // Specify how to display the options
+      />
   );
 }

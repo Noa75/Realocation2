@@ -16,8 +16,8 @@ function OpeningQuestions() {
     const navigate = useNavigate();
     const location = useLocation();
     const userId = location.state?.userId;
-    const {userDetails, setUserDetails} = useContext(UserContext);
-    const [selectedOption, setSelectedOption] = useState(null);
+    const { userDetails, setUserDetails } = useContext(UserContext);
+    const [selectedOption, setSelectedOption] = useState('');
     const [day, setDay] = useState('');
     const [month, setMonth] = useState('');
     const [year, setYear] = useState('');
@@ -30,23 +30,44 @@ function OpeningQuestions() {
     const [inputCountry, setInputCountry] = useState("");
     const url = baseURL();
 
-    useEffect (() => {
+    useEffect(() => {
         if (!userId) {
             navigate('/');
         }
         else {
-            setUserDetails({ userId });
+            const raw = "";
+            const requestOptions = {
+                method: "GET",
+                redirect: "follow"
+            };
+
+            fetch(`${url}UserDetails/${userId}`, requestOptions)
+                .then((response) => response.json())
+                .then((result) => {
+                    setInputCountry(result.relocationDetails.destinationCountry);
+                        setDay(new Date(result.relocationDetails.moveDate).getDate() + 1);
+                        setMonth(new Date(result.relocationDetails.moveDate).getMonth() + 1);
+                        setYear(new Date(result.relocationDetails.moveDate).getFullYear());
+                        setSelectedOption(result.relocationDetails.hasChildren ? 'yes' : 'no');
+                        console.log(result);
+                })
+                .catch((error) => console.error(error));
         }
-    },[userId, setUserDetails, navigate])
+    }, [userId, navigate, url])
+
+    const isFormValid = () => {
+        return inputCountry && day && month && year && selectedOption && !errors.day && !errors.month && !errors.year;
+    };
 
     const SaveDetails = () => {
+        if (!isFormValid()) return;
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
             "UserId": userDetails.userId,
             "DestinationCountry": inputCountry,
-            "MoveDate": new Date(year,month-1, day),
+            "MoveDate": new Date(year, month - 1, day),
             "HasChildren": selectedOption === 'yes',
             "SelectedCategories": []
         });
@@ -61,16 +82,16 @@ function OpeningQuestions() {
         fetch(`${url}details`, requestOptions)
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error (`error:" ${response.status}`);
+                    throw new Error(`error:" ${response.status}`);
                 }
                 return response.json();
             })
             .then((result) => {
                 console.log(result.userId);
-                setUserDetails(prev => ({...prev, userId : result.userId, hasChildren: result.hasChildren}));
-                navigate('/categories', { state: {userId : result.userId, hasChildren: result.hasChildren} });
+                setUserDetails(prev => ({ ...prev, userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate }));
+                navigate('/categories', { state: { userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate } });
             }
-        )
+            )
             .catch((error) => console.error(error));
     }
 
@@ -84,7 +105,7 @@ function OpeningQuestions() {
                 isValid = value >= 1 && value <= 12;
                 break;
             case 'year':
-                isValid = value >= (currentYear - 3) && value <= (currentYear + 120 );
+                isValid = value >= (currentYear - 3) && value <= (currentYear + 120);
                 break;
             default:
                 break;
@@ -116,8 +137,8 @@ function OpeningQuestions() {
         setSelectedOption(selection);
     }
 
- 
-    return  (
+
+    return (
         <div className='OQ-container'>
             <div className='stepIndicator' dir='rtl' >
                 <div className='dot'></div>
@@ -136,8 +157,8 @@ function OpeningQuestions() {
             </Grid>
             <Stack spacing={3} style={{ marginBottom: '50%' }}>
                 <p style={{ textAlign: 'right' }}>מדינת יעד</p>
-                <AutoComplete setInputCountry={ setInputCountry } />
-                
+                <AutoComplete setInputCountry={setInputCountry} defultCountry={inputCountry} />
+
                 <div>
                     <p style={{ textAlign: 'right' }}>מתי המעבר</p>
                     <Grid container spacing={1} justifyContent={'center'} alignItems="center">
@@ -174,7 +195,7 @@ function OpeningQuestions() {
                         <p>?האם יש לך ילדים</p></Grid>
                 </Grid>
             </Stack>
-            <PrimeButton onClick={SaveDetails} btntxt="הבא" />
+            <PrimeButton onClick={SaveDetails} btntxt="הבא" disabled={!isFormValid()} />
         </div>
     )
 }

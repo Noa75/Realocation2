@@ -14,7 +14,27 @@ export default function Terms() {
   const url = baseURL();
   const {userDetails, setUserDetails} = useContext(UserContext);
 
-  const fromLogin = location.state?.fromLogin; 
+  const fromReg = location.state?.fromReg; 
+
+useEffect (() => {
+  if (!userDetails) {
+    navigate('/');
+}
+else {
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow"
+  };
+  
+  fetch(`${url}register/${userDetails.userId}`, requestOptions)
+    .then((response) => response.json())
+    .then((result) => {
+      setIsAccepted(result.hasAcceptedTerms)
+    })
+    .catch((error) => console.error(error));
+  }
+},[userDetails, url, navigate])
+
 
   const acceptTerms = () =>  {
     const myHeaders = new Headers();
@@ -41,7 +61,6 @@ fetch(`${url}register/accept-terms/${userDetails.userId}`, requestOptions)
     console.log(error);
   });
   }
-
 
 
     return (
@@ -80,7 +99,7 @@ fetch(`${url}register/accept-terms/${userDetails.userId}`, requestOptions)
         </div>
         <div style={{marginTop: '32px'}}>
         <PrimeButton onClick={acceptTerms} btntxt="הבא" disabled={!isAccepted} /></div>
-        {!fromLogin && <Navbar />} 
+        {!fromReg && <Navbar />} 
     </div>
   )
 }

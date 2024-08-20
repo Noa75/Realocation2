@@ -16,7 +16,11 @@ export const Translate = (value) => {
         "australia" : "אוסטרליה",
         "brazil" : "ברזיל",
         "japan" : "יפן",
-        "india" : "הודו"
+        "india" : "הודו",
+        "aa":"אא",
+        "bb":"בב",
+        "cc":"סס",
+        "aab":"אאב",
     }
     
     return obj[value.toLowerCase()] ?? value

@@ -51,7 +51,7 @@ function SignUp() {
         console.log(result);
         console.log(result.userId);
         setUserDetails({userId : result.userId});
-        navigate('/opening-questions', { state : {userId : result.userId} });
+        navigate('/terms', { state: { userId: result.userId }, state: { fromReg: true } } );
         //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
       })
       .catch((error) => {
