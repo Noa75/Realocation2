@@ -12,10 +12,9 @@ import AutoComplete from './AutoComplete';
 import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
 
-function OpeningQuestions() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const userId = location.state?.userId;
+function OpeningQuestions(props) {
+    const {userId, parseUserData} = props;
+    // const navigate = useNavigate();
     const { userDetails, setUserDetails } = useContext(UserContext);
     const [selectedOption, setSelectedOption] = useState('');
     const [day, setDay] = useState('');
@@ -31,10 +30,10 @@ function OpeningQuestions() {
     const url = baseURL();
 
     useEffect(() => {
-        if (!userId) {
-            navigate('/');
-        }
-        else {
+        // if (!userId) {
+        //     navigate('/');
+        // }
+        
             const raw = "";
             const requestOptions = {
                 method: "GET",
@@ -52,8 +51,8 @@ function OpeningQuestions() {
                         console.log(result);
                 })
                 .catch((error) => console.error(error));
-        }
-    }, [userId, navigate, url])
+        
+    }, [])
 
     const isFormValid = () => {
         return inputCountry && day && month && year && selectedOption && !errors.day && !errors.month && !errors.year;
@@ -61,6 +60,13 @@ function OpeningQuestions() {
 
     const SaveDetails = () => {
         if (!isFormValid()) return;
+        parseUserData({
+            "UserId": userDetails.userId,
+            "DestinationCountry": inputCountry,
+            "MoveDate": new Date(year, month - 1, day),
+            "HasChildren": selectedOption === 'yes',
+            "SelectedCategories": []
+        },"cetegories"); 
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -87,9 +93,9 @@ function OpeningQuestions() {
                 return response.json();
             })
             .then((result) => {
-                console.log(result.userId);
-                setUserDetails(prev => ({ ...prev, userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate }));
-                navigate('/categories', { state: { userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate } });
+                
+                //setUserDetails(prev => ({ ...prev, userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate }));
+                //navigate('/categories', { state: { userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate } });
             }
             )
             .catch((error) => console.error(error));
@@ -148,7 +154,7 @@ function OpeningQuestions() {
             </div>
             <Grid container spacing={2} alignItems="center" style={{ padding: '0 16px', marginBottom: '20%' }}>
                 <Grid item xs={1}>
-                    <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '280px' }}>
+                    <IconButton onClick={() => parseUserData({},"terms")} style={{ transform: 'scaleX(-1)', left: '280px' }}>
                         <ArrowBackIcon />
                     </IconButton></Grid>
                 <Grid item xs={11}>

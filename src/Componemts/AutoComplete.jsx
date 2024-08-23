@@ -9,11 +9,12 @@ export default function AutoComplete(props) {
   
   const { setInputCountry, defultCountry } = props;
   const [country, setCountry] = useState('');
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState([{label:""}]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+console.log(countries);
   const setSelectedCountry = (e, newValue) => {
+
     console.log(e, newValue);
     if (newValue) {
       setInputCountry(newValue.label);
@@ -36,9 +37,9 @@ export default function AutoComplete(props) {
           label: country.name.common
         }));
 
-        setCountries(parsedData);
-        setCountry(parsedData[0].label); // Set default country (first country in the list)
+        setCountries(parsedData); // Set default country (first country in the list)
         setLoading(false);
+
       })
       .catch((error) => {
         setError(error.message);
@@ -53,12 +54,12 @@ export default function AutoComplete(props) {
   if (error) {
     return <div>Error: {error}</div>;
   }
-
+console.log(defultCountry)
   return (
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        defaultValue={defultCountry}
+        defaultValue={defultCountry?defultCountry:{label: ""}}
         options={countries}
         onChange={setSelectedCountry}
         renderInput={(params) => <TextField {...params} label="Country" />}

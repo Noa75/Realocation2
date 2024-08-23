@@ -1,19 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, IconButton } from '@mui/material';
 import CategoryItem from './CategoryItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PrimeButton from './PrimeButton';
-import { Navigate, useNavigate } from 'react-router-dom';
+// import { Navigate, useNavigate } from 'react-router-dom';
 import { Category, SignalWifiStatusbarConnectedNoInternet4Rounded } from '@mui/icons-material';
-import { UserContext } from './UserHook';
+// import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
 
 
-export default function Categories() {
+export default function Categories(props) {
+  const {parseUserData} = props
   const url = baseURL();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [active, setActive] = useState([]);
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  // const { userData, setuserData } = useContext(UserContext);
   const initialCategories = [
     { id: 1, image: "public/animals.png", label: "בעלי חיים" },
     { id: 2, image: "public/flight.png", label: "טיסה" },
@@ -31,19 +32,15 @@ export default function Categories() {
   const [categories, setCategories] = useState(initialCategories);
 
   useEffect(() => {
-    console.log(userDetails);
-    if (!userDetails) {
-      navigate('/');
-    }
-    else {
+    console.log(categories);
       fetchSelectedCategories();
-      const filteredCategories = userDetails.hasChildren
+      const filteredCategories = userData.hasChildren
         ? initialCategories
         : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
       setCategories(filteredCategories);
-      console.log(filteredCategories, userDetails.hasChildren)
-    }
-  }, [userDetails, navigate])
+      
+    
+  }, [])
 
   function fetchSelectedCategories(){
       const requestOptions = {
@@ -51,7 +48,7 @@ export default function Categories() {
         redirect: "follow"
       };
 
-      fetch(`${url}UserCategories/tasks/user/${userDetails.userId}/true`, requestOptions)
+      fetch(`${url}UserCategories/tasks/user/${userData.userId}/true`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           const selectedIds = result.map(item => item.categoryId);
@@ -69,8 +66,13 @@ export default function Categories() {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
+    parseUserData({
+      "SelectedCategories": active
+    },"taskBoard")
+    debugger;
+    return;
     const raw = JSON.stringify({
-      "UserId": userDetails.userId,
+      "UserId": userData.userId,
       "SelectedCategories": active
     });
 
@@ -84,15 +86,15 @@ export default function Categories() {
       .then((response) => response.json())
       .then((result) => {
         console.log(result.userId)
-        setUserDetails(prev => ({ ...prev, userId: result.userId }));
-        navigate('/tasks-board', {
-          state: {
-            userId: result.userId,
-            selectedCategories: active,
-            hasChildren: userDetails.hasChildren
-          }
-        }
-        );
+        // setuserData(prev => ({ ...prev, userId: result.userId }));
+        // navigate('/tasks-board', {
+        //   state: {
+        //     userId: result.userId,
+        //     selectedCategories: active,
+        //     hasChildren: userData.hasChildren
+         // }
+       // }
+       // );
       })
       .catch((error) => console.error(error));
   }
@@ -117,7 +119,7 @@ export default function Categories() {
         <div className='dot'></div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
-        <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '280px' }}>
+        <IconButton onClick={() => parseUserData({},"opningQuestions")} style={{ transform: 'scaleX(-1)', left: '280px' }}>
           <ArrowBackIcon />
         </IconButton>
         <h4 style={{ textAlign: 'center' }}>בחירת נושאי משימות </h4>
