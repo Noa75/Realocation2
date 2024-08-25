@@ -59,7 +59,7 @@ console.log(defultCountry)
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        defaultValue={defultCountry?defultCountry:{label: ""}}
+        value={defultCountry?defultCountry:{label: ""}}
         options={countries}
         onChange={setSelectedCountry}
         renderInput={(params) => <TextField {...params} label="Country" />}

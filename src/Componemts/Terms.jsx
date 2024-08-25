@@ -9,6 +9,7 @@ import { UserContext } from './UserHook';
 import OpeningQuestions from './OpeningQuestions';
 import Categories from './Categories';
 import TaskBoard from './TaskBoard';
+import EditTask from './EditTask';
 
 export default function Terms() {
   const [isAccepted, setIsAccepted] = useState(false);
@@ -96,10 +97,18 @@ export default function Terms() {
     )
   }
   else if (PageName === "taskBoard") {
+    return(
     <>
-    {/* <TaskBoard userId={userDetails.userId} userData={userData}/> */}
-    <OpeningQuestions userId={userDetails.userId} parseUserData={parseUserData} />
+    <TaskBoard userId={userDetails.userId} userData={userData}/>
     </>
+    )
+  }
+  else if (PageName === "editTask") {
+    return(
+    <>
+    <EditTask userId={userDetails.userId} userData={userData}/>
+    </>
+    )
   }
   else {
     return (

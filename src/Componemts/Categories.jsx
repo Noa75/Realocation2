@@ -10,7 +10,7 @@ import { baseURL } from '../Utils';
 
 
 export default function Categories(props) {
-  const {parseUserData} = props
+  const {parseUserData,userData} = props
   const url = baseURL();
   // const navigate = useNavigate();
   const [active, setActive] = useState([]);
@@ -47,8 +47,8 @@ export default function Categories(props) {
         method: "GET",
         redirect: "follow"
       };
-
-      fetch(`${url}UserCategories/tasks/user/${userData.userId}/true`, requestOptions)
+      console.log(userData);
+      fetch(`${url}UserCategories/tasks/user/${userData.UserId}/true`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           const selectedIds = result.map(item => item.categoryId);
@@ -58,6 +58,7 @@ export default function Categories(props) {
             active: selectedIds.includes(cat.id)
           }));
           setCategories(updatedCategories);
+          console.log(updatedCategories);
         })
         .catch((error) => console.error(error));
   }
@@ -69,8 +70,6 @@ export default function Categories(props) {
     parseUserData({
       "SelectedCategories": active
     },"taskBoard")
-    debugger;
-    return;
     const raw = JSON.stringify({
       "UserId": userData.userId,
       "SelectedCategories": active

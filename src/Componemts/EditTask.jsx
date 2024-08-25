@@ -6,16 +6,19 @@ import CircleButton from './CircleButton';
 import SecButton from './SecButton';
 import PrimeButton from './PrimeButton';
 import { useLocation, useNavigate } from 'react-router-dom';
+import TaskBoard from './TaskBoard';
 
 
-export default function EditTask() {
-  const [active, setActive] = useState(null);
+export default function EditTask(props) {
+  const {parseUserData,userData} = props;
+  const task = state.task;
+  const [active, setActive] = useState(task?task.priority:null);
   const navigate = useNavigate();
   const toggleActive = (label) => {
     setActive(active === label ? null : label)
   }
   const { state } = useLocation();
-  const task = state.task;
+  
 
   const [title, setTitle] = useState(task.title || "כותרת משימה");
   const [description, setDescription] = useState(task.description || "תיאור משימה");
@@ -48,7 +51,7 @@ export default function EditTask() {
     <div className='edit-container'>
       <div style={{ borderBottom: '1px solid #b3ccef', padding: '8px' }}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0 8px' }}>
-          <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '330px' }}>
+          <IconButton onClick={() => navigate("/tasks-board")} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '330px' }}>
             <ArrowBackIcon />
           </IconButton>
           {isEditingTitle ? (
@@ -63,7 +66,7 @@ export default function EditTask() {
             <h4 style={{ color: '#0C8CE9' }} onClick={handleTitleClick}>{title}</h4>
           )}
         </div>
-        <div דאט>
+        <div>
           {isEditingDesc ? (
             <input
               type="text"
@@ -102,22 +105,15 @@ export default function EditTask() {
       <div style={{ borderBottom: '1px solid #b3ccef', padding: '8px' }}>
         <p style={{ textAlign: 'right' }}>:דחיפות משימה</p>
         <div style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'flex-start', gap: '8px', alignItems: 'center' }}>
-          <CircleButton color="#e55c5c" label="דחוף" onClick={toggleActive} active={active === 'דחוף'} />
-          <CircleButton color="#e5e05c" label="חשוב" onClick={toggleActive} active={active === 'חשוב'} />
-          <CircleButton color="#67e55c" label="כדאי" onClick={toggleActive} active={active === 'כדאי'} />
+          <CircleButton color="#e55c5c" label="דחוף" onClick={toggleActive} active={active === 'דחוף' || active === 3} />
+          <CircleButton color="#e5e05c" label="חשוב" onClick={toggleActive} active={active === 'חשוב' || active === 2} />
+          <CircleButton color="#67e55c" label="כדאי" onClick={toggleActive} active={active === 'כדאי' || active === 1} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Switch defaultChecked />
           <span>
             קבלת התראה
           </span>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button style={{ color: '#1170f4', padding: '8px 0' }} > <IconButton>
-            <NearMeIcon style={{ transform: 'scaleX(-1)', color: '#1170f4' }} />
-          </IconButton>
-            הופסת מיקום
-          </button>
         </div>
       </div>
       <div style={{ marginTop: '16px' }}>

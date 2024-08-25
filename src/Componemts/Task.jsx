@@ -3,12 +3,13 @@ import './Realocation.css';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import IconButton from '@mui/material/IconButton';
 
-export default function Task({ date, label, description, onDelete, onClick }) {
+export default function Task(props) {
+  const { date, label, description, onDelete, onClick } = props;
   const handleDelete = (e, label) => {
     e.stopPropagation();
     onDelete(label);
   }
-  
+  console.log(description);
   return (
     <div className="task-container" onClick={onClick} >
         <IconButton aria-label="delete" size="small" className="task-delete-button"  onClick={(e) => handleDelete(e, label)} >
