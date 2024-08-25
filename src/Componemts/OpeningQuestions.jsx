@@ -1,5 +1,5 @@
 import './Realocation.css';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {  useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid';
@@ -15,7 +15,7 @@ import { baseURL } from '../Utils';
 function OpeningQuestions(props) {
     const {userId, parseUserData} = props;
     // const navigate = useNavigate();
-    const { userDetails, setUserDetails } = useContext(UserContext);
+  
     const [selectedOption, setSelectedOption] = useState('');
     const [day, setDay] = useState('');
     const [month, setMonth] = useState('');
@@ -61,7 +61,7 @@ function OpeningQuestions(props) {
     const SaveDetails = () => {
         if (!isFormValid()) return;
         parseUserData({
-            "UserId": userDetails.userId,
+            "UserId": userId,
             "DestinationCountry": inputCountry,
             "MoveDate": new Date(year, month - 1, day),
             "HasChildren": selectedOption === 'yes',
@@ -71,7 +71,7 @@ function OpeningQuestions(props) {
         myHeaders.append("Content-Type", "application/json");
 
         const raw = JSON.stringify({
-            "UserId": userDetails.userId,
+            "UserId":userId,
             "DestinationCountry": inputCountry,
             "MoveDate": new Date(year, month - 1, day),
             "HasChildren": selectedOption === 'yes',
