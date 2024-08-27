@@ -14,15 +14,16 @@ import { baseURL } from '../Utils';
 
 export default function TaskBoard(props) {
     const {userData} = props
-
     const navigate = useNavigate();
     const [task, setTask] = useState();
     const { userDetails, setUserDetails } = useContext(UserContext);
     const [tasksBefore, setTasksBefore] = useState([]);
     const [tasksAfter, setTasksAfter] = useState([]);
     const [selectedOption, setSelectedOption] = useState();
+    const location = useLocation();
     const hasChildren = userData.HasChildren;
     const selectedCategories = userData.SelectedCategories;
+   
     const [updateTrigger, setUpdateTrigger] = useState(false);
     const allCategories = [
         { id: 1, name: 'בעלי חיים' },
@@ -40,16 +41,13 @@ export default function TaskBoard(props) {
     ]
     const filteredCategories = allCategories.filter(cat => selectedCategories.includes(cat.id));
     const url = baseURL();
+    console.log(filteredCategories)
 
     const addNewTask = () => {
         // Navigate to the EditTask component with initial empty data for creating a new task
         navigate('/edit-task', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" } } });
     };
  
-
-    useEffect(() => {
-            fetchTasks();
-    }, []);
 
     useEffect(() => {
         if (filteredCategories.length > 0 && !selectedOption) {
@@ -69,10 +67,10 @@ export default function TaskBoard(props) {
             fetchTasks(selectedOption);
         }
     }, [selectedOption]);
-    console.log(selectedOption);
+    console.log("***",selectedOption);
 
 
-    const fetchTasks = (selectedOption) => {
+    const fetchTasks = (selectedOption, isBeforeMove) => {
         console.log("Fetching tasks for category:", selectedOption, " with children: ", hasChildren);
 
         const requestOptions = {
@@ -83,12 +81,18 @@ export default function TaskBoard(props) {
         fetch(`${url}UserTasks/tasks/user/${userDetails.userId}/final`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                const releventTasks = result.filter(task => {
+                const result10=[];
+                if(result.length>0){
+                    for (let i = 0; i < i<10; i++) {
+                        result10.push(result[i]) 
+                    }
+                }
+                const releventTasks = result10.filter(task => {
                     const categoryMatch = task.categoryId === selectedOption;
                     const notDeleted = !task.IsDeleted;
                     return categoryMatch && notDeleted;
             });
-            
+          
             setTasksBefore(releventTasks.filter(task => task.isBeforeMove)); // אם יש תכונה כזו
             setTasksAfter(releventTasks.filter(task => !task.isBeforeMove)); 
             })
@@ -130,9 +134,16 @@ export default function TaskBoard(props) {
 
     const handleTaskClick = (task) => {
         console.log(task)
-        navigate('/edit-task/${taskId}', { state: { task } });
+        navigate('/edit-task/${taskId}', { state: { task: { recommendedTask: task.taskName, descriptionTask: task.taskDescription, priority: task.priority }} });
     }
 
+    const handleNext = () => {
+        const allRemainingTasks = [...tasksBefore, ...tasksAfter];
+        console.log(allRemainingTasks);
+        navigate('/home', { state: { tasks: allRemainingTasks } });
+    }
+
+    console.log("***", tasksAfter);
     return (
         <div className='taskboard-container' >
             <div className='stepIndicator' dir='rtl' >
@@ -142,13 +153,13 @@ export default function TaskBoard(props) {
                 <div className='dot active'></div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', left: '240px' }}>
+                <IconButton onClick={() => parseUserData({},"cetegories")} style={{ transform: 'scaleX(-1)', left: '240px' }}>
                     <ArrowBack />
                 </IconButton>
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
             </div>
-            <div className='chip-container'>
-                <Stack direction="row-reverse" spacing={1} >
+            <div className='chip-container' style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
+                <Stack direction="row-reverse" spacing={1} style={{ flexWrap: 'nowrap', overflowX: 'scroll' }} >
                     {filteredCategories.map(category => (
                         <ChipButton
                             key={category.id}
@@ -178,8 +189,8 @@ export default function TaskBoard(props) {
                     <Task onClick={() => handleTaskClick(task)}
                         key={`${task.taskId}-${index}`}
                         date={task.daysToComplete}
-                        label={task.recommendedTask}
-                        description={task.descriptionTask}
+                        label={task.taskName}
+                        description={task.taskDescription}
                         onDelete={() => deleteTask(task.taskId, false)}
                     />
                 ))}
@@ -189,7 +200,7 @@ export default function TaskBoard(props) {
                 <SecButton btntxt="הוספת משימה חדשה" onClick={addNewTask} >
                     {<AddIcon />}
                 </SecButton>
-                <PrimeButton btntxt="הבא" />
+                <PrimeButton onClick={handleNext} btntxt="הבא" />
             </Stack>
             {userDetails.userId === "true" ? <Navbar /> : null}
         </div>

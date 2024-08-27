@@ -7,11 +7,13 @@ import PrimeButton from './PrimeButton';
 // import { Category, SignalWifiStatusbarConnectedNoInternet4Rounded } from '@mui/icons-material';
 // import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
+import { getLocalStorage, setLocalStorage } from '../utils/functions';
 
 
 export default function Categories(props) {
 
   const {parseUserData,userData} = props
+
 
   const url = baseURL();
   // const navigate = useNavigate();
@@ -32,16 +34,16 @@ export default function Categories(props) {
     { id: 12, image: "public/friends.png", label: "קהילות" }
   ];
   const [categories, setCategories] = useState(initialCategories);
-
   useEffect(() => {
-    console.log(categories);
       fetchSelectedCategories();
       const filteredCategories = userData.hasChildren
         ? initialCategories
         : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
       setCategories(filteredCategories);
-      
-    
+      const category_active=getLocalStorage('category_active')
+      if(category_active){
+        setActive(category_active)
+      }
   }, [])
 
   function fetchSelectedCategories(){
@@ -50,11 +52,11 @@ export default function Categories(props) {
         redirect: "follow"
       };
 
+
       fetch(`${url}UserCategories/tasks/user/${userData.UserId}/true`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           const selectedIds = result.map(item => item.categoryId);
-          setActive(selectedIds);
           const updatedCategories = initialCategories.map(cat => ({
             ...cat,
             active: selectedIds.includes(cat.id)
@@ -72,8 +74,13 @@ export default function Categories(props) {
       "SelectedCategories": active
     },"taskBoard")
 
-
     return;
+
+    // const raw = JSON.stringify({
+    //   "UserId": userData.userId,
+    //   "SelectedCategories": active
+    // });
+
 
     // const raw = JSON.stringify({
     //   "UserId": userData.userId,
@@ -112,8 +119,15 @@ export default function Categories(props) {
         return [...currentActive, id];
       }
     });
-
   };
+  useEffect(()=>{
+    if(active&&active.length>0){
+      setLocalStorage('category_active',active)
+    }else{
+      setLocalStorage('category_active',[])
+    }
+
+  },[active])
   return (
     <div className='Categories-container'>
       <div className='stepIndicator' dir='rtl' >

@@ -33,7 +33,7 @@ function LogIn() {
         fetch(`${url}login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                console.log(result.userId)
+                console.log('login',result)
                 setUserDetails({ userId: result.userId });
                 navigate('/terms', { state: { userId: result.userId }, state: { fromReg: true } });
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')

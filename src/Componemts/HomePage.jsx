@@ -13,14 +13,25 @@ import zIndex from '@mui/material/styles/zIndex';
 import HomeTask from './HomeTask';
 import './Realocation.css';
 import { Widgets } from '@mui/icons-material';
+import { useLocation } from 'react-router-dom';
 
 export default function HomePage() {
     const [drawerHieght, setDrawerHeight] = useState('50vh');
     const drawerRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
     const [date, setDate] = useState(new Date());
-    const [completedTasks, setCompletedTasks] = useState(3);
-    const [totalTasks, setTotalTasks] = useState(5);
+    const location = useLocation();
+    const [tasks, setTasks] = useState([]);
+
+    useEffect(() => {
+        // בדוק אם יש משימות במיקום ועדכן את ה-state
+        if (location.state && location.state.tasks) {
+            setTasks(location.state.tasks);
+        }
+    }, [location]);
+
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(task => task.isCompleted).length;
 
     const toggleDrawer = (open) => (event) => {
         if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -53,7 +64,7 @@ export default function HomePage() {
 
 
     return (
-        <div style={{ backgroundColor: '#0C8CE9', margin: '0', height: '100vh', padding: '0' }}>
+        <div style={{ backgroundColor: '#0C8CE9', height: '100vh', width: '100%', left: '0', margin: '0px' }}>
             <div style={{ paddingTop: '54px', textAlign: 'center', color: 'white' }}>
                 <img src="public/White R.png" alt="logo" />
             </div>
@@ -89,7 +100,7 @@ export default function HomePage() {
                         </div>
                     </div>
                     <div style={{ height: '100%', overflowY: 'auto', direction: 'rtl' }}>
-                        <HomeTask />
+                        <HomeTask tasks={tasks} />
                     </div>
 
                 </div>

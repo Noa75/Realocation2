@@ -1,4 +1,4 @@
-export const isLocalhost = false;
+export const isLocalhost = true;
 
 
 export const baseURL = () => {
