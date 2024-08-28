@@ -1,15 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import { Fab, TextField } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
 import Post from './Post';
 import { useNavigate } from 'react-router-dom';
+import { getLocalStorage } from '../utils/functions';
 
 
 export default function PostPage() {
     const [activeTab, setActiveTab] = useState('general');
     const navigate = useNavigate();
-    const destCountry = "אוסטרליה"
+    const [destCountry, setDestCountry] = useState("");
+
+    useEffect(() => {
+        const storedCountry = getLocalStorage('selected_country');
+        try {
+            if (storedCountry) {
+                const parsedCountry = typeof storedCountry === 'string' && storedCountry.startsWith('{')
+                    ? JSON.parse(storedCountry) // המרת JSON לאובייקט
+                    : storedCountry; // אם זה לא JSON, משאירים אותו כפי שהוא
+                setDestCountry(parsedCountry.label ? parsedCountry.label : parsedCountry);
+            }
+        } catch (error) {
+            console.error("Error parsing stored country:", error);
+        }
+    }, []);
 
     const tabStyle = {
         padding: '10px 20px',

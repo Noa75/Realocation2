@@ -14,7 +14,9 @@ import { baseURL } from "../Utils";
 import { getLocalStorage, setLocalStorage } from "../utils/functions";
 
 function OpeningQuestions(props) {
-  const { userId, parseUserData } = props;
+  const { parseUserData } = props;
+  const userId = getLocalStorage("currentUser");
+  console.log(userId);
   // const navigate = useNavigate();
   const { setUserDetails } = useContext(UserContext);
   const [selectedOption, setSelectedOption] = useState("");
@@ -22,7 +24,7 @@ function OpeningQuestions(props) {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [move_date, set_move_date] = useState({});
-
+  const user = getLocalStorage(userId);
   const currentYear = new Date().getFullYear();
   const [errors, setErrors] = useState({
     day: false,
@@ -33,8 +35,9 @@ function OpeningQuestions(props) {
   const url = baseURL();
 
   useEffect(() => {
-    const moveDate = getLocalStorage("moveDate");
-    const have_kids = getLocalStorage("have_kids");
+    const userId = getLocalStorage("currentUser");
+    const moveDate = getLocalStorage(userId).moveDate;
+    const have_kids = getLocalStorage(userId).have_kids;
     setSelectedOption(have_kids)
     set_move_date(moveDate)
     if (moveDate) {
@@ -142,13 +145,15 @@ function OpeningQuestions(props) {
       default:
         break;
     }
-    setLocalStorage("moveDate",temp);
+    user.moveDate = temp;
+    setLocalStorage(userId,user);
   };
 
 
   const handleButton = (selection) => {
     setSelectedOption(selection);
-    setLocalStorage('have_kids',selection)
+    user.have_kids = selection;
+    setLocalStorage(userId,user);
   };
 
   return (

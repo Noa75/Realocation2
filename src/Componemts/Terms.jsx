@@ -46,6 +46,7 @@ export default function Terms() {
       fetch(`${url}register/${userDetails.userId}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
+          console.log(result);
           setIsAccepted(result.hasAcceptedTerms)
         })
         .catch((error) => console.error(error));
@@ -65,25 +66,20 @@ export default function Terms() {
       body: raw,
       redirect: "follow"
     };
-    setUserDetails(prev => ({ ...prev, userId: 1222 }));
+    //setUserDetails(prev => ({ ...prev, userId: 1222 }));
     setPageName('opningQuestions')
-    // fetch(`${url}register/accept-terms/${userDetails.userId}`, requestOptions)
-    //   .then((response) => response.json())
-    //   .then((result) => {
-    //     console.log("work")
-    //     console.log(result);
-    //     setUserDetails(prev => ({ ...prev, userId: result.userId }));
-    //     setPageName('opningQuestions')
-    //     //navigate('/opening-questions', { state: { userId: result.userId } });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    fetch(`${url}register/accept-terms/${userDetails.userId}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setUserDetails({userId: result.userId});
+        setPageName('opningQuestions')
+        //navigate('/opening-questions', { state: { userId: result.userId } });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
-  console.log(PageName);
   if (PageName === 'opningQuestions') {
-
-    console.log(userDetails)
     return (
       <>
         <OpeningQuestions userId={userDetails.userId} parseUserData={parseUserData} />
@@ -100,7 +96,7 @@ export default function Terms() {
   else if (PageName === "taskBoard") {
     return(
     <>
-    <TaskBoard userId={userDetails.userId} userData={userData}/>
+    <TaskBoard userId={userDetails.userId} userData={userData} parseUserData={parseUserData}/>
     </>
     )
   }
@@ -136,7 +132,7 @@ export default function Terms() {
           השימוש באפליקציה מוגבל למטרות אישיות והמידע המועבר דרכה אינו לשימוש מסחרי או הפצה נוספת. פרטיות המשתתפים מוגנת והמידע אודותיהם לא ישותף ללא הסכמתם.
         </p>
         <div style={{ textAlign: 'right' }}>
-          <label htmlFor="">
+        {fromReg && <label htmlFor="">
             אני מסכימ.ה לתנאי השימוש
             <input
               type='checkbox'
@@ -145,9 +141,10 @@ export default function Terms() {
               style={{ marginLeft: '8px' }}
             />
           </label>
-        </div>
+  }</div>
+        
         <div style={{ marginTop: '32px' }}>
-          <PrimeButton onClick={acceptTerms} btntxt="הבא" disabled={!isAccepted} /></div>
+        {fromReg &&<PrimeButton onClick={acceptTerms} btntxt="הבא" disabled={!isAccepted} />}</div>
         {!fromReg && <Navbar />}
       </div>
     )

@@ -13,7 +13,7 @@ import { getLocalStorage, setLocalStorage } from '../utils/functions';
 export default function Categories(props) {
 
   const {parseUserData,userData} = props
-
+  const userId = getLocalStorage("currentUser");
 
   const url = baseURL();
   // const navigate = useNavigate();
@@ -40,7 +40,10 @@ export default function Categories(props) {
         ? initialCategories
         : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
       setCategories(filteredCategories);
-      const category_active=getLocalStorage('category_active')
+      console.log(userId);
+      const user = getLocalStorage(userId);
+      console.log(user);
+      const category_active = user.category_active;
       if(category_active){
         setActive(category_active)
       }
@@ -75,39 +78,6 @@ export default function Categories(props) {
     },"taskBoard")
 
     return;
-
-    // const raw = JSON.stringify({
-    //   "UserId": userData.userId,
-    //   "SelectedCategories": active
-    // });
-
-
-    // const raw = JSON.stringify({
-    //   "UserId": userData.userId,
-    //   "SelectedCategories": active
-    // });
-
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: raw
-    // };
-
-    // fetch(`${url}UserCategories`, requestOptions)
-    //   .then((response) => response.json())
-    //   .then((result) => {
-    //     console.log(result.userId)
-    //     // setuserData(prev => ({ ...prev, userId: result.userId }));
-    //     // navigate('/tasks-board', {
-    //     //   state: {
-    //     //     userId: result.userId,
-    //     //     selectedCategories: active,
-    //     //     hasChildren: userData.hasChildren
-    //      // }
-    //    // }
-    //    // );
-    //   })
-    //   .catch((error) => console.error(error));
   }
 
   const toggleActive = (id) => {
@@ -121,10 +91,13 @@ export default function Categories(props) {
     });
   };
   useEffect(()=>{
+    const user = getLocalStorage(userId)
     if(active&&active.length>0){
-      setLocalStorage('category_active',active)
+      user.category_active = active;
+      setLocalStorage(userId, user)
     }else{
-      setLocalStorage('category_active',[])
+      user.category_active = []
+      setLocalStorage(userId,user)
     }
 
   },[active])

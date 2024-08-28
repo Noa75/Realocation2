@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Navbar from "./Navbar";
+import SecButton from "./SecButton";
 
 function UserProfile() {
   const initialCategories = [
@@ -87,12 +88,11 @@ function UserProfile() {
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          padding: "20px",
+          alignItems: "center"
         }}
       >
-        <Avatar style={{ width: 120, height: 120 }} />
-        <h4>אורן</h4>
+        <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
+        <h4 style={{margintop:'0', marginBottom: '0'}}>אורן</h4>
         <p>{`9 משימות שבוצעו מתוך 8`}</p>
       </div>
       <div style={{ textAlign: "right" }}>
@@ -108,9 +108,9 @@ function UserProfile() {
             marginTop: 2,
           }}
         >
-          <List component="nav" aria-label="mailbox folders">
+          <List component="nav" aria-label="mailbox folders" style={{backgroundColor: '#F4F7FB'}}>
             <ListItem>
-              <p>מדינת יעד: אוסטרליה</p>
+              <p>מדינת יעד:</p> 
               <TextField onChange={(e)=>{set_DestinationCountry(e.target.value)}} value={DestinationCountry} />
             </ListItem>
             <Divider />
@@ -146,16 +146,19 @@ function UserProfile() {
                   <TextField {...params} label="categories" />
                 )}
               />
-            </ListItem>
+            </ListItem >
           </List>
         </Stack>
-        <Button
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+        <SecButton
+        btntxt="שמור"
+        active={false}
             onClick={() => {
               handleClick();
             }}
           >
-            שמור
-          </Button>
+          </SecButton>
+          </div>
         <Navbar />
       </div>
     </div>

@@ -19,9 +19,20 @@ export default function HomePage() {
     const [drawerHieght, setDrawerHeight] = useState('50vh');
     const drawerRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [date, setDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const location = useLocation();
-    const [tasks, setTasks] = useState([]);
+    //const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState([
+        {
+            id: 1,
+            taskName: "משימה לדוגמה",
+            taskDescription: "תיאור משימה לדוגמה",
+            priority: 2, // דרגת דחיפות
+            endDate: "2024-08-28", // אותו תאריך שנבחר
+            completed: false, // משימה לא הושלמה
+            userTaskId: 1
+        }
+    ]);
 
     useEffect(() => {
         // בדוק אם יש משימות במיקום ועדכן את ה-state
@@ -31,7 +42,7 @@ export default function HomePage() {
     }, [location]);
 
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(task => task.isCompleted).length;
+    const completedTasks = tasks.filter(task => task.completed).length;
 
     const toggleDrawer = (open) => (event) => {
         if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -39,6 +50,13 @@ export default function HomePage() {
         }
         setIsOpen(open);
     };
+
+    // const handleDateChange = (newDate) => {
+    //     setSelectedDate(newDate.toISOString().split('T')[0]); // שמירת תאריך בפורמט YYYY-MM-DD
+    // };
+
+    // const filteredTasks = tasks.filter(task => task.endDate === selectedDate); // סינון משימות לפי התאריך הנבחר
+
 
     useEffect(() => {
         // פונקציה לשינוי גובה המגירה במגע
@@ -64,13 +82,13 @@ export default function HomePage() {
 
 
     return (
-        <div style={{ backgroundColor: '#0C8CE9', height: '100vh', width: '100%', left: '0', margin: '0px' }}>
+        <div style={{ backgroundColor: '#0C8CE9',height: '100%', width: '100%', left: '0', margin: '0px', position: 'fixed', top: '0' }}>
             <div style={{ paddingTop: '54px', textAlign: 'center', color: 'white' }}>
                 <img src="public/White R.png" alt="logo" />
             </div>
             <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateCalendar />
+                    <DateCalendar  />
                 </LocalizationProvider>
             </div>
             <div>
@@ -93,14 +111,14 @@ export default function HomePage() {
                             left: '0'
                     }}>
                     <div style={{ padding: '0 16px', display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px', direction: 'rtl', textAlign: 'right' }}>
-                        <h4 style={{ fontSize: '32px', fontWeight: '200', margin: '0' }}>{moment(date).format('DD/MM')}</h4>
+                        <h4 style={{ fontSize: '32px', fontWeight: '200', margin: '0' }}>{moment(selectedDate).format('DD/MM')}</h4>
                         <div style={{ textAlign: 'right' }}>
                             <h3 style={{ marginBottom: '0' }}>משימות להיום</h3>
                             <p style={{ marginTop: '0' }}>{completedTasks} משימות מתוך {totalTasks}</p>
                         </div>
                     </div>
                     <div style={{ height: '100%', overflowY: 'auto', direction: 'rtl' }}>
-                        <HomeTask tasks={tasks} />
+                        <HomeTask tasks={tasks} setTasks={setTasks} />
                     </div>
 
                 </div>

@@ -28,7 +28,8 @@
   }
   .taskboard-container{
     max-width: 393px;
-    overflow: hidden;
+    width: 100%;
+    overflow-x: hidden;
     margin:  0 auto;
     padding-bottom: 56px;
   }
@@ -111,7 +112,7 @@
   border-radius: 16px;
   margin: 16px 0;
   padding: 16px;
-  width: 90%;
+  width: 310px;
 }
 .signup-container{
   display: flex;

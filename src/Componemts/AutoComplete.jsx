@@ -14,12 +14,15 @@ export default function AutoComplete(props) {
   const [countries, setCountries] = useState([{ label: "" }]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const selected_country = getLocalStorage("selected_country");
+  const userId = getLocalStorage("currentUser");
+  const selected_country = getLocalStorage(userId).selected_country;
 
   const setSelectedCountry = (e, newValue) => {
     console.log(e, newValue);
     if (newValue) {
-      setLocalStorage("selected_country", newValue);
+      const user = getLocalStorage(userId);
+      user.selected_country = newValue;
+      setLocalStorage(userId, user);
       setInputCountry(newValue.label);
       setCountry(newValue)
     }

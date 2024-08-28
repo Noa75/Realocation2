@@ -1,22 +1,25 @@
 import { Stack } from '@mui/material'
 import React, { useContext } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function () {
     const navigate = useNavigate();
+    const location = useLocation();
 
-
-
- 
+    const isActive = (path) => location.pathname === path;
+    
+      const underlineStyle = {
+        borderBottom: '3px solid #0C8CE9', // פס כחול מתחת לאייקון
+        paddingBottom: '10px', // למנוע שהפס יצמד יותר מדי
+      };
  
     return (
     <div style={{
         position: 'fixed',
         display:'flex',
-        justifyContent:'space-around',
+        justifyContent:'space-evenly',
         alignItems:'center', 
-        height:'73px',
-        padding:'0px', 
+        height:'73px', 
         direction:'rtl', 
         backgroundColor: '#f5f7fa',
         borderTop: '1px solid white',
@@ -26,20 +29,21 @@ export default function () {
         zIndex: '1000',
         maxWidth: '393px'
     }}>
-        <Stack direction="row" spacing={1} >
-        <button style={{backgroundColor:'#f5f7fa'}} onClick={() => navigate('/terms')}>
+        <Stack direction="row" spacing={2} >
+        <button style={isActive('/terms') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}}
+        onClick={() => navigate('/terms')}>
             <img src="public/R.png" alt="R" />
         </button>
-        <button style={{backgroundColor:'#f5f7fa'}} onClick={() => navigate('/task-board')}>
+        <button style={isActive('/tasks-board') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/tasks-board')}>
             <img src="public/Tasks.png" alt="Tasks" />
         </button>
-        <button style={{backgroundColor:'#f5f7fa'}} onClick={() => navigate('/home')}>
+        <button style={isActive('/home') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/home')}>
             <img src="public/HomeIcon.png" alt="Home" />
         </button>
-        <button style={{backgroundColor:'#f5f7fa'}} onClick={() => navigate('/post')}>
+        {/* <button style={isActive('/post') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/post')}>
             <img src="public/PlusIcon.png" alt="Plus" />
-        </button>
-        <button style={{backgroundColor:'#f5f7fa'}} onClick={() => navigate('/user')}>
+        </button> */}
+        <button style={isActive('/user') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/user')}>
             <img src="public/UserIcon.png" alt="User" />
         </button>
         </Stack>

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { baseURL } from '../Utils';
 import { UserContext } from './UserHook';
+import { getLocalStorage, setLocalStorage } from '../utils/functions';
 
 
 function LogIn() {
@@ -35,6 +36,11 @@ function LogIn() {
             .then((result) => {
                 console.log('login',result)
                 setUserDetails({ userId: result.userId });
+                if (!getLocalStorage(result.userId)) {
+                    setLocalStorage(result.userId, {category_active: [], have_kids: "no", moveDate: {year: '', month: '', day: ''}, selected_country: {label: ''}})
+                    
+                }
+                setLocalStorage("currentUser", result.userId)
                 navigate('/terms', { state: { userId: result.userId }, state: { fromReg: true } });
                 //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
             })

@@ -6,17 +6,15 @@ import SecButton from './SecButton';
 import { de } from 'date-fns/locale';
 
 
-export default function HomeTask({tasks}) {
-    const [task, setTask] = useState();
+export default function HomeTask({tasks, setTasks}) {
 
     const handleComplete = (taskId) => {
-        console.log("before", tasks);
-        setTask(tasks.map(task => {
+        setTasks(tasks.map(task => {
             if (taskId === task.userTaskId) {
-                console.log(taskId);
-                return { ...task, completed: !task.completed};
-            }
-            return task;
+                // task.completed = !task.completed;
+                // return task;
+                return { ...task, completed : !task.completed}
+             }
         }))
     };
 
@@ -28,6 +26,8 @@ export default function HomeTask({tasks}) {
             default: return 'grey';
         }
     };
+
+    //const filteredTasks = tasks.filter(task => task.endDate === selectedDate);
 
     return (
         <>
@@ -59,7 +59,6 @@ export default function HomeTask({tasks}) {
                 <p style={{ fontSize: '14px', color: task.completed ?'gray':'#0C8CE9', margin:'0' }}>{task.taskDescription}</p>
                 <p style={{ fontSize: '14px' }}> עד {task.endDate}</p>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '10px' }} >
-                    <SecButton disabled={!task.completed} btntxt="השאר חוות דעת" active={task.completed}/>
                     <SecButton onClick={() => handleComplete(task.userTaskId)} btntxt={task.completed ? "שחזר" : "בוצע"} active={!task.completed}/>
                 </div>
             </div>

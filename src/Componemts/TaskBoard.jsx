@@ -10,10 +10,12 @@ import SecButton from './SecButton';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
+import { getLocalStorage } from '../utils/functions';
 
 
 export default function TaskBoard(props) {
-    const {userData} = props
+    const {propUserData, parseUserData} = props;
+    const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
     const [task, setTask] = useState();
     const { userDetails, setUserDetails } = useContext(UserContext);
@@ -21,8 +23,8 @@ export default function TaskBoard(props) {
     const [tasksAfter, setTasksAfter] = useState([]);
     const [selectedOption, setSelectedOption] = useState();
     const location = useLocation();
-    const hasChildren = userData.HasChildren;
-    const selectedCategories = userData.SelectedCategories;
+    let hasChildren = false;
+    let selectedCategories = [];
    
     const [updateTrigger, setUpdateTrigger] = useState(false);
     const allCategories = [
@@ -48,6 +50,13 @@ export default function TaskBoard(props) {
         navigate('/edit-task', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" } } });
     };
  
+    useEffect(() => {
+        const userId = getLocalStorage("currentUser");
+        const localStorageData = {HasChildren: getLocalStorage(userId).have_kids, SelectedCategories: getLocalStorage(userId).category_active}
+        propUserData ? setUserData(propUserData) : setUserData(localStorageData);
+        hasChildren = localStorageData.HasChildren;
+        selectedCategories = localStorageData.SelectedCategories;
+    },[])
 
     useEffect(() => {
         if (filteredCategories.length > 0 && !selectedOption) {
@@ -158,8 +167,8 @@ export default function TaskBoard(props) {
                 </IconButton>
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
             </div>
-            <div className='chip-container' style={{ overflowX: 'scroll', whiteSpace: 'nowrap' }}>
-                <Stack direction="row-reverse" spacing={1} style={{ flexWrap: 'nowrap', overflowX: 'scroll' }} >
+            <div className='chip-container' style={{ maxWidth: '393px', overflowX: 'scroll', whiteSpace: 'nowrap' }}>
+                <Stack direction="row-reverse" spacing={1} style={{ flexWrap: 'nowrap', overflowX: 'scroll' , maxWidth: '310px' }} >
                     {filteredCategories.map(category => (
                         <ChipButton
                             key={category.id}
