@@ -96,7 +96,7 @@ export default function Terms() {
   else if (PageName === "taskBoard") {
     return(
     <>
-    <TaskBoard userId={userDetails.userId} userData={userData} parseUserData={parseUserData}/>
+    <TaskBoard userId={userDetails.userId} userData={userData} parseUserData={parseUserData} fromCategories={true} />
     </>
     )
   }
@@ -110,16 +110,16 @@ export default function Terms() {
   else {
     return (
       <div style={{ padding: '24px' }}>
-        <div className='stepIndicator' dir='rtl' >
+        {fromReg && <div className='stepIndicator' dir='rtl' >
           <div className='dot active'></div>
           <div className='dot'></div>
           <div className='dot'></div>
           <div className='dot'></div>
-        </div>
+        </div>}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '320px' }}>
+        {fromReg && <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '320px' }}>
             <ArrowBackIcon />
-          </IconButton>
+          </IconButton>}
           <h4 style={{ textAlign: 'center' }}>תנאי שימוש</h4>
         </div>
         <p style={{ marginBottom: '24px', textAlign: 'right', direction: 'rtl' }}>

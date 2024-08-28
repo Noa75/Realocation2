@@ -8,13 +8,14 @@ import PrimeButton from './PrimeButton';
 // import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
 import { getLocalStorage, setLocalStorage } from '../utils/functions';
+import { Navigate } from 'react-router-dom';
 
 
 export default function Categories(props) {
 
-  const {parseUserData,userData} = props
+  const { parseUserData, userData } = props
   const userId = getLocalStorage("currentUser");
-
+  const user = getLocalStorage(userId);
   const url = baseURL();
   // const navigate = useNavigate();
   const [active, setActive] = useState([]);
@@ -35,47 +36,72 @@ export default function Categories(props) {
   ];
   const [categories, setCategories] = useState(initialCategories);
   useEffect(() => {
-      fetchSelectedCategories();
-      const filteredCategories = userData.hasChildren
-        ? initialCategories
-        : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
-      setCategories(filteredCategories);
-      console.log(userId);
-      const user = getLocalStorage(userId);
-      console.log(user);
-      const category_active = user.category_active;
-      if(category_active){
-        setActive(category_active)
-      }
+    fetchSelectedCategories();
+    const filteredCategories = userData.hasChildren
+      ? initialCategories
+      : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
+    setCategories(filteredCategories);
+    const category_active = user.category_active;
+    if (category_active) {
+      setActive(category_active)
+    }
   }, [])
 
-  function fetchSelectedCategories(){
-      const requestOptions = {
-        method: "GET",
-        redirect: "follow"
-      };
+  function fetchSelectedCategories() {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow"
+    };
 
-
-      fetch(`${url}UserCategories/tasks/user/${userData.UserId}/true`, requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          const selectedIds = result.map(item => item.categoryId);
-          const updatedCategories = initialCategories.map(cat => ({
-            ...cat,
-            active: selectedIds.includes(cat.id)
-          }));
-          setCategories(updatedCategories);
-        })
-        .catch((error) => console.error(error));
+    fetch(`${url}UserCategories/tasks/user/${userData.UserId}/true`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        const selectedIds = result.map(item => item.categoryId);
+        const updatedCategories = initialCategories.map(cat => ({
+          ...cat,
+          active: selectedIds.includes(cat.id)
+        }));
+        setCategories(updatedCategories);
+      })
+      .catch((error) => console.error(error));
   }
 
   const SaveCateegories = () => {
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    parseUserData({
+    const moveDateObj = user.moveDate;
+    const fullMoveDate = new Date(moveDateObj.year, moveDateObj.month - 1, moveDateObj.day);
+  if (isNaN(fullMoveDate)) {
+    console.error("Invalid date: ", fullMoveDate);
+    return; // יציאה אם התאריך אינו חוקי
+  }
+
+  console.log("active categories:", active);
+
+    const raw = JSON.stringify({
+      "UserId": userId,
+      "DestinationCountry": user.selected_country.label,
+      "MoveDate": fullMoveDate.toISOString(),
+      "HasChildren": user.have_kids === "yes" ? true : false,
       "SelectedCategories": active
-    },"taskBoard")
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch(`${url}Details`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        parseUserData({SelectedCategories: active}, "taskBoard");
+      })
+      .catch((error) => console.error(error));
+
 
     return;
   }
@@ -90,17 +116,17 @@ export default function Categories(props) {
       }
     });
   };
-  useEffect(()=>{
+  useEffect(() => {
     const user = getLocalStorage(userId)
-    if(active&&active.length>0){
+    if (active && active.length > 0) {
       user.category_active = active;
       setLocalStorage(userId, user)
-    }else{
+    } else {
       user.category_active = []
-      setLocalStorage(userId,user)
+      setLocalStorage(userId, user)
     }
 
-  },[active])
+  }, [active])
   return (
     <div className='Categories-container'>
       <div className='stepIndicator' dir='rtl' >
@@ -110,7 +136,7 @@ export default function Categories(props) {
         <div className='dot'></div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', padding: ' 0 16px' }}>
-        <IconButton onClick={() => parseUserData({},"opningQuestions")} style={{ transform: 'scaleX(-1)', left: '280px' }}>
+        <IconButton onClick={() => parseUserData({}, "opningQuestions")} style={{ transform: 'scaleX(-1)', left: '280px' }}>
           <ArrowBackIcon />
         </IconButton>
         <h4 style={{ textAlign: 'center' }}>בחירת נושאי משימות </h4>

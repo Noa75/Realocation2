@@ -64,8 +64,8 @@ function UserProfile() {
   };
   const [moveDate, set_moveDate] = useState(
     set_date_to_input(
-      userDetails && userDetails.moveDate && userDetails.moveDate
-        ? moveDate
+      userDetails && userDetails.moveDate 
+        ? userDetails.moveDate
         : null
     )
   );
@@ -92,7 +92,6 @@ function UserProfile() {
         }}
       >
         <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
-        <h4 style={{margintop:'0', marginBottom: '0'}}>אורן</h4>
         <p>{`9 משימות שבוצעו מתוך 8`}</p>
       </div>
       <div style={{ textAlign: "right" }}>

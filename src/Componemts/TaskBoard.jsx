@@ -14,7 +14,7 @@ import { getLocalStorage } from '../utils/functions';
 
 
 export default function TaskBoard(props) {
-    const {propUserData, parseUserData} = props;
+    const {propUserData, parseUserData } = props;
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
     const [task, setTask] = useState();
@@ -151,20 +151,19 @@ export default function TaskBoard(props) {
         console.log(allRemainingTasks);
         navigate('/home', { state: { tasks: allRemainingTasks } });
     }
-
-    console.log("***", tasksAfter);
+    const fromCategories = props.fromCategories || location.state?.fromCategories || false;
     return (
         <div className='taskboard-container' >
-            <div className='stepIndicator' dir='rtl' >
+            {fromCategories && <div className='stepIndicator' dir='rtl' >
                 <div className='dot'></div>
                 <div className='dot'></div>
                 <div className='dot'></div>
                 <div className='dot active'></div>
-            </div>
+            </div>}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <IconButton onClick={() => parseUserData({},"cetegories")} style={{ transform: 'scaleX(-1)', left: '240px' }}>
+            {fromCategories && <IconButton onClick={() => parseUserData({},"cetegories")} style={{ transform: 'scaleX(-1)', left: '240px' }}>
                     <ArrowBack />
-                </IconButton>
+                </IconButton>}
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
             </div>
             <div className='chip-container' style={{ maxWidth: '393px', overflowX: 'scroll', whiteSpace: 'nowrap' }}>
@@ -211,7 +210,7 @@ export default function TaskBoard(props) {
                 </SecButton>
                 <PrimeButton onClick={handleNext} btntxt="הבא" />
             </Stack>
-            {userDetails.userId === "true" ? <Navbar /> : null}
+            {userDetails.userId ? <Navbar /> : null}
         </div>
 
 
