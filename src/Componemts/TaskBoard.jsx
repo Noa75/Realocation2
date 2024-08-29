@@ -195,7 +195,7 @@ export default function TaskBoard(props) {
                 {tasksBefore.map((task, index) => (
                     <Task onClick={() => handleTaskClick(task)}
                         key={`${task.taskId}-${index}`}
-                        date={(task.daysToComplete)}
+                        date={(task.startDate)}
                         label={task.taskName}
                         description={task.taskDescription
                         }
@@ -209,7 +209,7 @@ export default function TaskBoard(props) {
                 {tasksAfter.map((task, index) => (
                     <Task onClick={() => handleTaskClick(task)}
                         key={`${task.taskId}-${index}`}
-                        date={task.daysToComplete}
+                        date={task.startDate}
                         label={task.taskName}
                         description={task.taskDescription}
                         onDelete={() => deleteTask(task.taskId, false)}

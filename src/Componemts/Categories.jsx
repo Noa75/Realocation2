@@ -98,7 +98,7 @@ export default function Categories(props) {
       redirect: "follow"
     };
 
-    fetch(`${url}Details`, requestOptions)
+    fetch(`${url}Details/save-details-and-calculate/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         parseUserData({SelectedCategories: active}, "taskBoard");

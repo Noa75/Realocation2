@@ -5,6 +5,14 @@ import IconButton from '@mui/material/IconButton';
 
 export default function Task(props) {
   const { date, label, description, onDelete, onClick } = props;
+  
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0'); // מוסיף אפס בתחילת היום אם יש צורך
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // מוסיף אפס בתחילת החודש אם יש צורך
+    return `${day}/${month}`;
+  };
+  
   const handleDelete = (e, label) => {
     e.stopPropagation();
     onDelete(label);
@@ -18,7 +26,7 @@ export default function Task(props) {
         <h3 className="task-label">{label}</h3>
         <p className="task-description">{description}</p>
       </div>
-      <p className="task-date">{date}</p>
+      <p className="task-date">{formatDate(date)}</p>
     </div>
   )
 }

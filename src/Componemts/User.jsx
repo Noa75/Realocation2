@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserHook";
 import {
   Avatar,
@@ -13,6 +13,7 @@ import {
 import Stack from "@mui/material/Stack";
 import Navbar from "./Navbar";
 import SecButton from "./SecButton";
+import { baseURL } from '../Utils';
 
 function UserProfile() {
   const initialCategories = [
@@ -29,139 +30,145 @@ function UserProfile() {
     { id: 11, image: "public/car.png", label: "רכב" },
     { id: 12, image: "public/friends.png", label: "קהילות" },
   ];
+  const url = baseURL();
   const { userDetails } = useContext(UserContext);
   console.log(userDetails);
-  const [DestinationCountry, set_DestinationCountry] = useState(
-    userDetails &&
-      userDetails.DestinationCountry &&
-      userDetails.DestinationCountry.label
-      ? userDetails.DestinationCountry.label
-      : ""
-  );
-  const [have_kids, set_have_kids] = useState(
-    userDetails && userDetails.HasChildren ? userDetails.HasChildren : ""
-  );
-  const [categories, setCategories] = useState(
-    userDetails && userDetails.SelectedCategories
-      ? userDetails.SelectedCategories
-      : []
-  );
+  const [DestinationCountry, set_DestinationCountry] = useState("");
+  const [have_kids, set_have_kids] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [moveDate, set_moveDate] = useState("");
+  const userId = userDetails.userId;
+
 
   const set_date_to_input = (date) => {
     const dateObject = date ? new Date(date) : new Date();
 
-    // Extract the year, month, and day
     const year = dateObject.getFullYear();
-    let month = dateObject.getMonth() + 1; // Months are zero-indexed
+    let month = dateObject.getMonth() + 1;
     let day = dateObject.getDate();
 
-    // Pad month and day with leading zeros if necessary
     month = month < 10 ? "0" + month : month;
     day = day < 10 ? "0" + day : day;
 
-    // Format the date as YYYY-MM-DD
     return `${year}-${month}-${day}`;
   };
-  const [moveDate, set_moveDate] = useState(
-    set_date_to_input(
-      userDetails && userDetails.moveDate 
-        ? userDetails.moveDate
-        : null
-    )
-  );
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, [])
+  console.log(userDetails.userId);
+  const fetchUserDetails = () => {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow"
+    };
+    console.log(userDetails.userId);
+    fetch(`${url}UserDetails/${userDetails.UserId}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result)
+        set_DestinationCountry(result.DestinationCountry || "");
+        set_have_kids(result.HasChildren || false);
+        set_moveDate(set_date_to_input(result.moveDate || ""));
+        setCategories(result.SelectedCategories || []);
+      })
+      .catch((error) => console.error(error));
+  }
+
   const setSelectedCountry = (e, newValue) => {
     setCategories(newValue);
   };
+
   const handleClick = () => {
-    const data={
-        UserId:userDetails.UserId,
-        MoveDate:moveDate,
-        DestinationCountry:DestinationCountry,
-        have_kids:have_kids
-  }
-  console.log('data',data)
+    const data = {
+      UserId: userId,
+      MoveDate: moveDate,
+      DestinationCountry: DestinationCountry,
+      have_kids: have_kids
+    };
+    console.log('data', data);
 
 };
-  return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center"
+return (
+  <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center"
+      }}
+    >
+      <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
+      <p>{`9 משימות שבוצעו מתוך 8`}</p>
+    </div>
+    <div style={{ textAlign: "right" }}>
+      <Stack
+        direction="column"
+        dir="rtl"
+        textAlign="right"
+        spacing={2}
+        sx={{
+          width: "100%",
+          maxWidth: 360,
+          bgcolor: "background.paper",
+          marginTop: 2,
         }}
       >
-        <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
-        <p>{`9 משימות שבוצעו מתוך 8`}</p>
-      </div>
-      <div style={{ textAlign: "right" }}>
-        <Stack
-          direction="column"
-          dir="rtl"
-          textAlign="right"
-          spacing={2}
-          sx={{
-            width: "100%",
-            maxWidth: 360,
-            bgcolor: "background.paper",
-            marginTop: 2,
+        <List component="nav" aria-label="mailbox folders" style={{ backgroundColor: '#F4F7FB' }}>
+          <ListItem>
+            <p>מדינת יעד:</p>
+            <TextField onChange={(e) => { set_DestinationCountry(e.target.value) }} value={DestinationCountry} />
+          </ListItem>
+          <Divider />
+          <ListItem divider>
+            <p>תאריך היעד: </p>
+            <input
+              onChange={(e) => {
+                set_moveDate(e.target.value);
+              }}
+              type="date"
+              value={moveDate}
+            />
+          </ListItem>
+          <ListItem>
+            <p>האם יש ילדים: </p>
+            <input
+              type="checkbox"
+              checked={have_kids}
+              onChange={(e) => {
+                set_have_kids(e.target.value);
+              }}
+            />
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <p>קטגוריות שנבחרו: </p>
+            <Autocomplete
+              options={initialCategories}
+              multiple={true}
+              value={categories}
+              onChange={setSelectedCountry}
+              renderInput={(params) => (
+                <TextField {...params} label="categories" />
+              )}
+            />
+          </ListItem >
+        </List>
+      </Stack>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+        <SecButton
+          btntxt="שמור"
+          active={false}
+          onClick={() => {
+            handleClick();
           }}
         >
-          <List component="nav" aria-label="mailbox folders" style={{backgroundColor: '#F4F7FB'}}>
-            <ListItem>
-              <p>מדינת יעד:</p> 
-              <TextField onChange={(e)=>{set_DestinationCountry(e.target.value)}} value={DestinationCountry} />
-            </ListItem>
-            <Divider />
-            <ListItem divider>
-              <p>תאריך היעד: </p>
-              <input
-                onChange={(e) => {
-                  set_moveDate(e.target.value);
-                }}
-                type="date"
-                value={moveDate}
-              />
-            </ListItem>
-            <ListItem>
-              <p>האם יש ילדים: </p>
-              <input
-                type="checkbox"
-                checked={have_kids}
-                onChange={(e) => {
-                  set_have_kids(e.target.value);
-                }}
-              />
-            </ListItem>
-            <Divider />
-            <ListItem>
-              <p>קטגוריות שנבחרו: </p>
-              <Autocomplete
-                options={initialCategories}
-                multiple={true}
-                value={categories}
-                onChange={setSelectedCountry}
-                renderInput={(params) => (
-                  <TextField {...params} label="categories" />
-                )}
-              />
-            </ListItem >
-          </List>
-        </Stack>
-        <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
-        <SecButton
-        btntxt="שמור"
-        active={false}
-            onClick={() => {
-              handleClick();
-            }}
-          >
-          </SecButton>
-          </div>
-        <Navbar />
+        </SecButton>
       </div>
+      <Navbar />
     </div>
-  );
+  </div>
+);
 }
 
 export default UserProfile;

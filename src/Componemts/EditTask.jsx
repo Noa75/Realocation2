@@ -153,8 +153,8 @@ export default function EditTask(props) {
 
     const raw = JSON.stringify({
       "UserId": userId,
-      "TaskName": task.taskName,
-      "TaskDescription": task.taskName,
+      "TaskName": task.taskName || "שם משימה",
+      "TaskDescription": task.taskDescription || "תיאור משימה",
       "StartDate": task.startDate,
       "EndDate": task.endDate,
       "PriorityId": task.priority,
@@ -192,9 +192,10 @@ export default function EditTask(props) {
               onChange={handleInputChange}
               onBlur={handleBlur}
               autoFocus
+              style={{ width: '30%' }}
             />
           ) : (
-            <h4 style={{ color: '#0C8CE9' }} onClick={handleTitleClick}>{title}</h4>
+            <h4 style={{ color: '#0C8CE9', maxWidth: '260px', margin: '0 auto', width: '100%', textAlign: 'center' }} onClick={handleTitleClick}>{title}</h4>
           )}
         </div>
         <div>
@@ -208,7 +209,7 @@ export default function EditTask(props) {
               autoFocus
             />
           ) : (
-            <p style={{ color: '#0C8CE9' }} onClick={handleDescClick}>{task.descriptionTask}</p>
+            <p style={{ color: '#0C8CE9', maxWidth: '300px', margin: '0 auto', width: '100%', textAlign: 'center' }} onClick={handleDescClick}>{description}</p>
           )}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -28,6 +28,13 @@ export default function HomeTask({tasks, setTasks}) {
         }
     };
 
+    const formatDateForDisplay = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0'); // מוסיף אפס בתחילת היום אם יש צורך
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // מוסיף אפס בתחילת החודש אם יש צורך
+        return `${day}/${month}`;
+    };
+
     //const filteredTasks = tasks.filter(task => task.endDate === selectedDate);
 
     return (
@@ -58,7 +65,7 @@ export default function HomeTask({tasks, setTasks}) {
             <div style={{textAlign: 'right'}}>
                 <h4 style={{ fontSize: '18px', fontWeight: 'bold', color: task.completed ?'gray': '#0C8CE9', margin: '0' }}>{task.taskName}</h4>
                 <p style={{ fontSize: '14px', color: task.completed ?'gray':'#0C8CE9', margin:'0' }}>{task.taskDescription}</p>
-                <p style={{ fontSize: '14px' }}> עד {task.endDate}</p>
+                <p style={{ fontSize: '14px' }}> עד {formatDateForDisplay(task.endDate)}</p>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '10px' }} >
                     <SecButton onClick={() => handleComplete(task.userTaskId)} btntxt={task.completed ? "שחזר" : "בוצע"} active={!task.completed}/>
                 </div>
