@@ -17,6 +17,7 @@ export default function HomeTask({tasks, setTasks}) {
              }
         }))
     };
+    
 
     const urgencyColor = (urgency) => {
         switch (urgency) {

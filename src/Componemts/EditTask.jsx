@@ -7,24 +7,39 @@ import SecButton from './SecButton';
 import PrimeButton from './PrimeButton';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TaskBoard from './TaskBoard';
+import { baseURL } from '../Utils';
+import { getLocalStorage } from '../utils/functions';
 
 
 export default function EditTask(props) {
-  const {parseUserData,userData} = props;
-  const task = state.task;
-  const [active, setActive] = useState(task?task.priority:null);
-  const navigate = useNavigate();
-  const toggleActive = (label) => {
-    setActive(active === label ? null : label)
-  }
+  const { parseUserData, userData } = props;
   const { state } = useLocation();
-  
+  const taskFromState = state.task;
+  const [task, setTask] = useState(taskFromState);
+  const [active, setActive] = useState(task ? task.priority : null);
+  const navigate = useNavigate();
+  const [isOneDayTask, setIsOneDayTask] = useState(false);
+  // const toggleActive = (label) => {
+  //   setActive(active === label ? null : label)
+  // }
+  const url = baseURL();
+  const userId = getLocalStorage("currentUser");
 
-  const [title, setTitle] = useState(task.title || "כותרת משימה");
-  const [description, setDescription] = useState(task.description || "תיאור משימה");
+
+
+  const [title, setTitle] = useState(task.taskName || "כותרת משימה");
+  const [description, setDescription] = useState(task.taskDescription || "תיאור משימה");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
 
+  const formatDateForInput = (date) => {
+    if (!date) return ''; // אם אין תאריך, נחזיר מחרוזת ריקה
+    const d = new Date(date);
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    const year = d.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
 
   const handleTitleClick = () => {
     setIsEditingTitle(true);
@@ -34,8 +49,35 @@ export default function EditTask(props) {
     setIsEditingDesc(true);
   };
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setTask((prevTask) => ({
+      ...prevTask,
+      [name]:value,
+    }));
+    console.log(task.taskName)
+    if (name === "taskName") {
+      setTitle(value);
+    } else if (name === "taskDescription") {
+      setDescription(value);
+    }
+  };
+
+  const toggleActive = (label) => {
+    let newPriority;
+    if (label === 'דחוף') {
+      newPriority = 3;
+    } else if (label === 'חשוב') {
+      newPriority = 2;
+    } else if (label === 'כדאי') {
+      newPriority = 1;
+    }
+  
+    setActive(active === label ? null : label);
+    setTask(prevTask => ({
+      ...prevTask,
+      priority: active === label ? null : newPriority
+    }));
   };
 
   const handleDescChange = (event) => {
@@ -47,18 +89,107 @@ export default function EditTask(props) {
     setIsEditingDesc(false);
   };
 
+  const handleStartDateChange = (e) => {
+    const { value } = e.target;
+    setTask(prevTask => ({
+      ...prevTask,
+      startDate: value,
+      endDate: isOneDayTask ? value : prevTask.endDate // Update endDate if "One Day" is active
+    }));
+  };
+
+  const handleEndDateChange = (e) => {
+    const { value } = e.target;
+    setIsOneDayTask(false); // Disable "One Day" if endDate is manually changed
+    setTask(prevTask => ({
+      ...prevTask,
+      endDate: value
+    }));
+  };
+
+  const toggleOneDayTask = () => {
+    setIsOneDayTask(!isOneDayTask);
+    if (!isOneDayTask) {
+      setTask(prevTask => ({
+        ...prevTask,
+        endDate: prevTask.startDate
+      }))
+    }
+  }
+
+  const updateTask = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "TaskName": task.taskName,
+      "TaskDescription": task.taskDescription,
+      "PriorityId": task.priority,
+      "StartDate": task.startDate,
+      "EndDate": task.endDate,
+      "PersonalNote": task.personalNote
+    });
+    console.log(task);
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch(`${url}UpdateTask/tasks/update/${task.userTaskId}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        navigate('/tasks-board', { state: { fromEditTask: true } })
+      })
+      .catch((error) => console.error(error));
+  }
+
+  const newTask = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "UserId": userId,
+      "TaskName": task.taskName,
+      "TaskDescription": task.taskName,
+      "StartDate": task.startDate,
+      "EndDate": task.endDate,
+      "PriorityId": task.priority,
+      "PersonalNote": task.personalNote
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch(`${url}UserTasks/tasks/new`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log("new task:",result)
+        navigate('/tasks-board', { state: { fromEditTask: true } });
+      })
+      .catch((error) => console.error(error));
+  }
+
   return (
     <div className='edit-container'>
       <div style={{ borderBottom: '1px solid #b3ccef', padding: '8px' }}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '0 8px' }}>
-          <IconButton onClick={() => navigate("/tasks-board")} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '330px' }}>
+          <IconButton onClick={() => navigate('/tasks-board', { state: { fromEditTask: true } })} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '330px' }}>
             <ArrowBackIcon />
           </IconButton>
           {isEditingTitle ? (
             <input
               type="text"
-              value={title}
-              onChange={handleTitleChange}
+              name="taskName"
+              value={task.taskName}
+              onChange={handleInputChange}
               onBlur={handleBlur}
               autoFocus
             />
@@ -70,8 +201,9 @@ export default function EditTask(props) {
           {isEditingDesc ? (
             <input
               type="text"
-              value={description}
-              onChange={handleDescChange}
+              name="taskDescription"
+              value={task.taskDescription}
+              onChange={handleInputChange}
               onBlur={handleBlur}
               autoFocus
             />
@@ -80,7 +212,7 @@ export default function EditTask(props) {
           )}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Switch />
+          <Switch checked={isOneDayTask} onChange={toggleOneDayTask} />
           <span>
             יום אחד
           </span>
@@ -88,7 +220,12 @@ export default function EditTask(props) {
         <button>
           <div style={{ width: '250px', height: '35px', border: '1px solid #b3ccef', borderRadius: '8px', padding: '12px 16px', display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ fontWeight: 'bold' }}>
-              17.1.24
+              <input
+              type="date"
+              name="startDate"
+              value={formatDateForInput(task.startDate)}
+              onChange={handleStartDateChange}
+              />
             </div>
             <div>התחלה</div>
           </div>
@@ -96,7 +233,12 @@ export default function EditTask(props) {
         <button>
           <div style={{ width: '250px', height: '35px', border: '1px solid #b3ccef', borderRadius: '8px', padding: '12px 16px', display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ fontWeight: 'bold' }}>
-              17.1.24
+              <input
+              type="date"
+              name="endDate"
+              value={formatDateForInput(task.endDate)}
+              onChange={handleEndDateChange}
+              />
             </div>
             <div>סיום</div>
           </div>
@@ -119,14 +261,20 @@ export default function EditTask(props) {
       <div style={{ marginTop: '16px' }}>
         <p style={{ display: 'flex', justifyContent: 'flex-end' }}>הערות אישיות</p>
         <TextField
+        name="personalNote"
           fullWidth
           multiline
           rows={8}
-          placeholder="הערות לעצמך"
+          placeholder="הערות אישיות"
           variant="outlined"
+          value={task.personalNote}
+          onChange={handleInputChange}
           style={{ margin: '0px', direction: 'rtl', marginBottom: '16px' }} />
       </div>
-      <PrimeButton btntxt="שמירה" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <PrimeButton onClick={updateTask} btntxt="שמירה" />
+        <SecButton onClick={newTask} btntxt="הוספת משימה חדשה" />
+      </div>
     </div>
   )
 }

@@ -36,13 +36,18 @@ function LogIn() {
             .then((result) => {
                 console.log('login',result)
                 setUserDetails({ userId: result.userId });
-                if (!getLocalStorage(result.userId)) {
-                    setLocalStorage(result.userId, {category_active: [], have_kids: "no", moveDate: {year: '', month: '', day: ''}, selected_country: {label: ''}})
+                const user = getLocalStorage(result.userId);
+                if (!user) {
+                    setLocalStorage(result.userId, {category_active: [], have_kids: "no", moveDate: {year: '', month: '', day: ''}, selected_country: {label: ''}, completeReg: false})
                     
                 }
                 setLocalStorage("currentUser", result.userId)
-                navigate('/terms', { state: { userId: result.userId }, state: { fromReg: true } });
-                //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
+                // if (user.completeReg) {
+                //     navigate('/home');
+                // }
+                // else {
+                    navigate('/terms', { state: { fromReg: true } });
+                //}
             })
             .catch((error) => {
                 console.log(error)

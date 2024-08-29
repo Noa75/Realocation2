@@ -14,6 +14,7 @@ import { Navigate } from 'react-router-dom';
 export default function Categories(props) {
 
   const { parseUserData, userData } = props
+  console.log(userData);
   const userId = getLocalStorage("currentUser");
   const user = getLocalStorage(userId);
   const url = baseURL();
@@ -37,9 +38,11 @@ export default function Categories(props) {
   const [categories, setCategories] = useState(initialCategories);
   useEffect(() => {
     fetchSelectedCategories();
-    const filteredCategories = userData.hasChildren
+    const kids = user.have_kids === "yes" ? true : false;
+    const filteredCategories = kids
       ? initialCategories
       : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
+      console.log(filteredCategories)
     setCategories(filteredCategories);
     const category_active = user.category_active;
     if (category_active) {
