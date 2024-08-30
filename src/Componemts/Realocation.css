@@ -32,6 +32,7 @@
     overflow-x: hidden;
     margin:  0 auto;
     padding-bottom: 56px;
+    position: relative;
   }
   .chip-container{
     display: flex;

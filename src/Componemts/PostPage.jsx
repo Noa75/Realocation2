@@ -11,6 +11,8 @@ export default function PostPage() {
     const [activeTab, setActiveTab] = useState('general');
     const navigate = useNavigate();
     const [destCountry, setDestCountry] = useState("");
+    const userId = getLocalStorage("currentUser");
+    const user = getLocalStorage(userId);
 
     useEffect(() => {
         const storedCountry = getLocalStorage('selected_country');
@@ -50,7 +52,7 @@ export default function PostPage() {
             <div style={{ paddingTop: '24px', textAlign: 'center', color: 'white' }}>
                 <img src="public/blueLogo.png" alt="logo" />
             </div>
-            <h4 style={{ margin: '8px', textAlign: 'center' }}>{destCountry}</h4>
+            <h4 style={{ margin: '8px', textAlign: 'center' }}>{user.selected_country.label}</h4>
             <div dir='rtl'>
                 <div style={{display: 'flex', justifyContent: 'center', direction: 'rtl'}}>
                     <h3

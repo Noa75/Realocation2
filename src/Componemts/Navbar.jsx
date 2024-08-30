@@ -29,7 +29,7 @@ export default function () {
         zIndex: '1000',
         maxWidth: '393px'
     }}>
-        <Stack direction="row" spacing={2} >
+        <Stack direction="row" spacing={1} >
         <button style={isActive('/terms') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}}
         onClick={() => navigate('/terms')}>
             <img src="public/R.png" alt="R" />

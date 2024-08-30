@@ -36,18 +36,18 @@ function LogIn() {
             .then((result) => {
                 console.log('login',result)
                 setUserDetails({ userId: result.userId });
-                const user = getLocalStorage(result.userId);
+                let user = getLocalStorage(result.userId);
                 if (!user) {
                     setLocalStorage(result.userId, {category_active: [], have_kids: "no", moveDate: {year: '', month: '', day: ''}, selected_country: {label: ''}, completeReg: false})
-                    
+                    user = getLocalStorage(result.userId);
                 }
                 setLocalStorage("currentUser", result.userId)
-                // if (user.completeReg) {
-                //     navigate('/home');
-                // }
-                // else {
+                if (user.completeReg) {
+                    navigate('/home');
+                }
+                else {
                     navigate('/terms', { state: { fromReg: true } });
-                //}
+                }
             })
             .catch((error) => {
                 console.log(error)

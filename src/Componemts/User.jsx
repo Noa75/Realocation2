@@ -14,6 +14,7 @@ import Stack from "@mui/material/Stack";
 import Navbar from "./Navbar";
 import SecButton from "./SecButton";
 import { baseURL } from '../Utils';
+import { getLocalStorage } from '../utils/functions';
 
 function UserProfile() {
   const initialCategories = [
@@ -32,6 +33,7 @@ function UserProfile() {
   ];
   const url = baseURL();
   const { userDetails } = useContext(UserContext);
+  const userId = getLocalStorage("currentUser");
   const [DestinationCountry, set_DestinationCountry] = useState("");
   const [have_kids, set_have_kids] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -55,12 +57,10 @@ function UserProfile() {
 
     return `${year}-${month}-${day}`;
   };
-
+  
   useEffect(() => {
-    if (userDetails) {
       fetchUserDetails();
-    }
-  }, [userDetails]);
+  },[]);
 
   const fetchUserDetails = () => {
     const requestOptions = {
@@ -68,7 +68,7 @@ function UserProfile() {
       redirect: "follow"
     };
 
-    fetch(`${url}UserDetails/${userDetails.UserId}`, requestOptions)
+    fetch(`${url}UserDetails/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -103,7 +103,7 @@ function UserProfile() {
       redirect: "follow"
     };
 
-    fetch(`${url}Details/update/${userDetails.UserId}`, requestOptions)
+    fetch(`${url}Details/update/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -121,7 +121,7 @@ function UserProfile() {
 
   };
   return (
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}} >
       <div
         style={{
           display: "flex",
@@ -171,7 +171,7 @@ function UserProfile() {
               />
             </ListItem>
             <Divider />
-            <ListItem>
+            <ListItem style={{textAlign:'right'}}>
               <p>קטגוריות שנבחרו: </p>
               <Autocomplete
                 options={initialCategories}

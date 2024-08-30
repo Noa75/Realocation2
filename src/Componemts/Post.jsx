@@ -34,109 +34,7 @@ export default function Post() {
       content: "Another post from user3.",
       user: "user3",
       comment_to: null,
-    },
-    {
-      id: 4,
-      content: "Commenting on user3's post.",
-      user: "user1",
-      comment_to: 3,
-    },
-    {
-      id: 5,
-      content: "Yet another comment on user3's post.",
-      user: "user2",
-      comment_to: 3,
-    },
-    {
-      id: 6,
-      content: "A new standalone post.",
-      user: "user4",
-      comment_to: null,
-    },
-    {
-      id: 7,
-      content: "Comment on user4's post.",
-      user: "user3",
-      comment_to: 6,
-    },
-    {
-      id: 8,
-      content: "Reply to user3's comment.",
-      user: "user4",
-      comment_to: 7,
-    },
-    {
-      id: 9,
-      content: "Another independent post.",
-      user: "user2",
-      comment_to: null,
-    },
-    {
-      id: 10,
-      content: "Comment on user2's post.",
-      user: "user5",
-      comment_to: 9,
-    },
-    {
-      id: 11,
-      content: "Continuing the conversation.",
-      user: "user6",
-      comment_to: 10,
-    },
-    {
-      id: 12,
-      content: "A new post unrelated to the others.",
-      user: "user7",
-      comment_to: null,
-    },
-    {
-      id: 13,
-      content: "Replying to user7.",
-      user: "user1",
-      comment_to: 12,
-    },
-    {
-      id: 14,
-      content: "Another reply to user7.",
-      user: "user8",
-      comment_to: 12,
-    },
-    {
-      id: 15,
-      content: "Independent post by user9.",
-      user: "user9",
-      comment_to: null,
-    },
-    {
-      id: 16,
-      content: "Comment on user9's post.",
-      user: "user10",
-      comment_to: 15,
-    },
-    {
-      id: 17,
-      content: "A follow-up comment.",
-      user: "user11",
-      comment_to: 16,
-    },
-    {
-      id: 18,
-      content: "New post from user12.",
-      user: "user12",
-      comment_to: null,
-    },
-    {
-      id: 19,
-      content: "Comment on user12's post.",
-      user: "user13",
-      comment_to: 18,
-    },
-    {
-      id: 20,
-      content: "Final comment in this list.",
-      user: "user14",
-      comment_to: 19,
-    },
+    }
   ]);
   const [newComment, setNewComment] = useState("");
   const [open, setOpen] = useState(false);
@@ -158,20 +56,6 @@ export default function Post() {
 
   return (
     <>
-      {userDetails &&
-        userDetails.DestinationCountry &&
-        userDetails.DestinationCountry.label && (
-          <h4
-            style={{
-              position: "absolute",
-              top: "5.5%",
-              left: "40%",
-              fontWeight: "bold",
-            }}
-          >
-            {userDetails.DestinationCountry.label}
-          </h4>
-        )}
       <div
         style={{
           padding: "24px 16px",

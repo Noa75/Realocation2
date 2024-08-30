@@ -95,12 +95,6 @@ export default function TaskBoard(props) {
         fetch(`${url}UserTasks/tasks/user/${userId}/final`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                // const result10 = [];
-                // if (result.length > 0) {
-                //     for (let i = 0; i < i < 10; i++) {
-                //         result10.push(result[i])
-                //     }
-                // }
                 console.log(result)
                 const releventTasks = result.filter(task => {
                     const categoryMatch = task.categoryId === selectedOption;
@@ -122,7 +116,7 @@ export default function TaskBoard(props) {
 
         const raw = {
             "userTaskId": userId,
-            // "TaskId": userTaskId,
+            "TaskId": userTaskId,
             "IsDelete": true
         };
 
