@@ -14,28 +14,17 @@ import HomeTask from './HomeTask';
 import './Realocation.css';
 import { Widgets } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 export default function HomePage() {
     const [drawerHieght, setDrawerHeight] = useState('50vh');
     const drawerRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(dayjs());
     const location = useLocation();
-    //const [tasks, setTasks] = useState([]);
-    const [tasks, setTasks] = useState([
-        {
-            id: 1,
-            taskName: "משימה לדוגמה",
-            taskDescription: "תיאור משימה לדוגמה",
-            priority: 2, // דרגת דחיפות
-            endDate: "2024-08-28", // אותו תאריך שנבחר
-            completed: false, // משימה לא הושלמה
-            userTaskId: 1
-        }
-    ]);
+    const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        // בדוק אם יש משימות במיקום ועדכן את ה-state
         if (location.state && location.state.tasks) {
             setTasks(location.state.tasks);
         }
@@ -51,18 +40,19 @@ export default function HomePage() {
         setIsOpen(open);
     };
 
-    // const handleDateChange = (newDate) => {
-    //     setSelectedDate(newDate.toISOString().split('T')[0]); // שמירת תאריך בפורמט YYYY-MM-DD
-    // };
+    const handleDateChange = (newDate) => {
+        setSelectedDate(newDate); 
+    };
+    
 
-    // const filteredTasks = tasks.filter(task => task.endDate === selectedDate); // סינון משימות לפי התאריך הנבחר
-
+    const filteredTasks = tasks.filter(task => {
+        return dayjs(task.startDate).format('YYYY-MM-DD') === selectedDate.format('YYYY-MM-DD');
+    });
 
     useEffect(() => {
-        // פונקציה לשינוי גובה המגירה במגע
         const changeDrawerHeight = (e) => {
             if (!drawerRef.current) return;
-            const newHeight = e.touches[0].clientY; // השגת מיקום המגע
+            const newHeight = e.touches[0].clientY; 
             const screenHeight = window.innerHeight;
             const calculatedHeight = Math.max(screenHeight - newHeight, screenHeight * 0.50); // חישוב הגובה החדש
 
@@ -88,7 +78,7 @@ export default function HomePage() {
             </div>
             <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateCalendar  />
+                    <DateCalendar value={selectedDate} onChange={handleDateChange} />
                 </LocalizationProvider>
             </div>
             <div>
@@ -111,14 +101,14 @@ export default function HomePage() {
                             left: '0'
                     }}>
                     <div style={{ padding: '0 16px', display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px', direction: 'rtl', textAlign: 'right' }}>
-                        <h4 style={{ fontSize: '32px', fontWeight: '200', margin: '0' }}>{moment(selectedDate).format('DD/MM')}</h4>
+                        <h4 style={{ fontSize: '32px', fontWeight: '200', margin: '0' }}>{selectedDate.format('DD/MM')}</h4>
                         <div style={{ textAlign: 'right' }}>
                             <h3 style={{ marginBottom: '0' }}>משימות להיום</h3>
                             <p style={{ marginTop: '0' }}>{completedTasks} משימות מתוך {totalTasks}</p>
                         </div>
                     </div>
                     <div style={{ height: '100%', overflowY: 'auto', direction: 'rtl' }}>
-                        <HomeTask tasks={tasks} setTasks={setTasks} />
+                        <HomeTask tasks={filteredTasks} setTasks={setTasks} />
                     </div>
 
                 </div>

@@ -32,17 +32,20 @@ function UserProfile() {
   ];
   const url = baseURL();
   const { userDetails } = useContext(UserContext);
-  console.log(userDetails);
   const [DestinationCountry, set_DestinationCountry] = useState("");
   const [have_kids, set_have_kids] = useState(false);
   const [categories, setCategories] = useState([]);
   const [moveDate, set_moveDate] = useState("");
-  const userId = userDetails.userId;
 
+  const mapCategoriesFromServer = (categoriesFromServer) => {
+    return categoriesFromServer.map(cat => ({
+      id: cat.categoryId, 
+      label: cat.categoryName
+    }));
+  };
 
   const set_date_to_input = (date) => {
     const dateObject = date ? new Date(date) : new Date();
-
     const year = dateObject.getFullYear();
     let month = dateObject.getMonth() + 1;
     let day = dateObject.getDate();
@@ -54,23 +57,25 @@ function UserProfile() {
   };
 
   useEffect(() => {
-    fetchUserDetails();
-  }, [])
-  console.log(userDetails.userId);
+    if (userDetails) {
+      fetchUserDetails();
+    }
+  }, [userDetails]);
+
   const fetchUserDetails = () => {
     const requestOptions = {
       method: "GET",
       redirect: "follow"
     };
-    console.log(userDetails.userId);
+
     fetch(`${url}UserDetails/${userDetails.UserId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
-        set_DestinationCountry(result.DestinationCountry || "");
-        set_have_kids(result.HasChildren || false);
-        set_moveDate(set_date_to_input(result.moveDate || ""));
-        setCategories(result.SelectedCategories || []);
+        set_DestinationCountry(result.relocationDetails.destinationCountry || "");
+        set_have_kids(result.relocationDetails.hasChildren || false);
+        set_moveDate(set_date_to_input(result.relocationDetails.moveDate || ""));
+        setCategories(mapCategoriesFromServer(result.categories || []));
       })
       .catch((error) => console.error(error));
   }
@@ -79,96 +84,123 @@ function UserProfile() {
     setCategories(newValue);
   };
 
-  const handleClick = () => {
-    const data = {
-      UserId: userId,
-      MoveDate: moveDate,
-      DestinationCountry: DestinationCountry,
-      have_kids: have_kids
-    };
-    console.log('data', data);
+  
 
-};
-return (
-  <div>
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center"
-      }}
-    >
-      <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
-      <p>{`9 משימות שבוצעו מתוך 8`}</p>
-    </div>
-    <div style={{ textAlign: "right" }}>
-      <Stack
-        direction="column"
-        dir="rtl"
-        textAlign="right"
-        spacing={2}
-        sx={{
-          width: "100%",
-          maxWidth: 360,
-          bgcolor: "background.paper",
-          marginTop: 2,
+  const handleClick = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "DestinationCountry": DestinationCountry,
+      "MoveDate": moveDate,
+      "HasChildren": have_kids
+    });
+
+    const requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch(`${url}Details/update/${userDetails.UserId}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result)
+      })
+      .catch((error) => {console.error(error)});
+    
+    
+      // const data = {
+    //   UserId: userId,
+    //   MoveDate: moveDate,
+    //   DestinationCountry: DestinationCountry,
+    //   have_kids: have_kids
+    // };
+    // console.log('data', data);
+
+  };
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
         }}
       >
-        <List component="nav" aria-label="mailbox folders" style={{ backgroundColor: '#F4F7FB' }}>
-          <ListItem>
-            <p>מדינת יעד:</p>
-            <TextField onChange={(e) => { set_DestinationCountry(e.target.value) }} value={DestinationCountry} />
-          </ListItem>
-          <Divider />
-          <ListItem divider>
-            <p>תאריך היעד: </p>
-            <input
-              onChange={(e) => {
-                set_moveDate(e.target.value);
-              }}
-              type="date"
-              value={moveDate}
-            />
-          </ListItem>
-          <ListItem>
-            <p>האם יש ילדים: </p>
-            <input
-              type="checkbox"
-              checked={have_kids}
-              onChange={(e) => {
-                set_have_kids(e.target.value);
-              }}
-            />
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <p>קטגוריות שנבחרו: </p>
-            <Autocomplete
-              options={initialCategories}
-              multiple={true}
-              value={categories}
-              onChange={setSelectedCountry}
-              renderInput={(params) => (
-                <TextField {...params} label="categories" />
-              )}
-            />
-          </ListItem >
-        </List>
-      </Stack>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-        <SecButton
-          btntxt="שמור"
-          active={false}
-          onClick={() => {
-            handleClick();
+        <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <Stack
+          direction="column"
+          dir="rtl"
+          textAlign="right"
+          spacing={2}
+          sx={{
+            width: "100%",
+            maxWidth: 360,
+            bgcolor: "background.paper",
+            marginTop: 2,
           }}
         >
-        </SecButton>
+          <List component="nav" aria-label="mailbox folders" style={{ backgroundColor: '#F4F7FB' }}>
+            <ListItem>
+              <p>מדינת יעד:</p>
+              <TextField onChange={(e) => { set_DestinationCountry(e.target.value) }} value={DestinationCountry} />
+            </ListItem>
+            <Divider />
+            <ListItem divider>
+              <p>תאריך היעד: </p>
+              <input
+                onChange={(e) => {
+                  set_moveDate(e.target.value);
+                }}
+                type="date"
+                value={moveDate}
+              />
+            </ListItem>
+            <ListItem>
+              <p>האם יש ילדים: </p>
+              <input
+                type="checkbox"
+                checked={have_kids}
+                onChange={(e) => {
+                  set_have_kids(e.target.checked);
+                }}
+              />
+            </ListItem>
+            <Divider />
+            <ListItem>
+              <p>קטגוריות שנבחרו: </p>
+              <Autocomplete
+                options={initialCategories}
+                multiple={true}
+                value={categories}
+                onChange={setSelectedCountry}
+                getOptionLabel={(option) => option.label}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <TextField {...params} label="categories" />
+                )}
+              />
+            </ListItem >
+          </List>
+        </Stack>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+          <SecButton
+            btntxt="שמור"
+            active={false}
+            onClick={() => {
+              handleClick();
+            }}
+          >
+          </SecButton>
+        </div>
+        <Navbar />
       </div>
-      <Navbar />
     </div>
-  </div>
-);
+  );
 }
 
 export default UserProfile;

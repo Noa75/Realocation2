@@ -121,14 +121,16 @@ export default function TaskBoard(props) {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        // const raw = {
-        //     "userTaskId": userId,
-        //     "TaskId": userTaskId,
-        //     "IsDelete": true
-        // };
+        const raw = {
+            "userTaskId": userId,
+            // "TaskId": userTaskId,
+            "IsDelete": true
+        };
 
         const requestOptions = {
             method: "DELETE",
+            headers: myHeaders,
+            body: raw,
             redirect: "follow"
         };
 
