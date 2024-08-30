@@ -1,25 +1,23 @@
-import React, { useContext, useState } from 'react'
-import { Stack, TextField } from '@mui/material';
-import './Realocation.css';
-import PrimeButton from './PrimeButton';
-import { useNavigate } from 'react-router-dom';
-import { baseURL } from '../Utils';
-import { UserContext } from './UserHook';
-import { getLocalStorage, setLocalStorage } from '../utils/functions';
-
-
+import React, { useContext, useState, useEffect } from "react";
+import { Stack, TextField } from "@mui/material";
+import "./Realocation.css";
+import PrimeButton from "./PrimeButton";
+import { useNavigate } from "react-router-dom";
+import { baseURL } from "../Utils";
+import { UserContext } from "./UserHook";
+import { getLocalStorage, setLocalStorage } from "../utils/functions";
 
 function SignUp() {
   const [user, setUser] = useState({
-    fullname: '',
-    email: '',
-    password: '',
-    confirmpassword: ''
+    fullname: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
   });
-  const [userExistsMSG, setUserExistsMSG] = useState('');
+  const [userExistsMSG, setUserExistsMSG] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const {setUserDetails} = useContext(UserContext);
+  const { setUserDetails } = useContext(UserContext);
   const url = baseURL();
 
   const handleRegister = () => {
@@ -28,75 +26,89 @@ function SignUp() {
     myHeaders.append("Accept", "application/json; charset=utf-8");
 
     const RegistrationData = JSON.stringify({
-      "email": user.email,
-      "fullName": user.fullname,
-      "passwordHash": user.password,
-      "username": user.email
+      email: user.email,
+      fullName: user.fullname,
+      passwordHash: user.password,
+      username: user.email,
     });
 
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: RegistrationData,
-      redirect: "follow"
+      redirect: "follow",
     };
-    const errors = Object.keys(user).map(key => validateField(key, user[key])).filter(error => error);
-    if (errors.length === 0 ) {
+    const errors = Object.keys(user)
+      .map((key) => validateField(key, user[key]))
+      .filter((error) => error);
+    if (errors.length === 0) {
       fetch(`${url}register/register`, requestOptions)
-      .then((response) => {
-        if (!response.ok) throw new Error('field to register');
-        return response.json();
-      })
-      .then((result) => {
-        console.log("work")
-        console.log(result);
-        console.log(result.userId);
-        setUserDetails({userId : result.userId});
-        if (!getLocalStorage(result.userId)) {
-          setLocalStorage(result.userId, {category_active: [], have_kids: "no", moveDate: {year: '', month: '', day: ''}, selected_country: {label: ''}, completeReg: false})
-          
-      }
-      setLocalStorage("currentUser", result.userId)
-        navigate('/terms', { state: { userId: result.userId }, state: { fromReg: true } } );
-        //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
-      })
-      .catch((error) => {
-        console.log("not work")
-        console.log(error)
-        setUserExistsMSG("משתמש קיים")
-        //הלוגיקה שמה קורה אם לא הצליח
-      });
+        .then((response) => {
+          if (!response.ok) throw new Error("field to register");
+          return response.json();
+        })
+        .then((result) => {
+          console.log("work");
+          console.log(result);
+          console.log(result.userId);
+          setUserDetails({ userId: result.userId });
+          if (!getLocalStorage(result.userId)) {
+            setLocalStorage(result.userId, {
+              category_active: [],
+              have_kids: "no",
+              moveDate: { year: "", month: "", day: "" },
+              selected_country: { label: "" },
+              completeReg: false,
+            });
+          }
+          setLocalStorage("currentUser", result.userId);
+          navigate("/terms", {
+            state: { userId: result.userId },
+            state: { fromReg: true },
+          });
+          //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
+        })
+        .catch((error) => {
+          console.log("not work");
+          console.log(error);
+          setUserExistsMSG("משתמש קיים");
+          //הלוגיקה שמה קורה אם לא הצליח
+        });
     }
-  }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser(prevState => ({
+    setUser((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
     validateField(name, value);
   };
 
   const validateField = (name, value) => {
-    let errMsg = '';
+    let errMsg = "";
     switch (name) {
-      case 'fullname':
+      case "fullname":
         if (value.split(" ").length < 2) {
           errMsg = "יש לרשום שם מלא";
         }
         break;
-      case 'email':
-        if (!value.includes('@') || !value.endsWith('.com') || !/[A-Za-z]/.test(value)) {
+      case "email":
+        if (
+          !value.includes("@") ||
+          !value.endsWith(".com") ||
+          !/[A-Za-z]/.test(value)
+        ) {
           errMsg = "כתובת מייל לא תקינה";
         }
         break;
-        case 'password':
-          if (!/^[A-Za-z0-9]{6,}$/.test(value)){
-            errMsg = "סיסמא צריכה להכיל 6 תווים לפחות"
-          }
+      case "password":
+        if (!/^[A-Za-z0-9]{6,}$/.test(value)) {
+          errMsg = "סיסמא צריכה להכיל 6 תווים לפחות";
+        }
         break;
-      case 'confirmpassword':
+      case "confirmpassword":
         if (value !== user.password) {
           errMsg = "סיסמא לא תואמת";
         }
@@ -104,20 +116,27 @@ function SignUp() {
       default:
         break;
     }
-    setErrors(prev => ({ ...prev, [name]: errMsg }));
+    setErrors((prev) => ({ ...prev, [name]: errMsg }));
     return errMsg;
   };
 
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
   const handleBlur = (e) => {
     const { name, value } = e.target;
     validateField(name, value);
-  }
-
+  };
 
   return (
-    <div className='signup-container' >
-      <img className='logo' src="public/Logo.svg" alt="logo" style={{ marginTop: "80px" }} />
-      <div className='signup-inputs'>
+    <div className="signup-container">
+      <img
+        className="logo"
+        src="public/Logo.svg"
+        alt="logo"
+        style={{ marginTop: "80px" }}
+      />
+      <div className="signup-inputs">
         <TextField
           label="שם מלא"
           name="fullname"
@@ -126,7 +145,8 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.fullname}
-          helperText={errors.fullname} />
+          helperText={errors.fullname}
+        />
         <TextField
           label="מייל"
           name="email"
@@ -136,7 +156,8 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.email}
-          helperText={errors.email} />
+          helperText={errors.email}
+        />
         <TextField
           label="סיסמא"
           name="password"
@@ -146,7 +167,8 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.password}
-          helperText={errors.email} />
+          helperText={errors.email}
+        />
         <TextField
           label="אימות סיסמא"
           name="confirmpassword"
@@ -156,15 +178,17 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.confirmpassword}
-          helperText={errors.confirmpassword} />
+          helperText={errors.confirmpassword}
+        />
       </div>
       <p>{userExistsMSG}</p>
       <Stack spacing={1}>
         <PrimeButton onClick={handleRegister} btntxt="הירשם" />
-        <button onClick={() => navigate('/')} variant="contained" >לחשבון קיים</button>
+        <button onClick={() => navigate("/")} variant="contained">
+          לחשבון קיים
+        </button>
       </Stack>
-
     </div>
-  )
+  );
 }
 export default SignUp;

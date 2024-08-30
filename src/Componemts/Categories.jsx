@@ -81,6 +81,12 @@ export default function Categories(props) {
     return; // יציאה אם התאריך אינו חוקי
   }
 
+  const saveDB=getLocalStorage('saveDB');
+  if(saveDB){
+    parseUserData({SelectedCategories: active}, "taskBoard");
+    return
+  }
+
   console.log("active categories:", active);
 
     const raw = JSON.stringify({
@@ -101,6 +107,7 @@ export default function Categories(props) {
     fetch(`${url}Details/save-details-and-calculate/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        setLocalStorage('saveDB',1);
         parseUserData({SelectedCategories: active}, "taskBoard");
       })
       .catch((error) => console.error(error));

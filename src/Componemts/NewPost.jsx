@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext ,useState } from 'react'
 import { Grid, IconButton, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PrimeButton from './PrimeButton';
@@ -11,7 +11,7 @@ export default function NewPost() {
   const [postContent, setPostContent] = useState("");  // מצב לתוכן הפוסט
   const url = baseURL(); 
 
-
+console.log(userDetails)
   const handlePost = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");

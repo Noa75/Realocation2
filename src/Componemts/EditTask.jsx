@@ -15,6 +15,8 @@ export default function EditTask(props) {
   const { parseUserData, userData } = props;
   const { state } = useLocation();
   const taskFromState = state.task;
+  const is_newTask = state.newTask;
+  const categoryId = state.categoryId;
   const [task, setTask] = useState(taskFromState);
   const [active, setActive] = useState(task ? task.priority : null);
   const navigate = useNavigate();
@@ -158,9 +160,10 @@ export default function EditTask(props) {
       "StartDate": task.startDate,
       "EndDate": task.endDate,
       "PriorityId": task.priority,
-      "PersonalNote": task.personalNote
+      "PersonalNote": task.personalNote,
+      "categoryId":categoryId
     });
-
+    
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -273,7 +276,7 @@ export default function EditTask(props) {
           style={{ margin: '0px', direction: 'rtl', marginBottom: '16px' }} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <PrimeButton onClick={updateTask} btntxt="שמירה" />
+        {!is_newTask&&<PrimeButton onClick={updateTask} btntxt="שמירה" />}
         <SecButton onClick={newTask} btntxt="הוספת משימה חדשה" />
       </div>
     </div>

@@ -67,15 +67,14 @@ export default function TaskBoard(props) {
 
     useEffect(() => {
         if (selectedOption && userId) {
-            console.log(selectedOption, userId)
+
             fetchTasks(selectedOption);
         }
     }, [selectedOption, userId]);
-    console.log("***", selectedOption, userId);
 
     const addNewTask = () => {
 
-        navigate('/edit-task/${userTaskId}', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" } } });
+        navigate('/edit-task/${userTaskId}', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" },categoryId:selectedOption,newTask:true } });
     };
 
 
@@ -130,20 +129,20 @@ export default function TaskBoard(props) {
         const requestOptions = {
             method: "DELETE",
             headers: myHeaders,
-            body: raw,
-            redirect: "follow"
+            body:JSON.stringify(raw) ,
         };
 
         fetch(`${url}UserTasks/${userId}/task/${userTaskId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 console.log("task deleted:", result)
-                const updateTasks = (tasks) => tasks.filter(task => task.taskId !== userTaskId);
-                if (isBeforeMove) {
-                    setTasksBefore(updateTasks);
-                } else {
-                    setTasksAfter(updateTasks);
-                }
+                // const updateTasks = tasks.filter(task => task.taskId !== userTaskId);
+                
+                // if (isBeforeMove) {
+                //     setTasksBefore(updateTasks);
+                // } else {
+                //     setTasksAfter(updateTasks);
+                // }
 
             })
             .catch((error) => console.error(error));
@@ -152,7 +151,7 @@ export default function TaskBoard(props) {
 
     const handleTaskClick = (task) => {
         console.log(task)
-        navigate('/edit-task/${userTaskId}', { state: { task: task } });
+        navigate('/edit-task/${userTaskId}', { state: { task: task,categoryId:selectedOption } });
     }
 
     const handleNext = () => {
@@ -160,7 +159,7 @@ export default function TaskBoard(props) {
         user.completeReg = true;
         setLocalStorage(userId,user);
         const allRemainingTasks = [...tasksBefore, ...tasksAfter];
-        console.log(allRemainingTasks);
+        setLocalStorage('allRemainingTasks',allRemainingTasks)
         navigate('/home', { state: { tasks: allRemainingTasks } });
     }
     const fromCategories = props.fromCategories || false;
@@ -176,9 +175,9 @@ export default function TaskBoard(props) {
                 <div className='dot active'></div>
             </div>}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                {showBackAndDots && <IconButton onClick={() => parseUserData({}, "cetegories")} style={{ transform: 'scaleX(-1)', left: '240px' }}>
+                {/* {showBackAndDots && <IconButton onClick={() => parseUserData?parseUserData({}, "cetegories"):navigate('/cetegories',{})} style={{ transform: 'scaleX(-1)', left: '240px' }}>
                     <ArrowBack />
-                </IconButton>}
+                </IconButton>} */}
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
             </div>
             <div className='chip-container' style={{ maxWidth: '393px', overflowX: 'scroll', whiteSpace: 'nowrap' }}>

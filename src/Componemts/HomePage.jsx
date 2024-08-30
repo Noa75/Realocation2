@@ -15,6 +15,7 @@ import './Realocation.css';
 import { Widgets } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { getLocalStorage } from '../utils/functions';
 
 export default function HomePage() {
     const [drawerHieght, setDrawerHeight] = useState('50vh');
@@ -25,13 +26,20 @@ export default function HomePage() {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
+        
         if (location.state && location.state.tasks) {
             setTasks(location.state.tasks);
+        }else{
+            
+           const allRemainingTasks= getLocalStorage('allRemainingTasks')
+           if(allRemainingTasks){
+            setTasks(allRemainingTasks);
+           }
         }
     }, [location]);
 
     const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(task => task.completed).length;
+    const completedTasks = tasks.filter(task => task.completed);
 
     const toggleDrawer = (open) => (event) => {
         if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -104,7 +112,7 @@ export default function HomePage() {
                         <h4 style={{ fontSize: '32px', fontWeight: '200', margin: '0' }}>{selectedDate.format('DD/MM')}</h4>
                         <div style={{ textAlign: 'right' }}>
                             <h3 style={{ marginBottom: '0' }}>משימות להיום</h3>
-                            <p style={{ marginTop: '0' }}>{completedTasks} משימות מתוך {totalTasks}</p>
+                            <p style={{ marginTop: '0' }}>{completedTasks.length} משימות מתוך {filteredTasks.length}</p>
                         </div>
                     </div>
                     <div style={{ height: '100%', overflowY: 'auto', direction: 'rtl' }}>

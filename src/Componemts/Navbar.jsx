@@ -40,9 +40,9 @@ export default function () {
         <button style={isActive('/home') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/home')}>
             <img src="public/HomeIcon.png" alt="Home" />
         </button>
-        {/* <button style={isActive('/post') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/post')}>
+        <button style={isActive('/post') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/post')}>
             <img src="public/PlusIcon.png" alt="Plus" />
-        </button> */}
+        </button>
         <button style={isActive('/user') ? {...underlineStyle } : {backgroundColor:'#f5f7fa'}} onClick={() => navigate('/user')}>
             <img src="public/UserIcon.png" alt="User" />
         </button>
