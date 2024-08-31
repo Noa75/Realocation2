@@ -4,36 +4,19 @@ import { UserContext } from "./UserHook";
 import { baseURL } from '../Utils';
 import { getLocalStorage } from "../utils/functions";
 
-export default function Post() {
+export default function Post({posts}) {
   const { userDetails } = useContext(UserContext);
   const userId = getLocalStorage("currentUser")
   console.log(userDetails);
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      content: "This is the first post.",
-      user: "user1",
-      comment_to: null,
-    },
-    {
-      id: 2,
-      content: "This is a comment on the first post.",
-      user: "user2",
-      comment_to: 1,
-    },
-    {
-      id: 3,
-      content: "Another post from user3.",
-      user: "user3",
-      comment_to: null,
-    }
-  ]);
+  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [showAllComments, setShowAllComments] = useState({});
   const [open, setOpen] = useState(false);
   const [commentTo, setCommentTo] = useState([]);
   const url = baseURL();
 
-  const sendComment = () => {
+  const sendComment = (postId) => {
+    console.log(postId)
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -48,51 +31,56 @@ export default function Post() {
       redirect: "follow"
     };
 
-    fetch(`${url}UserPost/add-comment/5/${userId}`, requestOptions)
+    fetch(`${url}UserPost/add-comment/${postId}/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
-        const newId = comments.length + 1;
+        const newId = comments[postId]?.length + 1 || 1;
         const updateComments = [
-          ...comments,
+          ...(comments[postId] || []),
           { id: newId, user: userDetails.userName, content: newComment },
         ];
-        setComments(updateComments);
+        setComments(prev => ({
+          ...prev,
+          [postId]: updateComments,
+        }));
         setNewComment("");
       })
       .catch((error) => console.error(error));
   };
 
+  const toggleShowAllComments = (postId) => {
+    setShowAllComments(prev => ({
+      ...prev,
+      [postId]: !prev[postId], // Toggle the visibility of comments for the specific post
+    }));
+  };
+
   const openCommentTo = (id) => {
     const comment_to = comments.filter((c) => c.comment_to == id);
-    // setCommentTo(comment_to);
+    setCommentTo(comment_to);
   };
+
+  const sortedPosts = [...posts].sort((a, b) => b.postId - a.postId);
 
   return (
     <>
-      <div
-        style={{
-          padding: "24px 16px",
-          backgroundColor: "white",
-          margin: "16px 0",
-          borderRadius: "16px",
-        }}>
-        <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
-          <Avatar
-            style={{ marginLeft: "16px" }}
-            src="/static/images/avatar/1.jpg" />
-          <ListItemText
-            style={{ marginRight: "8px", textAlign: "right", margin: "0" }}
-            primary="שם משתמש"
-            secondary="תוכן הפוסט" />
+    {sortedPosts.map(post => (  
+      <div key={post.postId}
+        style={{ padding: "24px 16px", backgroundColor: "white", margin: "16px 0",borderRadius: "16px" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
+          <Avatar style={{ marginLeft: "16px" }} src="/static/images/avatar/1.jpg" />
+          <ListItemText style={{ marginRight: "8px", textAlign: "right", margin: "0" }}
+            primary={post.username}
+            secondary={post.content} />
         </div>
-        <Button style={{ display: "flex", justifyContent: "flex-start" }}>
-          לכל התגובות
+        <Button onClick={() => toggleShowAllComments(post.postId)} style={{ display: "flex", justifyContent: "flex-start" }}>
+          {showAllComments[post.postId] ? "לכל התגובות" : "הסתר תגובות"}
         </Button>
         <List style={{ padding: "0" }}>
-          {comments
+          {(comments[post.postId] || [])
             .filter((c) => c.comment_to == null)
+            .slice(0, showAllComments[post.postId] ? undefined : 3)
             .map((comment) => (
               <ListItem
                 onClick={() => {
@@ -118,17 +106,8 @@ export default function Post() {
               onChange={(e) => setNewComment(e.target.value)} />
           </Grid>
           <Grid item xs={3}>
-            <Button
-              style={{
-                padding: "8px 16px",
-                backgroundColor: "#0C8CE9",
-                color: "white",
-                borderRadius: "40px",
-                fontSize: "16px",
-                fontWeight: "bold",
-                textAlign: "center",
-              }}
-              onClick={sendComment}>
+            <Button style={{ padding: "8px 16px", backgroundColor: "#0C8CE9", color: "white", borderRadius: "40px", fontSize: "16px", fontWeight: "bold", textAlign: "center" }}
+              onClick={() => sendComment(post.postId)}>
               שלח
             </Button>
           </Grid>
@@ -165,7 +144,9 @@ export default function Post() {
             </DialogActions>
           </Dialog>
         )}
-      </div>{" "}
+      </div>))}
+      {" "}
+      
     </>
   );
 }
