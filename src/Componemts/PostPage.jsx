@@ -1,32 +1,52 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from './Navbar'
 import { Fab, TextField } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
 import Post from './Post';
 import { useNavigate } from 'react-router-dom';
 import { getLocalStorage } from '../utils/functions';
-
+import { baseURL } from '../Utils';
 
 export default function PostPage() {
     const [activeTab, setActiveTab] = useState('general');
     const navigate = useNavigate();
     const [destCountry, setDestCountry] = useState("");
+    const [postId, setPostId] = useState(null);
     const userId = getLocalStorage("currentUser");
     const user = getLocalStorage(userId);
+    const url = baseURL();
 
     useEffect(() => {
         const storedCountry = getLocalStorage('selected_country');
         try {
             if (storedCountry) {
                 const parsedCountry = typeof storedCountry === 'string' && storedCountry.startsWith('{')
-                    ? JSON.parse(storedCountry) // המרת JSON לאובייקט
-                    : storedCountry; // אם זה לא JSON, משאירים אותו כפי שהוא
+                    ? JSON.parse(storedCountry)
+                    : storedCountry;
                 setDestCountry(parsedCountry.label ? parsedCountry.label : parsedCountry);
             }
         } catch (error) {
             console.error("Error parsing stored country:", error);
         }
     }, []);
+
+    useEffect(() => {
+        loadPosts();
+    }, [])
+
+    const loadPosts = () => {
+        const requestOptions = {
+            method: "GET",
+            redirect: "follow"
+        };
+
+        fetch(`${url}UserPost/get-post-details/${postId}`, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+                console.log(result);
+
+            })
+            .catch((error) => console.error(error));
+    }
 
     const tabStyle = {
         padding: '10px 20px',
@@ -54,7 +74,7 @@ export default function PostPage() {
             </div>
             <h4 style={{ margin: '8px', textAlign: 'center' }}>{user.selected_country.label}</h4>
             <div dir='rtl'>
-                <div style={{display: 'flex', justifyContent: 'center', direction: 'rtl'}}>
+                <div style={{ display: 'flex', justifyContent: 'center', direction: 'rtl' }}>
                     <h3
                         style={activeTab === 'general' ? activeTabStyle : tabStyle}
                         onClick={() => setActiveTab('general')}>כללי</h3>
@@ -69,8 +89,7 @@ export default function PostPage() {
                         onClick={goToNewPost}
                         InputProps={{
                             readOnly: true,
-                        }}
-                    />
+                        }} />
                 </div>
                 <Post />
             </div>

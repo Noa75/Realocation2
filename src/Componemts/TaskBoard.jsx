@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import Task from './Task'
-import { IconButton, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add';
-import { ArrowBack, FormatTextdirectionLToROutlined } from '@mui/icons-material';
 import ChipButton from './ChipButton';
 import Navbar from './Navbar';
 import PrimeButton from './PrimeButton';
@@ -12,13 +11,10 @@ import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
 import { getLocalStorage, setLocalStorage } from '../utils/functions';
 
-
 export default function TaskBoard(props) {
     const { propUserData, parseUserData } = props;
     const [userData, setUserData] = useState(null);
     const navigate = useNavigate();
-    const [task, setTask] = useState();
-    const { userDetails, setUserDetails } = useContext(UserContext);
     const [tasksBefore, setTasksBefore] = useState([]);
     const [tasksAfter, setTasksAfter] = useState([]);
     const [selectedOption, setSelectedOption] = useState();
@@ -27,8 +23,6 @@ export default function TaskBoard(props) {
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const url = baseURL();
-
-    const [updateTrigger, setUpdateTrigger] = useState(false);
     const allCategories = [
         { id: 1, name: 'בעלי חיים' },
         { id: 2, name: 'טיסה' },
@@ -52,7 +46,6 @@ export default function TaskBoard(props) {
         setSelectedCategories(localStorageData.SelectedCategories);
     }, [])
 
-
     useEffect(() => {
         const filtered = allCategories.filter(cat => selectedCategories.includes(cat.id));
         setFilteredCategories(filtered);
@@ -67,26 +60,21 @@ export default function TaskBoard(props) {
 
     useEffect(() => {
         if (selectedOption && userId) {
-
             fetchTasks(selectedOption);
         }
     }, [selectedOption, userId]);
 
     const addNewTask = () => {
-
-        navigate('/edit-task/${userTaskId}', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" },categoryId:selectedOption,newTask:true } });
+        navigate('/edit-task/${userTaskId}', { state: { task: { recommendedTask: "כותרת משימה", descriptionTask: "תיאור משימה" }, categoryId: selectedOption, newTask: true } });
     };
-
 
     const handleButton = (categoryId) => {
         console.log("changing:", categoryId);
         setSelectedOption(categoryId);
-
     }
 
     const fetchTasks = (selectedOption) => {
         console.log("Fetching tasks for category:", selectedOption, " with children: ", hasChildren);
-
         const requestOptions = {
             method: "GET",
             redirect: "follow"
@@ -115,51 +103,43 @@ export default function TaskBoard(props) {
         myHeaders.append("Content-Type", "application/json");
 
         const raw = {
-            "userTaskId": userId,
-            "TaskId": userTaskId,
+            "userTaskId": userTaskId,
             "IsDelete": true
         };
 
         const requestOptions = {
             method: "DELETE",
             headers: myHeaders,
-            body:JSON.stringify(raw) ,
+            body: JSON.stringify(raw),
         };
 
-        fetch(`${url}UserTasks/${userId}/task/${userTaskId}`, requestOptions)
+        fetch(`${url}UserTasks/${userId}/usertask/${userTaskId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 console.log("task deleted:", result)
-                // const updateTasks = tasks.filter(task => task.taskId !== userTaskId);
-                
-                // if (isBeforeMove) {
-                //     setTasksBefore(updateTasks);
-                // } else {
-                //     setTasksAfter(updateTasks);
-                // }
-
+                setTasksBefore(prevTasks => prevTasks.filter(task => task.userTaskId !== userTaskId));
+                setTasksAfter(prevTasks => prevTasks.filter(task => task.userTaskId !== userTaskId));
             })
             .catch((error) => console.error(error));
     }
 
-
     const handleTaskClick = (task) => {
         console.log(task)
-        navigate('/edit-task/${userTaskId}', { state: { task: task,categoryId:selectedOption } });
+        navigate('/edit-task/${userTaskId}', { state: { task: task, categoryId: selectedOption } });
     }
 
     const handleNext = () => {
         const user = getLocalStorage(userId)
         user.completeReg = true;
-        setLocalStorage(userId,user);
+        setLocalStorage(userId, user);
         const allRemainingTasks = [...tasksBefore, ...tasksAfter];
-        setLocalStorage('allRemainingTasks',allRemainingTasks)
+        setLocalStorage('allRemainingTasks', allRemainingTasks)
         navigate('/home', { state: { tasks: allRemainingTasks } });
     }
     const fromCategories = props.fromCategories || false;
     const fromEditTask = location.state?.fromEditTask || false;
     const showBackAndDots = fromCategories || fromEditTask;
-    
+
     return (
         <div className='taskboard-container' >
             {showBackAndDots && <div className='stepIndicator' dir='rtl' >
@@ -169,9 +149,6 @@ export default function TaskBoard(props) {
                 <div className='dot active'></div>
             </div>}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                {/* {showBackAndDots && <IconButton onClick={() => parseUserData?parseUserData({}, "cetegories"):navigate('/cetegories',{})} style={{ transform: 'scaleX(-1)', left: '240px' }}>
-                    <ArrowBack />
-                </IconButton>} */}
                 <h4 style={{ textAlign: 'center' }}>בניית לוח משימות</h4>
             </div>
             <div className='chip-container' style={{ maxWidth: '393px', overflowX: 'scroll', whiteSpace: 'nowrap' }}>
@@ -200,17 +177,14 @@ export default function TaskBoard(props) {
             </div>
             <div className='taskrec'>
                 <h3 style={{ fontSize: '18px', float: 'right', fontWeight: '300', fontWeight: 'bold' }}>אחרי המעבר</h3>
-
                 {tasksAfter.map((task, index) => (
                     <Task onClick={() => handleTaskClick(task)}
                         key={`${task.taskId}-${index}`}
                         date={task.startDate}
                         label={task.taskName}
                         description={task.taskDescription}
-                        onDelete={() => deleteTask(task.taskId, false)}
-                    />
+                        onDelete={() => deleteTask(task.userTaskId, userId)} />
                 ))}
-
             </div>
             <Stack spacing={1} direction='column' sx={{ width: '70%', margin: 'auto' }}>
                 <SecButton btntxt="הוספת משימה חדשה" onClick={addNewTask} >
@@ -220,7 +194,6 @@ export default function TaskBoard(props) {
             </Stack>
             {!showBackAndDots ? <Navbar /> : null}
         </div>
-
 
     )
 }

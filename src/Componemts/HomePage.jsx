@@ -1,18 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Calendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { SwipeableDrawer, IconButton } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { Drawer, Button } from '@mui/material';
 import Navbar from './Navbar';
-import zIndex from '@mui/material/styles/zIndex';
 import HomeTask from './HomeTask';
 import './Realocation.css';
-import { Widgets } from '@mui/icons-material';
 import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { getLocalStorage } from '../utils/functions';
@@ -29,11 +22,10 @@ export default function HomePage() {
     }, [tasks])
 
     useEffect(() => {
-
         if (location.state && location.state.tasks) {
             setTasks(location.state.tasks);
-        } else {
-
+        }
+        else {
             const allRemainingTasks = getLocalStorage('allRemainingTasks')
             if (allRemainingTasks) {
                 setTasks(allRemainingTasks);
@@ -43,7 +35,6 @@ export default function HomePage() {
 
     const filterTasks = () => {
         const newTasks = tasks.filter(task => {
-            //console.log("startDate: ",task)
             return dayjs(task.startDate).format('YYYY-MM-DD') === selectedDate.format('YYYY-MM-DD');
         })
         return newTasks;
@@ -51,30 +42,27 @@ export default function HomePage() {
 
     const completedTasks = filterTasks().filter(task => task && task.completed);
 
-    const toggleDrawer = (open) => (event) => {
-        if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-            return;
-        }
-        setIsOpen(open);
-    };
+    // const toggleDrawer = (open) => (event) => {
+    //     if (event && event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+    //         return;
+    //     }
+    //     setIsOpen(open);
+    // };
 
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);
     };
-
-   
-
 
     useEffect(() => {
         const changeDrawerHeight = (e) => {
             if (!drawerRef.current) return;
             const newHeight = e.touches[0].clientY;
             const screenHeight = window.innerHeight;
-            const calculatedHeight = Math.max(screenHeight - newHeight, screenHeight * 0.50); // חישוב הגובה החדש
-
+            const calculatedHeight = Math.max(screenHeight - newHeight, screenHeight * 0.50);
             if (calculatedHeight > screenHeight * 0.85) {
                 setDrawerHeight('85vh');
-            } else {
+            }
+            else {
                 setDrawerHeight(`${calculatedHeight}px`);
             }
         };
@@ -85,7 +73,6 @@ export default function HomePage() {
             return () => drawerElement.removeEventListener('touchmove', changeDrawerHeight);
         }
     }, []);
-
 
     return (
         <div style={{ backgroundColor: '#0C8CE9', height: '100%', width: '100%', left: '0', margin: '0px', position: 'fixed', top: '0' }}>

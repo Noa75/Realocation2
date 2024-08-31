@@ -14,22 +14,22 @@ import NewPost from './NewPost';
 import User from './User';
 
 export default function RealocationApp() {
-  
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LogIn />}/>
-        <Route path="/restore-password" element={<RestorePassword />}/>
-        <Route path="/sign-up" element={<SignUp />}/>
-        <Route path="/terms" element={<Terms />}/>
-        <Route path="/opening-questions" element={<OpeningQuestions />}/>
-        <Route path="/categories" element={<Categories />}/>
-        <Route path="/tasks-board" element={<TaskBoard />}/>
-        <Route path="/edit-task/:taskId" element={<EditTask />}/>
-        <Route path="/home" element={<HomePage />}/>
-        <Route path="/post" element={<PostPage />}/>
-        <Route path="/new-post" element={<NewPost />}/>
-        <Route path="/user" element={<User />}/>
+        <Route path="/" element={<LogIn />} />
+        <Route path="/restore-password" element={<RestorePassword />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/opening-questions" element={<OpeningQuestions />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/tasks-board" element={<TaskBoard />} />
+        <Route path="/edit-task/:taskId" element={<EditTask />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/post" element={<PostPage />} />
+        <Route path="/new-post" element={<NewPost />} />
+        <Route path="/user" element={<User />} />
       </Routes>
     </Router>
   )

@@ -8,7 +8,6 @@ import { baseURL } from '../Utils';
 import { UserContext } from './UserHook';
 import { getLocalStorage, setLocalStorage } from '../utils/functions';
 
-
 function LogIn() {
     const navigate = useNavigate();
     const { setUserDetails } = useContext(UserContext);
@@ -34,11 +33,11 @@ function LogIn() {
         fetch(`${url}login`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                console.log('login',result)
+                console.log('login', result)
                 setUserDetails({ userId: result.userId });
                 let user = getLocalStorage(result.userId);
                 if (!user) {
-                    setLocalStorage(result.userId, {category_active: [], have_kids: "no", moveDate: {year: '', month: '', day: ''}, selected_country: {label: ''}, completeReg: false})
+                    setLocalStorage(result.userId, { category_active: [], have_kids: "no", moveDate: { year: '', month: '', day: '' }, selected_country: { label: '' }, completeReg: false })
                     user = getLocalStorage(result.userId);
                 }
                 setLocalStorage("currentUser", result.userId)
@@ -52,22 +51,18 @@ function LogIn() {
             .catch((error) => {
                 console.log(error)
                 setUserExistsMSG("משתמש לא קיים")
-                //הלוגיקה שמה קורה אם לא הצליח
             });
     }
-
 
     return (
         <div className="login-container">
             <div style={{ marginTop: "180px", marginBottom: "102px" }}>
                 <img src="Logo.svg" alt="logo" style={{ width: '100%' }}></img>
             </div>
-
             <Stack spacing={1} >
                 <TextField label="שם משתמש" variant="outlined" onChange={(e) => { setUser(e.target.value) }} /> <br />
                 <TextField label="סיסמא" type="password" autoComplete="current-password" onChange={(e) => { setPassword(e.target.value) }} />
             </Stack>
-
             <button className='forgetP' onClick={() => navigate('/restore-password')}>שכחתי סיסמא</button> <br />
             <p>{userExistsMSG}</p>
             <PrimeButton onClick={btnlogin} btntxt="כניסה" />
@@ -75,7 +70,6 @@ function LogIn() {
                 <button onClick={() => navigate('/sign-up')} variant="contained">הירשם</button>
                 ?אין לך משתמש
             </p>
-
         </div>
     )
 }

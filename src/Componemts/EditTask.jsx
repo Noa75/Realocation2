@@ -1,12 +1,10 @@
 import { Switch, IconButton, TextField } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import NearMeIcon from '@mui/icons-material/NearMe';
 import React, { useState } from 'react';
 import CircleButton from './CircleButton';
 import SecButton from './SecButton';
 import PrimeButton from './PrimeButton';
 import { useLocation, useNavigate } from 'react-router-dom';
-import TaskBoard from './TaskBoard';
 import { baseURL } from '../Utils';
 import { getLocalStorage } from '../utils/functions';
 
@@ -21,21 +19,15 @@ export default function EditTask(props) {
   const [active, setActive] = useState(task ? task.priority : null);
   const navigate = useNavigate();
   const [isOneDayTask, setIsOneDayTask] = useState(false);
-  // const toggleActive = (label) => {
-  //   setActive(active === label ? null : label)
-  // }
   const url = baseURL();
   const userId = getLocalStorage("currentUser");
-
-
-
   const [title, setTitle] = useState(task.taskName || "כותרת משימה");
   const [description, setDescription] = useState(task.taskDescription || "תיאור משימה");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
 
   const formatDateForInput = (date) => {
-    if (!date) return ''; // אם אין תאריך, נחזיר מחרוזת ריקה
+    if (!date) return '';
     const d = new Date(date);
     const month = ('0' + (d.getMonth() + 1)).slice(-2);
     const day = ('0' + d.getDate()).slice(-2);
@@ -55,7 +47,7 @@ export default function EditTask(props) {
     const { name, value } = e.target;
     setTask((prevTask) => ({
       ...prevTask,
-      [name]:value,
+      [name]: value,
     }));
     console.log(task.taskName)
     if (name === "taskName") {
@@ -74,16 +66,12 @@ export default function EditTask(props) {
     } else if (label === 'כדאי') {
       newPriority = 1;
     }
-  
+
     setActive(active === label ? null : label);
     setTask(prevTask => ({
       ...prevTask,
       priority: active === label ? null : newPriority
     }));
-  };
-
-  const handleDescChange = (event) => {
-    setDescription(event.target.value);
   };
 
   const handleBlur = () => {
@@ -96,13 +84,13 @@ export default function EditTask(props) {
     setTask(prevTask => ({
       ...prevTask,
       startDate: value,
-      endDate: isOneDayTask ? value : prevTask.endDate // Update endDate if "One Day" is active
+      endDate: isOneDayTask ? value : prevTask.endDate 
     }));
   };
 
   const handleEndDateChange = (e) => {
     const { value } = e.target;
-    setIsOneDayTask(false); // Disable "One Day" if endDate is manually changed
+    setIsOneDayTask(false); 
     setTask(prevTask => ({
       ...prevTask,
       endDate: value
@@ -152,7 +140,7 @@ export default function EditTask(props) {
   const newTask = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    console.log("%%", categoryId)
     const raw = JSON.stringify({
       "UserId": userId,
       "TaskName": task.taskName || "שם משימה",
@@ -161,9 +149,9 @@ export default function EditTask(props) {
       "EndDate": task.endDate,
       "PriorityId": task.priority,
       "PersonalNote": task.personalNote,
-      "categoryId":categoryId
+      "categoryId": categoryId
     });
-    
+
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -174,7 +162,7 @@ export default function EditTask(props) {
     fetch(`${url}UserTasks/tasks/new`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log("new task:",result)
+        console.log("new task:", result)
         navigate('/tasks-board', { state: { fromEditTask: true } });
       })
       .catch((error) => console.error(error));
@@ -225,10 +213,10 @@ export default function EditTask(props) {
           <div style={{ width: '250px', height: '35px', border: '1px solid #b3ccef', borderRadius: '8px', padding: '12px 16px', display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ fontWeight: 'bold' }}>
               <input
-              type="date"
-              name="startDate"
-              value={formatDateForInput(task.startDate)}
-              onChange={handleStartDateChange}
+                type="date"
+                name="startDate"
+                value={formatDateForInput(task.startDate)}
+                onChange={handleStartDateChange}
               />
             </div>
             <div>התחלה</div>
@@ -238,10 +226,10 @@ export default function EditTask(props) {
           <div style={{ width: '250px', height: '35px', border: '1px solid #b3ccef', borderRadius: '8px', padding: '12px 16px', display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ fontWeight: 'bold' }}>
               <input
-              type="date"
-              name="endDate"
-              value={formatDateForInput(task.endDate)}
-              onChange={handleEndDateChange}
+                type="date"
+                name="endDate"
+                value={formatDateForInput(task.endDate)}
+                onChange={handleEndDateChange}
               />
             </div>
             <div>סיום</div>
@@ -265,7 +253,7 @@ export default function EditTask(props) {
       <div style={{ marginTop: '16px' }}>
         <p style={{ display: 'flex', justifyContent: 'flex-end' }}>הערות אישיות</p>
         <TextField
-        name="personalNote"
+          name="personalNote"
           fullWidth
           multiline
           rows={8}
@@ -276,7 +264,7 @@ export default function EditTask(props) {
           style={{ margin: '0px', direction: 'rtl', marginBottom: '16px' }} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        {!is_newTask&&<PrimeButton onClick={updateTask} btntxt="שמירה" />}
+        {!is_newTask && <PrimeButton onClick={updateTask} btntxt="שמירה" />}
         <SecButton onClick={newTask} btntxt="הוספת משימה חדשה" />
       </div>
     </div>

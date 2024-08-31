@@ -1,20 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "./UserHook";
-import {
-  Avatar,
-  Typography,
-  List,
-  ListItem,
-  Divider,
-  TextField,
-  Autocomplete,
-  Button,
-} from "@mui/material";
+import { Avatar, List, ListItem, Divider, TextField, Autocomplete } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Navbar from "./Navbar";
 import SecButton from "./SecButton";
 import { baseURL } from '../Utils';
-import { getLocalStorage } from '../utils/functions';
+import { getLocalStorage, setLocalStorage } from '../utils/functions';
 
 function UserProfile() {
   const initialCategories = [
@@ -32,7 +23,6 @@ function UserProfile() {
     { id: 12, image: "public/friends.png", label: "קהילות" },
   ];
   const url = baseURL();
-  const { userDetails } = useContext(UserContext);
   const userId = getLocalStorage("currentUser");
   const [DestinationCountry, set_DestinationCountry] = useState("");
   const [have_kids, set_have_kids] = useState(false);
@@ -41,7 +31,7 @@ function UserProfile() {
 
   const mapCategoriesFromServer = (categoriesFromServer) => {
     return categoriesFromServer.map(cat => ({
-      id: cat.categoryId, 
+      id: cat.categoryId,
       label: cat.categoryName
     }));
   };
@@ -57,10 +47,10 @@ function UserProfile() {
 
     return `${year}-${month}-${day}`;
   };
-  
+
   useEffect(() => {
-      fetchUserDetails();
-  },[]);
+    fetchUserDetails();
+  }, []);
 
   const fetchUserDetails = () => {
     const requestOptions = {
@@ -84,16 +74,15 @@ function UserProfile() {
     setCategories(newValue);
   };
 
-  
-
   const handleClick = () => {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    console.log(categories)
     const raw = JSON.stringify({
       "DestinationCountry": DestinationCountry,
       "MoveDate": moveDate,
-      "HasChildren": have_kids
+      "HasChildren": have_kids,
+      "SelectedCategories": categories.map(category => category.id)
     });
 
     const requestOptions = {
@@ -103,25 +92,22 @@ function UserProfile() {
       redirect: "follow"
     };
 
-    fetch(`${url}Details/update/${userId}`, requestOptions)
+    fetch(`${url}details/update-relocation-details-and-categories/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
+        const user = getLocalStorage(userId);
+        user.selected_country.label = DestinationCountry;
+        user.moveDate = moveDate;
+        user.have_kids = have_kids;
+        user.category_active = categories.map(category => category.id)
+        setLocalStorage(userId, user);
       })
-      .catch((error) => {console.error(error)});
-    
-    
-      // const data = {
-    //   UserId: userId,
-    //   MoveDate: moveDate,
-    //   DestinationCountry: DestinationCountry,
-    //   have_kids: have_kids
-    // };
-    // console.log('data', data);
+      .catch((error) => { console.error(error) });
 
   };
   return (
-    <div style={{display: 'flex', flexDirection: 'column', minHeight: '100vh'}} >
+    <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '100vh' }} >
       <div
         style={{
           display: "flex",
@@ -171,7 +157,7 @@ function UserProfile() {
               />
             </ListItem>
             <Divider />
-            <ListItem style={{textAlign:'right'}}>
+            <ListItem style={{ textAlign: 'right' }}>
               <p>קטגוריות שנבחרו: </p>
               <Autocomplete
                 options={initialCategories}

@@ -1,20 +1,12 @@
-import {
-  Avatar,
-  Button,
-  Dialog,
-  DialogActions,
-  Grid,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  TextField,
-} from "@mui/material";
+import { Avatar, Button, Dialog, DialogActions, Grid, List, ListItem, ListItemAvatar, ListItemText, TextField } from "@mui/material";
 import React, { useState, useContext } from "react";
 import { UserContext } from "./UserHook";
+import { baseURL } from '../Utils';
+import { getLocalStorage } from "../utils/functions";
 
 export default function Post() {
-  const { userDetails } = useContext(UserContext); // קבלת המידע על המשתמש מהקונטקסט
+  const { userDetails } = useContext(UserContext);
+  const userId = getLocalStorage("currentUser")
   console.log(userDetails);
   const [comments, setComments] = useState([
     {
@@ -39,19 +31,41 @@ export default function Post() {
   const [newComment, setNewComment] = useState("");
   const [open, setOpen] = useState(false);
   const [commentTo, setCommentTo] = useState([]);
+  const url = baseURL();
+
+  const sendComment = () => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      "Content": newComment
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow"
+    };
+
+    fetch(`${url}UserPost/add-comment/5/${userId}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        const newId = comments.length + 1;
+        const updateComments = [
+          ...comments,
+          { id: newId, user: userDetails.userName, content: newComment },
+        ];
+        setComments(updateComments);
+        setNewComment("");
+      })
+      .catch((error) => console.error(error));
+  };
 
   const openCommentTo = (id) => {
     const comment_to = comments.filter((c) => c.comment_to == id);
     // setCommentTo(comment_to);
-  };
-  const sendComment = () => {
-    const newId = comments.length + 1;
-    const updatedComments = [
-      ...comments,
-      { id: newId, user: "משתמש חדש", content: newComment },
-    ];
-    setComments(updatedComments);
-    setNewComment(""); // Clear input after sending
   };
 
   return (
@@ -62,20 +76,16 @@ export default function Post() {
           backgroundColor: "white",
           margin: "16px 0",
           borderRadius: "16px",
-        }}
-      >
+        }}>
         <div
-          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}
-        >
+          style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
           <Avatar
             style={{ marginLeft: "16px" }}
-            src="/static/images/avatar/1.jpg"
-          />
+            src="/static/images/avatar/1.jpg" />
           <ListItemText
             style={{ marginRight: "8px", textAlign: "right", margin: "0" }}
             primary="שם משתמש"
-            secondary="תוכן הפוסט"
-          />
+            secondary="תוכן הפוסט" />
         </div>
         <Button style={{ display: "flex", justifyContent: "flex-start" }}>
           לכל התגובות
@@ -89,16 +99,14 @@ export default function Post() {
                   openCommentTo(comment.id);
                 }}
                 key={comment.id}
-                style={{ padding: "0" }}
-              >
+                style={{ padding: "0" }}>
                 <ListItemAvatar>
                   <Avatar />
                 </ListItemAvatar>
                 <ListItemText
                   style={{ textAlign: "right" }}
                   primary={comment.user}
-                  secondary={comment.content}
-                />
+                  secondary={comment.content} />
               </ListItem>
             ))}
         </List>
@@ -107,8 +115,7 @@ export default function Post() {
             <TextField
               placeholder="הוסף תגובה"
               value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
+              onChange={(e) => setNewComment(e.target.value)} />
           </Grid>
           <Grid item xs={3}>
             <Button
@@ -121,8 +128,7 @@ export default function Post() {
                 fontWeight: "bold",
                 textAlign: "center",
               }}
-              onClick={sendComment}
-            >
+              onClick={sendComment}>
               שלח
             </Button>
           </Grid>
@@ -132,32 +138,28 @@ export default function Post() {
             open={open}
             onClose={setOpen(false)}
             aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
+            aria-describedby="alert-dialog-description">
             {commentTo.map((comment) => (
               <ListItem
                 onClick={() => {
                   openCommentTo(comment.id);
                 }}
                 key={comment.id}
-                style={{ padding: "0" }}
-              >
+                style={{ padding: "0" }}>
                 <ListItemAvatar>
                   <Avatar />
                 </ListItemAvatar>
                 <ListItemText
                   style={{ textAlign: "right" }}
                   primary={comment.user}
-                  secondary={comment.content}
-                />
+                  secondary={comment.content} />
               </ListItem>
             ))}
             <DialogActions>
               <Button
                 onClick={() => {
                   setOpen(false);
-                }}
-              >
+                }}>
                 close
               </Button>
             </DialogActions>

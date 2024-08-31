@@ -41,22 +41,21 @@ export default function AutoComplete(props) {
           a.name.common.localeCompare(b.name.common)
         );
 
-        // Mapping countries data to the format that Autocomplete expects (label for display)
         const parsedData = sortedData.map((country) => ({
           label: country.name.common,
         }));
 
-        setCountries(parsedData); // Set default country (first country in the list)
+        setCountries(parsedData);
         setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
         setLoading(false);
       });
-      if (selected_country) {
-        setCountry(selected_country) ;
-        setInputCountry(selected_country)
-      }
+    if (selected_country) {
+      setCountry(selected_country);
+      setInputCountry(selected_country)
+    }
   }, []);
 
   if (loading) {

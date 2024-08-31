@@ -1,11 +1,10 @@
 import "./Realocation.css";
-import React, { useEffect, useState,useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";
 import PrimeButton from "./PrimeButton";
 import SecButton from "./SecButton";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { IconButton } from "@mui/material";
 import AutoComplete from "./AutoComplete";
@@ -17,7 +16,6 @@ function OpeningQuestions(props) {
   const { parseUserData } = props;
   const userId = getLocalStorage("currentUser");
   console.log(userId);
-  // const navigate = useNavigate();
   const { setUserDetails } = useContext(UserContext);
   const [selectedOption, setSelectedOption] = useState("");
   const [day, setDay] = useState("");
@@ -74,13 +72,13 @@ function OpeningQuestions(props) {
     );
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    const data={
-        UserId: userId,
-        DestinationCountry: inputCountry,
-        MoveDate: new Date(year, month - 1, day),
-        HasChildren: selectedOption === "yes",
-        SelectedCategories: [],
-      }
+    const data = {
+      UserId: userId,
+      DestinationCountry: inputCountry,
+      MoveDate: new Date(year, month - 1, day),
+      HasChildren: selectedOption === "yes",
+      SelectedCategories: [],
+    }
     const raw = JSON.stringify(data);
     setUserDetails(data)
     const requestOptions = {
@@ -97,8 +95,6 @@ function OpeningQuestions(props) {
         return response.json();
       })
       .then((result) => {
-        //setUserDetails(prev => ({ ...prev, userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate }));
-        //navigate('/categories', { state: { userId: result.userId, hasChildren: result.hasChildren, MoveDate: result.moveDate } });
       })
       .catch((error) => console.error(error));
   };
@@ -124,15 +120,15 @@ function OpeningQuestions(props) {
 
   const handleChange = (name, value) => {
     let temp;
-    if(value){
-    temp = move_date ?? {};
-    temp[name] = value;}
+    if (value) {
+      temp = move_date ?? {};
+      temp[name] = value;
+    }
     set_move_date(temp);
     switch (name) {
       case "day":
         setDay(value);
         validateField("day", value);
-       
         break;
       case "month":
         setMonth(value);
@@ -146,14 +142,14 @@ function OpeningQuestions(props) {
         break;
     }
     user.moveDate = temp;
-    setLocalStorage(userId,user);
+    setLocalStorage(userId, user);
   };
 
 
   const handleButton = (selection) => {
     setSelectedOption(selection);
     user.have_kids = selection;
-    setLocalStorage(userId,user);
+    setLocalStorage(userId, user);
   };
 
   return (
@@ -168,13 +164,11 @@ function OpeningQuestions(props) {
         container
         spacing={2}
         alignItems="center"
-        style={{ padding: "0 16px", marginBottom: "20%" }}
-      >
+        style={{ padding: "0 16px", marginBottom: "20%" }}>
         <Grid item xs={1}>
           <IconButton
             onClick={() => parseUserData({}, "terms")}
-            style={{ transform: "scaleX(-1)", left: "280px" }}
-          >
+            style={{ transform: "scaleX(-1)", left: "280px" }}>
             <ArrowBackIcon />
           </IconButton>
         </Grid>
@@ -186,17 +180,14 @@ function OpeningQuestions(props) {
         <p style={{ textAlign: "right" }}>מדינת יעד</p>
         <AutoComplete
           setInputCountry={setInputCountry}
-          defultCountry={inputCountry}
-        />
-
+          defultCountry={inputCountry} />
         <div>
           <p style={{ textAlign: "right" }}>מתי המעבר</p>
           <Grid
             container
             spacing={1}
             justifyContent={"center"}
-            alignItems="center"
-          >
+            alignItems="center">
             <Grid item xs={4}>
               <TextField
                 fullWidth
@@ -207,8 +198,7 @@ function OpeningQuestions(props) {
                 name="year"
                 value={year}
                 onChange={(e) => handleChange("year", e.target.value)}
-                error={errors.year}
-              />
+                error={errors.year} />
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -220,8 +210,7 @@ function OpeningQuestions(props) {
                 name="month"
                 value={month}
                 onChange={(e) => handleChange("month", e.target.value)}
-                error={errors.month}
-              />
+                error={errors.month} />
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -233,8 +222,7 @@ function OpeningQuestions(props) {
                 name="day"
                 value={day}
                 onChange={(e) => handleChange("day", e.target.value)}
-                error={errors.day}
-              />
+                error={errors.day} />
             </Grid>
           </Grid>
           <br />
@@ -244,15 +232,13 @@ function OpeningQuestions(props) {
             <SecButton
               btntxt="לא"
               onClick={() => handleButton("no")}
-              active={selectedOption === "no"}
-            />
+              active={selectedOption === "no"} />
           </Grid>
           <Grid item xs={3.5}>
             <SecButton
               btntxt="כן"
               onClick={() => handleButton("yes")}
-              active={selectedOption === "yes"}
-            />
+              active={selectedOption === "yes"} />
           </Grid>
           <Grid item xs={5}>
             <p>?האם יש לך ילדים</p>
@@ -262,8 +248,7 @@ function OpeningQuestions(props) {
       <PrimeButton
         onClick={SaveDetails}
         btntxt="הבא"
-        disabled={!isFormValid()}
-      />
+        disabled={!isFormValid()} />
     </div>
   );
 }

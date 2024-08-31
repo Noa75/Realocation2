@@ -7,22 +7,9 @@ export const baseURL = () => {
 
 export const Translate = (value) => {
     const obj = {
-        "united states" : "ארצות הברית",
-        "canada" : "קנדה",
-        "germany" : "גרמניה",
-        "france" : "צרפת",
-        "italy" : "איטליה",
-        "spain" : "ספרד",
-        "australia" : "אוסטרליה",
-        "brazil" : "ברזיל",
-        "japan" : "יפן",
-        "india" : "הודו",
-        "aa":"אא",
-        "bb":"בב",
-        "cc":"סס",
-        "aab":"אאב",
+
     }
-    
+
     return obj[value.toLowerCase()] ?? value
 
 }

@@ -66,13 +66,11 @@ function SignUp() {
             state: { userId: result.userId },
             state: { fromReg: true },
           });
-          //אם הבקשה עברה בהצלחה (לעבור עמוד לדוג')
         })
         .catch((error) => {
           console.log("not work");
           console.log(error);
           setUserExistsMSG("משתמש קיים");
-          //הלוגיקה שמה קורה אם לא הצליח
         });
     }
   };
@@ -98,8 +96,7 @@ function SignUp() {
         if (
           !value.includes("@") ||
           !value.endsWith(".com") ||
-          !/[A-Za-z]/.test(value)
-        ) {
+          !/[A-Za-z]/.test(value)) {
           errMsg = "כתובת מייל לא תקינה";
         }
         break;
@@ -134,8 +131,7 @@ function SignUp() {
         className="logo"
         src="public/Logo.svg"
         alt="logo"
-        style={{ marginTop: "80px" }}
-      />
+        style={{ marginTop: "80px" }} />
       <div className="signup-inputs">
         <TextField
           label="שם מלא"
@@ -145,8 +141,7 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.fullname}
-          helperText={errors.fullname}
-        />
+          helperText={errors.fullname} />
         <TextField
           label="מייל"
           name="email"
@@ -156,8 +151,7 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.email}
-          helperText={errors.email}
-        />
+          helperText={errors.email} />
         <TextField
           label="סיסמא"
           name="password"
@@ -167,8 +161,7 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.password}
-          helperText={errors.email}
-        />
+          helperText={errors.email} />
         <TextField
           label="אימות סיסמא"
           name="confirmpassword"
@@ -178,8 +171,7 @@ function SignUp() {
           onChange={handleChange}
           onBlur={handleBlur}
           error={!!errors.confirmpassword}
-          helperText={errors.confirmpassword}
-        />
+          helperText={errors.confirmpassword} />
       </div>
       <p>{userExistsMSG}</p>
       <Stack spacing={1}>

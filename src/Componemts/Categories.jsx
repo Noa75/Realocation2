@@ -3,9 +3,6 @@ import { Grid, IconButton } from '@mui/material';
 import CategoryItem from './CategoryItem';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PrimeButton from './PrimeButton';
-// import { Navigate, useNavigate } from 'react-router-dom';
-// import { Category, SignalWifiStatusbarConnectedNoInternet4Rounded } from '@mui/icons-material';
-// import { UserContext } from './UserHook';
 import { baseURL } from '../Utils';
 import { getLocalStorage, setLocalStorage } from '../utils/functions';
 import { Navigate } from 'react-router-dom';
@@ -18,9 +15,7 @@ export default function Categories(props) {
   const userId = getLocalStorage("currentUser");
   const user = getLocalStorage(userId);
   const url = baseURL();
-  // const navigate = useNavigate();
   const [active, setActive] = useState([]);
-  // const { userData, setuserData } = useContext(UserContext);
   const initialCategories = [
     { id: 1, image: "public/animals.png", label: "בעלי חיים" },
     { id: 2, image: "public/flight.png", label: "טיסה" },
@@ -42,7 +37,7 @@ export default function Categories(props) {
     const filteredCategories = kids
       ? initialCategories
       : initialCategories.filter(Category => Category.label !== "חינוך ילדים");
-      console.log(filteredCategories)
+    console.log(filteredCategories)
     setCategories(filteredCategories);
     const category_active = user.category_active;
     if (category_active) {
@@ -76,18 +71,18 @@ export default function Categories(props) {
 
     const moveDateObj = user.moveDate;
     const fullMoveDate = new Date(moveDateObj.year, moveDateObj.month - 1, moveDateObj.day);
-  if (isNaN(fullMoveDate)) {
-    console.error("Invalid date: ", fullMoveDate);
-    return; // יציאה אם התאריך אינו חוקי
-  }
+    if (isNaN(fullMoveDate)) {
+      console.error("Invalid date: ", fullMoveDate);
+      return;
+    }
 
-  const saveDB=getLocalStorage('saveDB');
-  if(saveDB){
-    parseUserData({SelectedCategories: active}, "taskBoard");
-    return
-  }
+    const saveDB = getLocalStorage('saveDB');
+    if (saveDB) {
+      parseUserData({ SelectedCategories: active }, "taskBoard");
+      return
+    }
 
-  console.log("active categories:", active);
+    console.log("active categories:", active);
 
     const raw = JSON.stringify({
       "UserId": userId,
@@ -107,8 +102,8 @@ export default function Categories(props) {
     fetch(`${url}Details/save-details-and-calculate/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        setLocalStorage('saveDB',1);
-        parseUserData({SelectedCategories: active}, "taskBoard");
+        setLocalStorage('saveDB', 1);
+        parseUserData({ SelectedCategories: active }, "taskBoard");
       })
       .catch((error) => console.error(error));
 

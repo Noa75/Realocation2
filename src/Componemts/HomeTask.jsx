@@ -1,19 +1,11 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
-import PrimeButton from './PrimeButton';
 import SecButton from './SecButton';
-import { de } from 'date-fns/locale';
 import { setLocalStorage } from '../utils/functions';
 
-
 export default function HomeTask({ tasks, setTasks, filterTasks }) {
-
     const handleComplete = (taskId) => {
         const newTasks = tasks.map(task => {
             if (taskId === task.userTaskId) {
-                // task.completed = !task.completed;
-                // return task;
                 return { ...task, completed: !task.completed }
             }
             else {
@@ -23,7 +15,6 @@ export default function HomeTask({ tasks, setTasks, filterTasks }) {
         setTasks(newTasks)
         setLocalStorage('allRemainingTasks', tasks)
     };
-
 
     const urgencyColor = (urgency) => {
         switch (urgency) {
@@ -36,12 +27,10 @@ export default function HomeTask({ tasks, setTasks, filterTasks }) {
 
     const formatDateForDisplay = (dateString) => {
         const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, '0'); // מוסיף אפס בתחילת היום אם יש צורך
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // מוסיף אפס בתחילת החודש אם יש צורך
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         return `${day}/${month}`;
     };
-
-    //const filteredTasks = tasks.filter(task => task.endDate === selectedDate);
 
     return (
         <>

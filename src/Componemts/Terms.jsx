@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import PrimeButton from './PrimeButton';
 import Navbar from './Navbar';
-import {IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { baseURL } from '../Utils';
 import { UserContext } from './UserHook';
@@ -24,7 +24,7 @@ export default function Terms() {
   const parseUserData = (obj, PageName) => {
     let data = userData
     const arr = Object.keys(obj)
-    for(let i = 0; i < arr.length;i++){
+    for (let i = 0; i < arr.length; i++) {
       const key = arr[i];
       data[key] = obj[key];
     }
@@ -35,7 +35,6 @@ export default function Terms() {
 
   useEffect(() => {
     if (!userDetails) {
-      //navigate('/');
     }
     else {
       const requestOptions = {
@@ -66,14 +65,12 @@ export default function Terms() {
       body: raw,
       redirect: "follow"
     };
-    //setUserDetails(prev => ({ ...prev, userId: 1222 }));
     setPageName('opningQuestions')
     fetch(`${url}register/accept-terms/${userDetails.userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        setUserDetails({userId: result.userId});
+        setUserDetails({ userId: result.userId });
         setPageName('opningQuestions')
-        //navigate('/opening-questions', { state: { userId: result.userId } });
       })
       .catch((error) => {
         console.log(error);
@@ -87,24 +84,24 @@ export default function Terms() {
     )
   }
   else if (PageName === "cetegories") {
-    return(
+    return (
       <>
-      <Categories userId={userDetails.userId} parseUserData={parseUserData} userData={userData}/>
+        <Categories userId={userDetails.userId} parseUserData={parseUserData} userData={userData} />
       </>
     )
   }
   else if (PageName === "taskBoard") {
-    return(
-    <>
-    <TaskBoard userId={userDetails.userId} userData={userData} parseUserData={parseUserData} fromCategories={true} />
-    </>
+    return (
+      <>
+        <TaskBoard userId={userDetails.userId} userData={userData} parseUserData={parseUserData} fromCategories={true} />
+      </>
     )
   }
   else if (PageName === "editTask") {
-    return(
-    <>
-    <EditTask userId={userDetails.userId} userData={userData}/>
-    </>
+    return (
+      <>
+        <EditTask userId={userDetails.userId} userData={userData} />
+      </>
     )
   }
   else {
@@ -117,7 +114,7 @@ export default function Terms() {
           <div className='dot'></div>
         </div>}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        {fromReg && <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '320px' }}>
+          {fromReg && <IconButton onClick={() => navigate(-1)} style={{ transform: 'scaleX(-1)', position: 'absolute', left: '320px' }}>
             <ArrowBackIcon />
           </IconButton>}
           <h4 style={{ textAlign: 'center' }}>תנאי שימוש</h4>
@@ -132,7 +129,7 @@ export default function Terms() {
           השימוש באפליקציה מוגבל למטרות אישיות והמידע המועבר דרכה אינו לשימוש מסחרי או הפצה נוספת. פרטיות המשתתפים מוגנת והמידע אודותיהם לא ישותף ללא הסכמתם.
         </p>
         <div style={{ textAlign: 'right' }}>
-        {fromReg && <label htmlFor="">
+          {fromReg && <label htmlFor="">
             אני מסכימ.ה לתנאי השימוש
             <input
               type='checkbox'
@@ -141,10 +138,10 @@ export default function Terms() {
               style={{ marginLeft: '8px' }}
             />
           </label>
-  }</div>
-        
+          }</div>
+
         <div style={{ marginTop: '32px' }}>
-        {fromReg &&<PrimeButton onClick={acceptTerms} btntxt="הבא" disabled={!isAccepted} />}</div>
+          {fromReg && <PrimeButton onClick={acceptTerms} btntxt="הבא" disabled={!isAccepted} />}</div>
         {!fromReg && <Navbar />}
       </div>
     )
