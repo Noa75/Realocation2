@@ -243,12 +243,6 @@ export default function EditTask(props) {
           <CircleButton color="#e5e05c" label="חשוב" onClick={toggleActive} active={active === 'חשוב' || active === 2} />
           <CircleButton color="#67e55c" label="כדאי" onClick={toggleActive} active={active === 'כדאי' || active === 1} />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Switch defaultChecked />
-          <span>
-            קבלת התראה
-          </span>
-        </div>
       </div>
       <div style={{ marginTop: '16px' }}>
         <p style={{ display: 'flex', justifyContent: 'flex-end' }}>הערות אישיות</p>

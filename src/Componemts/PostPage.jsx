@@ -61,8 +61,13 @@ export default function PostPage() {
             .then((response) => response.json())
             .then((result) => {
                 console.log(result);
+                if(result.length > 0){
                 const sortedMyPosts = result.sort((a, b) => b.postId - a.postId);
                 setPosts(sortedMyPosts);
+            }
+            else{
+                setPosts([]);
+            }
             })
             .catch((error) => console.error(error));
     }

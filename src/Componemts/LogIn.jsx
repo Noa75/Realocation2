@@ -56,16 +56,15 @@ function LogIn() {
 
     return (
         <div className="login-container">
-            <div style={{ marginTop: "180px", marginBottom: "102px" }}>
+            <div style={{ marginTop: "180px", marginBottom: "118px" }}>
                 <img src="Logo.svg" alt="logo" style={{ width: '100%' }}></img>
             </div>
-            <Stack spacing={1} >
+            <Stack style={{marginBottom: '100px'}} spacing={1} >
                 <TextField label="שם משתמש" variant="outlined" onChange={(e) => { setUser(e.target.value) }} /> <br />
                 <TextField label="סיסמא" type="password" autoComplete="current-password" onChange={(e) => { setPassword(e.target.value) }} />
             </Stack>
-            <button className='forgetP' onClick={() => navigate('/restore-password')}>שכחתי סיסמא</button> <br />
             <p>{userExistsMSG}</p>
-            <PrimeButton onClick={btnlogin} btntxt="כניסה" />
+            <PrimeButton style={{marginTop:'100px'}} onClick={btnlogin} btntxt="כניסה" />
             <p className='newregister'>
                 <button onClick={() => navigate('/sign-up')} variant="contained">הירשם</button>
                 ?אין לך משתמש

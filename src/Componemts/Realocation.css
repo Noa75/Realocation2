@@ -54,13 +54,6 @@
     overflow: hidden;
   }
 
-  .forgetP {
-    font-size: 12px;
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 100px;
-  }
-
   h4 {
     font-weight: 300;
     font-size: 24px;

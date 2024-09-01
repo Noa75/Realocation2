@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { UserContext } from "./UserHook";
 import { Avatar, List, ListItem, Divider, TextField, Autocomplete } from "@mui/material";
 import Stack from "@mui/material/Stack";
@@ -28,6 +28,8 @@ function UserProfile() {
   const [have_kids, set_have_kids] = useState(false);
   const [categories, setCategories] = useState([]);
   const [moveDate, set_moveDate] = useState("");
+  const fileInputRef = useRef(null);
+  const [avatarSrc, setAvatarSrc] = useState("");
 
   const mapCategoriesFromServer = (categoriesFromServer) => {
     return categoriesFromServer.map(cat => ({
@@ -50,6 +52,7 @@ function UserProfile() {
 
   useEffect(() => {
     fetchUserDetails();
+    fetchUserProfilePicture();
   }, []);
 
   const fetchUserDetails = () => {
@@ -104,8 +107,65 @@ function UserProfile() {
         setLocalStorage(userId, user);
       })
       .catch((error) => { console.error(error) });
-
   };
+
+  const fetchUserProfilePicture = () => {
+console.log("picture")
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow"
+    };
+
+    fetch(`${url}UserProfile/get-profile-picture/${userId}`, requestOptions)
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Failed to fetch profile picture');
+        }
+      })
+      .then((blob) => {
+        const imageUrl = URL.createObjectURL(blob);
+        setAvatarSrc(imageUrl);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+  }
+
+
+
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setAvatarSrc(imageUrl);
+      const formdata = new FormData();
+      formdata.append("profilePicture", file);
+
+      const requestOptions = {
+        method: "POST",
+        body: formdata,
+        redirect: "follow"
+      };
+
+      fetch(`${url}UserProfile/upload-profile-picture/${userId}`, requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => console.error(error));
+    }
+  }
+
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '100vh' }} >
       <div
@@ -115,7 +175,18 @@ function UserProfile() {
           alignItems: "center"
         }}
       >
-        <Avatar style={{ width: 120, height: 120, marginBottom: '0' }} />
+        <Avatar
+          src={avatarSrc || undefined}
+          style={{ width: 120, height: 120, marginBottom: '0', cursor: 'pointer' }}
+          onClick={handleAvatarClick}
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+          accept="image/*"
+        />
       </div>
       <div style={{ textAlign: "right" }}>
         <Stack
