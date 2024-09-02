@@ -129,7 +129,7 @@ export default function Post({ posts }) {
                   style={{ padding: "0" }}>
                   <ListItemAvatar>
                     <Avatar
-                      src={comment.commentUserProfilePicture ? `data:image/jpeg;base64,${comment.commentUserProfilePicture}` : '/static/images/avatar/1.jpg'}
+                      src={post.comments.commentUserProfilePicture ? `data:image/jpeg;base64,${comment.commentUserProfilePicture}` : '/static/images/avatar/1.jpg'}
                     />
                   </ListItemAvatar>
                   <ListItemText
