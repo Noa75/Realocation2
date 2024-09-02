@@ -30,19 +30,19 @@ export default function () {
             <Stack direction="row" spacing={1} >
                 <button style={isActive('/terms') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }}
                     onClick={() => navigate('/terms')}>
-                    <img src="public/R.png" alt="R" />
+                    <img src="../../public/R.png" alt="R" />
                 </button>
                 <button style={isActive('/tasks-board') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/tasks-board')}>
-                    <img src="public/Tasks.png" alt="Tasks" />
+                    <img src="../../public/Tasks.png" alt="Tasks" />
                 </button>
                 <button style={isActive('/home') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/home')}>
-                    <img src="public/HomeIcon.png" alt="Home" />
+                    <img src="../../public/HomeIcon.png" alt="Home" />
                 </button>
                 <button style={isActive('/post') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/post')}>
-                    <img src="public/PlusIcon.png" alt="Plus" />
+                    <img src="../../public/PlusIcon.png" alt="Plus" />
                 </button>
                 <button style={isActive('/user') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/user')}>
-                    <img src="public/UserIcon.png" alt="User" />
+                    <img src="../../public/UserIcon.png" alt="User" />
                 </button>
             </Stack>
         </div>

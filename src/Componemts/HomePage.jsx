@@ -77,7 +77,7 @@ export default function HomePage() {
     return (
         <div style={{ backgroundColor: '#0C8CE9', height: '100%', width: '100%', left: '0', margin: '0px', position: 'fixed', top: '0' }}>
             <div style={{ paddingTop: '54px', textAlign: 'center', color: 'white' }}>
-                <img src="public/White R.png" alt="logo" />
+                <img src="../../public/White R.png" alt="logo" />
             </div>
             <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
