@@ -156,3 +156,8 @@
   .dot.active {
     background-color: #5db2f0;
   }
+  .MyPostTab{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

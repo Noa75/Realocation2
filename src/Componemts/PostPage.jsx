@@ -5,6 +5,8 @@ import Post from './Post';
 import { useNavigate } from 'react-router-dom';
 import { getLocalStorage } from '../utils/functions';
 import { baseURL } from '../Utils';
+import './Realocation.css';
+
 
 export default function PostPage() {
     const [activeTab, setActiveTab] = useState('general');
@@ -93,13 +95,13 @@ export default function PostPage() {
 
     return (
         <div style={{ height: '100vh' }} >
-            <div style={{ paddingTop: '24px', textAlign: 'center', color: 'white' }}>
-                <img src="public/blueLogo.png" alt="logo" />
+            <div style={{ paddingTop: '24px', textAlign: 'center', color: 'white', padding: '0px', margin: '0px' }}>
+                <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/blueLogo.png" alt="logo" />
             </div>
             <h4 style={{ margin: '8px', textAlign: 'center' }}>{user.selected_country.label}</h4>
             <div dir='rtl'>
                 <div style={{ display: 'flex', justifyContent: 'center', direction: 'rtl' }}>
-                    <h3
+                    <h3 className='MyPostTab'
                         style={activeTab === 'general' ? activeTabStyle : tabStyle}
                         onClick={() => {
                             setActiveTab('general');

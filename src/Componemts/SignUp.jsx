@@ -129,7 +129,7 @@ function SignUp() {
     <div className="signup-container">
       <img
         className="logo"
-        src="../../public/Logo.svg"
+        src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/Logo.svg"
         alt="logo"
         style={{ marginTop: "80px" }} />
       <div className="signup-inputs">

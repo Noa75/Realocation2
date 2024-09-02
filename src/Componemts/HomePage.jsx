@@ -52,6 +52,23 @@ export default function HomePage() {
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);
     };
+    const handleClickOutside = (e) => {
+        if (drawerRef.current && !drawerRef.current.contains(e.target)) {
+            setDrawerHeight('50vh');
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
 
     useEffect(() => {
         const changeDrawerHeight = (e) => {
@@ -68,16 +85,26 @@ export default function HomePage() {
         };
 
         const drawerElement = drawerRef.current;
-        if (drawerElement) {
-            drawerElement.addEventListener('touchmove', changeDrawerHeight);
-            return () => drawerElement.removeEventListener('touchmove', changeDrawerHeight);
-        }
+        // if (drawerElement) {
+        //     drawerElement.addEventListener('touchmove', changeDrawerHeight);
+        //     return () => drawerElement.removeEventListener('touchmove', changeDrawerHeight);
+        // }
     }, []);
+
+    const handleDrawerClick = () => {
+        if (isOpen) {
+            setDrawerHeight('50vh');
+            setIsOpen(false);
+        } else {
+            setDrawerHeight('85vh');
+            setIsOpen(true);
+        }
+    };
 
     return (
         <div style={{ backgroundColor: '#0C8CE9', height: '100%', width: '100%', left: '0', margin: '0px', position: 'fixed', top: '0' }}>
             <div style={{ paddingTop: '54px', textAlign: 'center', color: 'white' }}>
-                <img src="../../public/White R.png" alt="logo" />
+                <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/White R.png" alt="logo" />
             </div>
             <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -87,11 +114,11 @@ export default function HomePage() {
             <div>
                 <div className='drawer'
                     ref={drawerRef}
-                    anchor='bottom'
-                    open={!isOpen}
-                    onClose={() => setIsOpen(false)}
-                    onOpen={() => setIsOpen(true)}
-                    swipeAreaWidth={30}
+                    // anchor='bottom'
+                    // open={!isOpen}
+                    // onClose={() => setIsOpen(false)}
+                    // onOpen={() => setIsOpen(true)}
+                    // swipeAreaWidth={30}
                     style={{
                         position: 'absolute',
                         height: { drawerHieght },
@@ -103,7 +130,7 @@ export default function HomePage() {
                         width: '100%',
                         left: '0'
                     }}>
-                    <div style={{ padding: '0 16px', display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px', direction: 'rtl', textAlign: 'right' }}>
+                    <div onClick={handleDrawerClick} style={{ padding: '0 16px', display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '-16px', direction: 'rtl', textAlign: 'right' }}>
                         <h4 style={{ fontSize: '32px', fontWeight: '200', margin: '0' }}>{selectedDate.format('DD/MM')}</h4>
                         <div style={{ textAlign: 'right' }}>
                             <h3 style={{ marginBottom: '0' }}>משימות להיום</h3>

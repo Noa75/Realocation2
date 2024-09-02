@@ -17,18 +17,18 @@ export default function Categories(props) {
   const url = baseURL();
   const [active, setActive] = useState([]);
   const initialCategories = [
-    { id: 1, image: "../../public/animals.png", label: "בעלי חיים" },
-    { id: 2, image: "../../public/flight.png", label: "טיסה" },
-    { id: 3, image: "../../public/working.png", label: "עבודה" },
-    { id: 4, image: "../../public/doctor.png", label: "בריאות" },
-    { id: 5, image: "../../public/home.png", label: "מגורים" },
-    { id: 6, image: "../../public/beer.png", label: "פנאי" },
-    { id: 7, image: "../../public/classroom.png", label: "חינוך ילדים" },
-    { id: 8, image: "../../public/truck.png", label: "הובלה" },
-    { id: 9, image: "../../public/student.png", label: "חינוך בוגרים" },
-    { id: 10, image: "../../public/shild.png", label: "ביטוחים" },
-    { id: 11, image: "../../public/car.png", label: "רכב" },
-    { id: 12, image: "../../public/friends.png", label: "קהילות" }
+    { id: 1, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/animals.png", label: "בעלי חיים" },
+    { id: 2, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/flight.png", label: "טיסה" },
+    { id: 3, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/working.png", label: "עבודה" },
+    { id: 4, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/doctor.png", label: "בריאות" },
+    { id: 5, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/home.png", label: "מגורים" },
+    { id: 6, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/beer.png", label: "פנאי" },
+    { id: 7, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/classroom.png", label: "חינוך ילדים" },
+    { id: 8, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/truck.png", label: "הובלה" },
+    { id: 9, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/student.png", label: "חינוך בוגרים" },
+    { id: 10, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/shild.png", label: "ביטוחים" },
+    { id: 11, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/car.png", label: "רכב" },
+    { id: 12, image: "https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/friends.png", label: "קהילות" }
   ];
   const [categories, setCategories] = useState(initialCategories);
   useEffect(() => {

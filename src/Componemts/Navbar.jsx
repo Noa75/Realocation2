@@ -30,19 +30,19 @@ export default function () {
             <Stack direction="row" spacing={1} >
                 <button style={isActive('/terms') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }}
                     onClick={() => navigate('/terms')}>
-                    <img src="../../public/R.png" alt="R" />
+                    <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/R.png" alt="R" />
                 </button>
                 <button style={isActive('/tasks-board') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/tasks-board')}>
-                    <img src="../../public/Tasks.png" alt="Tasks" />
+                    <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/Tasks.png" alt="Tasks" />
                 </button>
                 <button style={isActive('/home') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/home')}>
-                    <img src="../../public/HomeIcon.png" alt="Home" />
+                    <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/HomeIcon.png" alt="Home" />
                 </button>
                 <button style={isActive('/post') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/post')}>
-                    <img src="../../public/PlusIcon.png" alt="Plus" />
+                    <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/PlusIcon.png" alt="Plus" />
                 </button>
                 <button style={isActive('/user') ? { ...underlineStyle } : { backgroundColor: '#f5f7fa' }} onClick={() => navigate('/user')}>
-                    <img src="../../public/UserIcon.png" alt="User" />
+                    <img src="https://proj.ruppin.ac.il/bgroup30/test2/tar2/dist/UserIcon.png" alt="User" />
                 </button>
             </Stack>
         </div>
